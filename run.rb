@@ -36,8 +36,9 @@ method_class = possible_methods[options[:command]]
 
 options[:input_path].each do |filename|
   begin
-    method_class.new(filename, options[:force_overwrite]).run
+    c = method_class.new(filename, options[:output_path], options[:force_overwrite])
+    c.run
   rescue KeplerProcessor::FileExistsError
-    puts "Your output file (#{filename}) already exists, please remove it first (or something)."
+    puts "Your output file (#{c.full_output_filename}) already exists, please remove it first (or something)."
   end
 end
