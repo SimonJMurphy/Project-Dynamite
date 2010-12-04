@@ -2,7 +2,7 @@ module KeplerProcessor
   class Transformer < Base
     include GSL
 
-    # define parameters for FT (eventually to be given as arguments)
+    # FT Parameters - TODO: take as arguments
     DEG       = 2       # degree of polynomial to subtract from the data
     SAMPLING  = 1000    # 1 kHz
     F_INITIAL = 0.03    # lower frequency limit for amplitude spectrum, c/d
@@ -27,11 +27,7 @@ module KeplerProcessor
       end
 
       def subtract_polynomial_fit!
-        @formatted_data = @input_data.map do |p|
-          fit_point = @fit.at(p[0]).to_f || 0.0
-          p[1] -= fit_point
-          p
-        end
+        @formatted_data = @input_data.map { |p| p[1] -= @fit.at(p[0]).to_f || 0.0; p }
       end
 
       def compute_amplitude_spectrum
@@ -49,6 +45,7 @@ module KeplerProcessor
       def plot_lightcurve
 
       end
+
       # no output filename method, because we don't want to save any text, just the plots.
   end
 end

@@ -10,7 +10,9 @@ end
 
 class Array
   def to_hash
-    self.inject({}) { |accumulator, element| accumulator[element[0].downcase.gsub(" ", "_").to_sym] = element[1].gsub(" ", "").strip; accumulator }
-    # creating an empty hash with inject. The key is made lower case and spaces swapped to underscore.
+    # create an empty hash with inject. The key is made lower case and spaces swapped to underscore.
+    self.inject({}) do |accumulator, element|
+      accumulator[element[0].downcase.gsub(" ", "_").to_sym] = element[1].gsub(" ", "").strip; accumulator
+    end
   end
 end
