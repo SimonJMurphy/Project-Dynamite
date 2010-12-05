@@ -2,12 +2,12 @@
 require 'optparse'
 require_relative 'kepler_processor.rb'
 
-options = {:input_path => [], :output_path => "data/output"}
+options = { :command => KeplerProcessor::Convertor, :input_path => [], :output_path => "data/output" }
 
 option_parser = OptionParser.new do |opts|
   opts.banner = "Usage: ruby run.rb -c command -i path_to_input_file [-o output_directory]"
   opts.on("-c", "--command COMMAND", String, "Specify the command to run") do |c|
-    options[:command] = c
+    options[:command] = { "convert" => KeplerProcessor::Convertor, "transform" => KeplerProcessor::Transformer }[c]
   end
   opts.on("-f", "--[no-]force_overwrite", "Force overwrite existing output files") do |f|
     options[:force_overwrite] = f
@@ -31,12 +31,9 @@ rescue
   option_parser.parse('--help') # print out command glossary
 end
 
-possible_methods = { "convert" => KeplerProcessor::Convertor, "transform" => KeplerProcessor::Transformer }
-method_class = possible_methods[options[:command]]
-
 options[:input_path].each do |filename|
   begin
-    c = method_class.new(filename, options[:output_path], options[:force_overwrite])
+    c = options[:command].new(filename, options[:output_path], options[:force_overwrite])
     c.run
   rescue KeplerProcessor::FileExistsError
     puts "Your output file (#{c.full_output_filename}) already exists, please remove it first (or something)."
