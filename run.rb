@@ -6,8 +6,13 @@ options = { :command => KeplerProcessor::Convertor, :input_path => [], :output_p
 
 option_parser = OptionParser.new do |opts|
   opts.banner = "Usage: ruby run.rb -c command -i path_to_input_file [-o output_directory]"
-  opts.on("-c", "--command COMMAND", String, "Specify the command to run") do |c|
+  opts.on("-c", "--command COMMAND", String, "Specify the command to run [convert/transform]") do |c|
     options[:command] = { "convert" => KeplerProcessor::Convertor, "transform" => KeplerProcessor::Transformer }[c]
+    if options[:command].nil?
+      puts "Invalid command. Options are [convert/transform`]"
+      puts opts
+      exit
+    end
   end
   opts.on("-f", "--[no-]force_overwrite", "Force overwrite existing output files") do |f|
     options[:force_overwrite] = f
