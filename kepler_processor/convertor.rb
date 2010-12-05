@@ -1,5 +1,6 @@
 module KeplerProcessor
   class Convertor < Base
+
     def run
       super do
         strip_invalid!
@@ -31,5 +32,6 @@ module KeplerProcessor
         # Determine the output filename from header
         "kic#{@attributes[:kic_number]}_#{@attributes[:season]}_#{@input_filename.split("_")[1]}.txt"
       end
+
   end
 end

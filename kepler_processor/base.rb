@@ -2,11 +2,12 @@ require 'fileutils'
 
 module KeplerProcessor
   class Base
+
     def initialize(input_filename, output_path, force_overwrite)
-      @input_filename = input_filename
-      @output_path = output_path
-      @force_overwrite = force_overwrite
-      @input_data = []
+      @input_filename   = input_filename
+      @output_path      = output_path
+      @force_overwrite  = force_overwrite
+      @input_data       = []
     end
 
     def run
@@ -21,7 +22,7 @@ module KeplerProcessor
     end
 
     def full_output_filename
-      @output_path + "/" + output_filename
+      "#{@output_path}/#{output_filename}"
     end
 
     private
@@ -65,5 +66,6 @@ module KeplerProcessor
           @output_data.each { |record| output_file << "#{record.join("\t")}\n" }
         end
       end
+
   end
 end

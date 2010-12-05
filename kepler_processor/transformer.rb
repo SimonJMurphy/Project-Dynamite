@@ -1,5 +1,6 @@
 module KeplerProcessor
   class Transformer < Base
+
     include GSL
 
     # FT Parameters - TODO: take as arguments
@@ -20,6 +21,7 @@ module KeplerProcessor
     end
 
     private
+
       def calculate_polynomial_fit
         # @input_data is currently an array of arrays e.g [ [time1, mag1], [time2, mag2] ... ]
         # need an array of the times, and an array of the mags to apply a fit to, final argument is degree of fit
@@ -35,10 +37,10 @@ module KeplerProcessor
       end
 
       def plot_DFT
-        y2 = @fft.subvector(1, @input_data.size-2).to_complex2
-        mag = y2.abs
+        y2    = @fft.subvector(1, @input_data.size-2).to_complex2
+        mag   = y2.abs
         phase = y2.arg
-        f = Vector.linspace 0, SAMPLING/2, mag.size
+        f     = Vector.linspace 0, SAMPLING/2, mag.size
         graph f, mag, "-T png -C -g 3 -x 0 200 -X 'Frequency [Hz]' > fft.png"
       end
 
