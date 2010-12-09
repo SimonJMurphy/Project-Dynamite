@@ -3,10 +3,9 @@ require 'fileutils'
 module KeplerProcessor
   class Base
 
-    def initialize(input_filename, output_path, force_overwrite)
+    def initialize(input_filename, options*)
       @input_filename   = input_filename
-      @output_path      = output_path
-      @force_overwrite  = force_overwrite
+      @options          = options
       @input_data       = []
     end
 
@@ -22,7 +21,7 @@ module KeplerProcessor
     end
 
     def full_output_filename
-      "#{@output_path}/#{output_filename}"
+      "#{@options[:output_path]}/#{output_filename}"
     end
 
     private
@@ -56,12 +55,12 @@ module KeplerProcessor
       def save!
         if output_filename
           @output_data ||= @input_data
-          ::FileUtils.mkpath @output_path
-          raise FileExistsError if File.exist?(full_output_filename) && !@force_overwrite
+          ::FileUtils.mkpath @options[:output_path]
+          raise FileExistsError if File.exist?(full_output_filename) && !@options[:force_overwrite]
           puts "Writing output to #{full_output_filename}"
           output_file = File.new full_output_filename, "a+" # 'a+' for all - read, write... everything
           # confine the size of the file to zero if forcing overwrite, thereby emptying the file
-          output_file.truncate(0) if @force_overwrite
+          output_file.truncate(0) if @options[:force_overwrite]
           # output the array, joining each element separated by tab, and each record by newline
           @output_data.each { |record| output_file << "#{record.join("\t")}\n" }
         end

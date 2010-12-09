@@ -38,7 +38,7 @@ end
 
 options[:input_path].each do |filename|
   begin
-    c = options[:command].new(filename, options[:output_path], options[:force_overwrite])
+    c = options[:command].new(filename, options)
     c.run
   rescue KeplerProcessor::FileExistsError
     puts "Your output file (#{c.full_output_filename}) already exists, please remove it first (or something)."
