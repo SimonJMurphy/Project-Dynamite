@@ -7,7 +7,7 @@ options = { :command => KeplerProcessor::Convertor, :input_path => [], :output_p
 option_parser = OptionParser.new do |opts|
   opts.banner = "Usage: ruby run.rb -c command -i path_to_input_file [-o output_directory]"
   opts.on("-c", "--command COMMAND", String, "Specify the command to run [convert/transform]") do |c|
-    options[:command] = { "convert" => KeplerProcessor::Convertor, "transform" => KeplerProcessor::Transformer }[c]
+    options[:command] = { "convert" => KeplerProcessor::Convertor, "transform" => KeplerProcessor::Transformer, "merge" => KeplerProcessor::Merger }[c]
     if options[:command].nil?
       puts "Invalid command. Options are [convert/transform`]"
       puts opts
@@ -22,6 +22,9 @@ option_parser = OptionParser.new do |opts|
   end
   opts.on("-o", "--output PATH", String, "Specify the path to the output directory. Defaults to data/output") do |p|
     options[:output_path] = p
+  end
+  opts.on("-mr", "--merge-ratio RATIO", Integer, "Specify a merge ratio to use.") do |p|
+    options[:merge_ratio] = p
   end
   opts.on_tail("-h", "--help", "Show this message") do
     puts opts
