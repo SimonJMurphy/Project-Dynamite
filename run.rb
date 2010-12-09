@@ -9,7 +9,7 @@ option_parser = OptionParser.new do |opts|
   opts.on("-c", "--command COMMAND", String, "Specify the command to run [convert/transform]") do |c|
     options[:command] = { "convert" => KeplerProcessor::Convertor, "transform" => KeplerProcessor::Transformer, "merge" => KeplerProcessor::Merger }[c]
     if options[:command].nil?
-      puts "Invalid command. Options are [convert/transform]"
+      puts "Invalid command. Options are [convert/transform/merge]"
       puts opts
       exit
     end
