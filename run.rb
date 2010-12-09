@@ -24,7 +24,13 @@ option_parser = OptionParser.new do |opts|
     options[:output_path] = p
   end
   opts.on("-mr", "--merge-ratio RATIO", Integer, "Specify a merge ratio to use.") do |p|
-    options[:merge_ratio] = p
+    if p.nil? && options[:command] == KeplerProcessor::Merger
+      puts "You must provide an integer merge ratio"
+      puts opts
+      exit
+    else
+      options[:merge_ratio] = p
+    end
   end
   opts.on_tail("-h", "--help", "Show this message") do
     puts opts

@@ -3,16 +3,11 @@ module KeplerProcessor
 
     def run
       super do
-        determine_merge_ratio
         merge!
       end
     end
 
     private
-
-    def determine_merge_ratio
-      raise InvalidArgumentError, "You must provide an integer merge ratio" if @options[:merge_ratio].nil?
-    end
 
     #  def calculate_averages
     #   @input_data.map { |record| record[1] }.inject(:+).to_f / @input_data.size
