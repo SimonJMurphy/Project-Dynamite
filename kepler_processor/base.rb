@@ -3,7 +3,7 @@ require 'fileutils'
 module KeplerProcessor
   class Base
 
-    def initialize(input_filename, options*)
+    def initialize(input_filename, options)
       @input_filename   = input_filename
       @options          = options
       @input_data       = []
