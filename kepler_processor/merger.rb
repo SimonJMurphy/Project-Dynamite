@@ -30,7 +30,7 @@ module KeplerProcessor
 
       def output_filename
         # Determine the output filename from header
-        @input_filename.insert(-5, "#{@options[:merge_ratio]}to1")
+        @input_filename.dup.split("/").last.insert(-5, "_#{@options[:merge_ratio]}to1")
       end
 
   end
