@@ -30,7 +30,7 @@ module KeplerProcessor
 
       def output_filename
         # Determine the output filename from header
-        "kic#{@attributes[:kic_number]}_#{@attributes[:season]}_#{@input_filename.split("_")[1]}_#{@options[:merge_ratio]}to1.txt"
+        @input_filename.insert(-5, "#{@options[:merge_ratio]}to1")
       end
 
   end
