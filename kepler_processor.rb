@@ -2,6 +2,7 @@ require 'gsl'
 require_relative 'kepler_processor/base.rb'
 require_relative 'kepler_processor/convertor.rb'
 require_relative 'kepler_processor/transformer.rb'
+require_relative 'kepler_processor/merger.rb'
 
 module KeplerProcessor
   class FileExistsError < StandardError; end
