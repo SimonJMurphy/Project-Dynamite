@@ -23,14 +23,8 @@ option_parser = OptionParser.new do |opts|
   opts.on("-o", "--output PATH", String, "Specify the path to the output directory. Defaults to data/output") do |p|
     options[:output_path] = p
   end
-  opts.on("-mr", "--merge-ratio RATIO", Integer, "Specify a merge ratio to use.") do |p|
-    if p.nil? && options[:command] == KeplerProcessor::Merger
-      puts "You must provide an integer merge ratio"
-      puts opts
-      exit
-    else
-      options[:merge_ratio] = p
-    end
+  opts.on("-m", "--merge-ratio RATIO", Integer, "Specify a merge ratio to use.") do |p|
+    options[:merge_ratio] = p
   end
   opts.on_tail("-h", "--help", "Show this message") do
     puts opts
@@ -43,6 +37,12 @@ begin
 rescue
   puts $! # print out error
   option_parser.parse('--help') # print out command glossary
+end
+
+if options[:command] == KeplerProcessor::Merger && !options.has_key?(:merge_ratio)
+  puts "You must provide an integer merge ratio"
+  option_parser.parse('--help')
+  exit
 end
 
 options[:input_path].each do |filename|
