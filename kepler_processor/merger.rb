@@ -15,10 +15,10 @@ module KeplerProcessor
         std_range = @input_filename.split("_")[1] == "slc" ? 0.00068 : 0.02
 
         # separate the input_data array into times and fluxes arrays, then slice those into arrays of size merge_ratio
-        # for each slice, replace the slice by the arithmetic mean value, unless there is a time gap in the data greater than the std gap
+        # for each slice, replace the slice by the arithmetic mean value, unless there is a time gap in the data greater than the std gap or <10 items in slice (eof).
         @output_data = []
         @input_data.each_slice(@options[:merge_ratio]) do |slice|
-          if ( slice.last[0] - slice.first[0] ) > ( @options[:merge_ratio] * std_range ) || ( slice.last[1] - slice.first[1] ) > ( @options[:merge_ratio] * std_range )
+          if ( slice.last[0] - slice.first[0] ) > ( @options[:merge_ratio] * std_range ) || slice.size < @options[:merge_ratio]
             slice.each { |s| @output_data << s } # Don't average things out
           else
             @output_data << [slice.map { |e| e[0] }.inject(:+).to_f / @options[:merge_ratio], slice.map { |e| e[1] }.inject(:+).to_f / @options[:merge_ratio]]
