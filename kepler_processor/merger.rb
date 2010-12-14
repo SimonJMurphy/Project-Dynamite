@@ -14,7 +14,7 @@ module KeplerProcessor
         # therefore, if the data is slc, as indicated by input_filename, take the first value for std_range, if not, take second.
         std_range = @input_filename.split("_")[1] == "slc" ? 0.00068 : 0.02
 
-        # separate the input_data array into times and fluxes arrays, then slice those into arrays of size merge_ratio
+        # slice the input data array into arrays of size merge_ratio
         # for each slice, replace the slice by the arithmetic mean value, unless there is a time gap in the data greater than the std gap or <10 items in slice (eof).
         @output_data = []
         @input_data.each_slice(@options[:merge_ratio]) do |slice|
@@ -24,8 +24,6 @@ module KeplerProcessor
             @output_data << [slice.map { |e| e[0] }.inject(:+).to_f / @options[:merge_ratio], slice.map { |e| e[1] }.inject(:+).to_f / @options[:merge_ratio]]
           end
         end
-        puts @input_data[1420, 100].inspect
-        puts @output_data[142, 10].inspect
       end
 
       def output_filename
