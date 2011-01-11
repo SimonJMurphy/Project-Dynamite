@@ -2,14 +2,14 @@
 require 'optparse'
 require_relative 'kepler_processor.rb'
 
-options = { :command => KeplerProcessor::Convertor, :input_path => [], :output_path => "data/output" }
+options = { :command => KeplerProcessor::Convertor, :input_path => [], :output_path => "data/output", :transform => :dft, :samplerate =>  450.0 }
 
 option_parser = OptionParser.new do |opts|
   opts.banner = "Usage: ruby run.rb -c command -i path_to_input_file [-o output_directory]"
-  opts.on("-c", "--command COMMAND", String, "Specify the command to run [convert/transform]") do |c|
+  opts.on("-c", "--command COMMAND", String, "Specify the command to run [convert/transform/merge]") do |c|
     options[:command] = { "convert" => KeplerProcessor::Convertor, "transform" => KeplerProcessor::Transformer, "merge" => KeplerProcessor::Merger }[c]
     if options[:command].nil?
-      puts "Invalid command. Options are [convert/transform/merge]"
+      puts "Invalid command. Options are [convert/transform/merge/]"
       puts opts
       exit
     end
@@ -25,6 +25,12 @@ option_parser = OptionParser.new do |opts|
   end
   opts.on("-m", "--merge-ratio RATIO", Integer, "Specify a merge ratio to use.") do |p|
     options[:merge_ratio] = p
+  end
+  opts.on("--fft", "Perform a Fast Fourier Transform (quicker)") do
+      options[:transform] = :fft
+  end
+  opts.on("-r", "--samplerate SAMPLERATE", Float, "Specify the sample rate of the generated signal") do |r|
+    options[:samplerate] = r
   end
   opts.on_tail("-h", "--help", "Show this message") do
     puts opts

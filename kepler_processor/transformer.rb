@@ -33,15 +33,23 @@ module KeplerProcessor
       end
 
       def compute_amplitude_spectrum
-        @fft = @input_data.map { |d| d[1] }.to_gsl_vector.fft
+        signal = @input_data.map { |d| d[1] }
+        @fourier = FourierTransform.new(signal.size, @options[:samplerate])
+        @fourier.send(@options[:transform], signal) # runs either fft or dft transform
+
+        puts "[#{@options[:transform].to_s.upcase}] Sample rate: #{@fourier.samplerate.freq_to_per_day}c/d / Buffer size: #{@fourier.buffersize} samples\n\n"
+        puts "      Found fundamental peak frequency of #{@fourier.peak_frequency.freq_to_per_day.round_to(5)}c/d +/- #{(@fourier.bandwidth/2.0).freq_to_per_day.round_to(5)}\n\n"
       end
 
       def plot_DFT
-        y2    = @fft.subvector(1, @input_data.size-2).to_complex2
-        mag   = y2.abs
-        phase = y2.arg
-        f     = Vector.linspace 0, SAMPLING/2, mag.size
-        graph f, mag, "-T png -C -g 3 -x 0 200 -X 'Frequency [Hz]' > fft.png"
+        # y2    = @fft.subvector(1, @input_data.size-2).to_complex2
+        # mag   = y2.abs
+        # phase = y2.arg
+        # f     = Vector.linspace 0, SAMPLING/2, mag.size
+        # graph f, mag, "-T png -C -g 3 -x 0 200 -X 'Frequency [Hz]' > fft.png"
+        
+        @fourier.spectrum.each { |p| puts p.inspect }
+        @fourier.plot
       end
 
       def plot_lightcurve
