@@ -1,14 +1,6 @@
 module KeplerProcessor
   class Transformer < Base
-
     include GSL
-
-    # FT Parameters - TODO: take as arguments
-    DEG       = 2       # degree of polynomial to subtract from the data
-    SAMPLING  = 1000    # 1 kHz
-    F_INITIAL = 0.03    # lower frequency limit for amplitude spectrum, c/d
-    F_FINAL   = 24      # upper frequency limit for amplitude spectrum, c/d
-    DELTA_F   = 0.02    # frequency step (to be updated to 1/10T eventually), c/d
 
     def run
       super do
@@ -25,7 +17,7 @@ module KeplerProcessor
       def calculate_polynomial_fit
         # @input_data is currently an array of arrays e.g [ [time1, mag1], [time2, mag2] ... ]
         # need an array of the times, and an array of the mags to apply a fit to, final argument is degree of fit
-        @fit = Poly.fit(@input_data.map { |d| d[0] }.to_gsl_vector, @input_data.map { |d| d[1] }.to_gsl_vector, DEG)
+        @fit = Poly.fit(@input_data.map { |d| d[0] }.to_gsl_vector, @input_data.map { |d| d[1] }.to_gsl_vector, @options[:polynomial_degree])
       end
 
       def subtract_polynomial_fit!
@@ -47,7 +39,7 @@ module KeplerProcessor
         # phase = y2.arg
         # f     = Vector.linspace 0, SAMPLING/2, mag.size
         # graph f, mag, "-T png -C -g 3 -x 0 200 -X 'Frequency [Hz]' > fft.png"
-        
+
         @fourier.spectrum.each { |p| puts p.inspect }
         @fourier.plot
       end

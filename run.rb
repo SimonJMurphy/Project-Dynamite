@@ -2,7 +2,7 @@
 require 'optparse'
 require_relative 'kepler_processor.rb'
 
-options = { :command => KeplerProcessor::Convertor, :input_path => [], :output_path => "data/output", :transform => :dft, :samplerate =>  450.0 }
+options = { :command => KeplerProcessor::Convertor, :input_path => [], :output_path => "data/output", :transform => :dft, :samplerate => 450.0, :polynomial_degree => 2 }
 
 option_parser = OptionParser.new do |opts|
   opts.banner = "Usage: ruby run.rb -c command -i path_to_input_file [-o output_directory]"
@@ -31,6 +31,9 @@ option_parser = OptionParser.new do |opts|
   end
   opts.on("-r", "--samplerate SAMPLERATE", Float, "Specify the sample rate of the generated signal") do |r|
     options[:samplerate] = r
+  end
+  opts.on("-d", "--polynomial-degree POLY_DEGREE", Integer, "Specify the degree of the polynomial fit to be subtracted when transforming. Defaults to 2") do |d|
+    options[:polynomial_degree] = d
   end
   opts.on_tail("-h", "--help", "Show this message") do
     puts opts

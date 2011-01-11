@@ -2,34 +2,34 @@ module KeplerProcessor
 
   class FourierTransform
     attr_reader :spectrum, :bandwidth, :samplerate, :buffersize
-  
+
     def initialize buffersize, samplerate
       @buffersize = buffersize
       @samplerate = samplerate
       @bandwidth = (2.0 / @buffersize) * (@samplerate / 2.0)
       @spectrum = Array.new
-  
+
       build_reverse_table
       build_trig_tables
     end
-  
+
     def build_reverse_table
       @reverse = Array.new(@buffersize)
       @reverse[0] = 0;
-  
+
       limit = 1
       bit = @buffersize >> 1
-  
+
       while (limit < @buffersize )
         (0...limit).each do |i|
           @reverse[i + limit] = @reverse[i] + bit
         end
-  
+
         limit = limit << 1
         bit = bit >> 1
       end
     end
-  
+
     def build_trig_tables
       @sin_lookup = Array.new(@buffersize)
       @cos_lookup = Array.new(@buffersize)
@@ -38,11 +38,11 @@ module KeplerProcessor
         @cos_lookup[i] = Math.cos(- Math::PI / i);
       end
     end
-  
+
     def dft(buffer)
       real = Array.new(buffer.length/2, 0)
       imag = Array.new(buffer.length/2, 0)
-  
+
       (0...buffer.length/2).each do |k|
         (0...buffer.length).each do |n|
           real[k] += buffer[n] * Math.cos(2 * Math::PI * k * n / buffer.length)
@@ -50,21 +50,21 @@ module KeplerProcessor
         end
         @spectrum[k] = 2 * Math.sqrt(real[k] ** 2 + imag[k] ** 2) / buffer.length
       end
-  
+
       @spectrum
     end
-  
+
     def fft(buffer)
       raise Exception if buffer.length % 2 != 0
-  
+
       real = Array.new(buffer.length)
       imag = Array.new(buffer.length)
-  
+
       (0...buffer.length).each do |i|
         real[i] = buffer[@reverse[i]]
         imag[i] = 0.0
       end
-  
+
       # here begins teh Danielson-Lanczos section
       halfsize = 1
       while halfsize < buffer.length
@@ -85,21 +85,21 @@ module KeplerProcessor
             imag[off] = imag[i] - ti
             real[i] += tr
             imag[i] += ti
-  
+
             i += halfsize << 1
           end
           tmp_real = current_phase_shift_real
           current_phase_shift_real = (tmp_real * phase_shift_step_real) - (current_phase_shift_imag * phase_shift_step_imag)
           current_phase_shift_imag = (tmp_real * phase_shift_step_imag) + (current_phase_shift_imag * phase_shift_step_real)
         end
-  
+
         halfsize = halfsize << 1
       end
-  
+
       (0...buffer.length/2).each do |i|
         @spectrum[i] = 2 * Math.sqrt(real[i] ** 2 + imag[i] ** 2) / buffer.length
       end
-  
+
       @spectrum
     end
 
