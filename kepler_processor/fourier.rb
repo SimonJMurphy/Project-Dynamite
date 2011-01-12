@@ -14,13 +14,13 @@ module KeplerProcessor
     end
 
     def build_reverse_table
-      @reverse = Array.new(@buffersize)
-      @reverse[0] = 0;
+      @reverse = Array.new @buffersize
+      @reverse[0] = 0
 
       limit = 1
       bit = @buffersize >> 1
 
-      while (limit < @buffersize )
+      while (limit < @buffersize)
         (0...limit).each do |i|
           @reverse[i + limit] = @reverse[i] + bit
         end
@@ -31,8 +31,8 @@ module KeplerProcessor
     end
 
     def build_trig_tables
-      @sin_lookup = Array.new(@buffersize)
-      @cos_lookup = Array.new(@buffersize)
+      @sin_lookup = Array.new @buffersize
+      @cos_lookup = Array.new @buffersize
       (0...@buffersize).each do |i|
         @sin_lookup[i] = Math.sin(- Math::PI / i);
         @cos_lookup[i] = Math.cos(- Math::PI / i);
@@ -40,8 +40,8 @@ module KeplerProcessor
     end
 
     def dft(buffer)
-      real = Array.new(buffer.length/2, 0)
-      imag = Array.new(buffer.length/2, 0)
+      real = Array.new buffer.length / 2, 0
+      imag = Array.new buffer.length / 2, 0
 
       (0...buffer.length/2).each do |k|
         (0...buffer.length).each do |n|
@@ -57,8 +57,8 @@ module KeplerProcessor
     def fft(buffer)
       raise Exception if buffer.length % 2 != 0
 
-      real = Array.new(buffer.length)
-      imag = Array.new(buffer.length)
+      real = Array.new buffer.length
+      imag = Array.new buffer.length
 
       (0...buffer.length).each do |i|
         real[i] = buffer[@reverse[i]]
@@ -112,8 +112,8 @@ module KeplerProcessor
     end
 
     def peak_frequency
-      index = (0...spectrum.length).max {|a, b| spectrum[a] <=> spectrum[b] }
-      index_to_frequency(index)
+      index = (0...spectrum.length).max { |a, b| spectrum[a] <=> spectrum[b] }
+      index_to_frequency index
     end
 
     def plot(rows = 20, cols = 80)
