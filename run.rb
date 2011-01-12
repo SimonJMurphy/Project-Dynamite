@@ -24,7 +24,7 @@ option_parser = OptionParser.new do |opts|
     options[:merge_ratio] = p
   end
   opts.on("--fft", "Perform a Fast Fourier Transform (quicker)") do
-      options[:transform] = :fft
+    options[:transform] = :fft
   end
   opts.on("-r", "--samplerate SAMPLERATE", Float, "Specify the sample rate of the generated signal") do |r|
     options[:samplerate] = r

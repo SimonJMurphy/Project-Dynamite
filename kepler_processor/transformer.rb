@@ -29,7 +29,7 @@ module KeplerProcessor
         @fourier = FourierTransform.new(signal.size, @options[:samplerate])
         @fourier.send(@options[:transform], signal) # runs either fft or dft transform
 
-        puts "[#{@options[:transform].to_s.upcase}] Sample rate: #{@fourier.samplerate.freq_to_per_day}c/d / Buffer size: #{@fourier.buffersize} samples\n\n"
+        puts "[#{@options[:transform].to_s.upcase}] Sample rate: #{@fourier.samplerate.freq_to_per_day} c/d.  Buffer size: #{@fourier.buffersize} samples\n\n"
         puts "      Found fundamental peak frequency of #{@fourier.peak_frequency.freq_to_per_day.round_to(5)}c/d +/- #{(@fourier.bandwidth/2.0).freq_to_per_day.round_to(5)}\n\n"
       end
 
