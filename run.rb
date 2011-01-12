@@ -2,7 +2,7 @@
 require 'optparse'
 require_relative 'kepler_processor.rb'
 
-options = { :command => KeplerProcessor::Convertor, :input_path => [], :output_path => "data/output", :transform => :dft, :samplerate => 450.0, :polynomial_degree => 2 }
+options = { :command => KeplerProcessor::Convertor, :input_paths => [], :output_path => "data/output", :transform => :dft, :samplerate => 450.0, :polynomial_degree => 2 }
 
 option_parser = OptionParser.new do |opts|
   opts.banner = "Usage: ruby run.rb -c command [-o output_directory] path_to_input_file(s)"
@@ -39,7 +39,7 @@ option_parser = OptionParser.new do |opts|
 end
 
 begin
-  options[:input_path] = option_parser.parse!
+  options[:input_paths] = option_parser.parse! # returns anything not handled by the options above - the input filenames.
 rescue
   puts $! # print out error
   option_parser.parse('--help') # print out command glossary
@@ -51,7 +51,7 @@ if options[:command] == KeplerProcessor::Merger && !options.has_key?(:merge_rati
   exit
 end
 
-options[:input_path].each do |filename|
+options[:input_paths].each do |filename|
   begin
     c = options[:command].new filename, options
     c.run
