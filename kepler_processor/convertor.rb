@@ -29,8 +29,8 @@ module KeplerProcessor
       end
 
       def output_filename
-        # Determine the output filename from header
-        "kic#{@attributes[:kic_number]}_#{@attributes[:season]}_#{@input_filename.split("_")[1]}.txt"
+        # Determine the output filename from header and input_filename. May require changing according to file location
+        "kic#{@attributes[:kic_number]}_#{@attributes[:season]}_#{@input_filename.split("_")[3].split(".")[0]}.txt"
       end
 
   end
