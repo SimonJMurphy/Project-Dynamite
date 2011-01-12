@@ -14,6 +14,7 @@ module KeplerProcessor
     end
   
     def build_reverse_table
+      # bit reversal speeds up calculations by optimizing the order of the input data, so that the output data is in the correct order
       @reverse = Array.new(@buffersize)
       @reverse[0] = 0;
   
@@ -31,6 +32,7 @@ module KeplerProcessor
     end
   
     def build_trig_tables
+      # building trig tables only once speeds up the overall calculation because thereafter they can be looked up rather than recalculated
       @sin_lookup = Array.new(@buffersize)
       @cos_lookup = Array.new(@buffersize)
       (0...@buffersize).each do |i|
@@ -54,7 +56,7 @@ module KeplerProcessor
       @spectrum
     end
   
-    def fft(buffer)
+    def fft(buffer) # Some code found on the internet so that an fft can be performed if necessary
       raise Exception if buffer.length % 2 != 0
   
       real = Array.new(buffer.length)
@@ -65,7 +67,7 @@ module KeplerProcessor
         imag[i] = 0.0
       end
   
-      # here begins teh Danielson-Lanczos section
+      # here begins the Danielson-Lanczos section
       halfsize = 1
       while halfsize < buffer.length
         #k = - Math::PI / halfsize
@@ -116,7 +118,7 @@ module KeplerProcessor
       index_to_frequency(index)
     end
 
-    def plot(rows = 20, cols = 80)
+    def plot(rows = 20, cols = 80) # Produces an ASCII plot of a fourier in the command prompt. Will later replace with a proper plot.
       return if @spectrum.empty?
 
       max = @spectrum.max
