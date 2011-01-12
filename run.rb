@@ -5,7 +5,7 @@ require_relative 'kepler_processor.rb'
 options = { :command => KeplerProcessor::Convertor, :input_path => [], :output_path => "data/output", :transform => :dft, :samplerate => 450.0, :polynomial_degree => 2 }
 
 option_parser = OptionParser.new do |opts|
-  opts.banner = "Usage: ruby run.rb -c command -i path_to_input_file [-o output_directory]"
+  opts.banner = "Usage: ruby run.rb -c command [-o output_directory] path_to_input_file(s)"
   opts.on("-c", "--command COMMAND", String, "Specify the command to run [convert/transform/merge]") do |c|
     options[:command] = { "convert" => KeplerProcessor::Convertor, "transform" => KeplerProcessor::Transformer, "merge" => KeplerProcessor::Merger }[c]
     if options[:command].nil?
