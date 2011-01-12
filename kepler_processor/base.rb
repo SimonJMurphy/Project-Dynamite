@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'csv'
 
 module KeplerProcessor
   class Base
@@ -58,11 +59,11 @@ module KeplerProcessor
           ::FileUtils.mkpath @options[:output_path]
           raise FileExistsError if File.exist?(full_output_filename) && !@options[:force_overwrite]
           puts "Writing output to #{full_output_filename}"
-          output_file = File.new full_output_filename, "a+" # 'a+' for all - read, write... everything
-          # confine the size of the file to zero if forcing overwrite, thereby emptying the file
-          output_file.truncate(0) if @options[:force_overwrite]
-          # output the array, joining each element separated by tab, and each record by newline
-          @output_data.each { |record| output_file << "#{record.join("\t")}\n" }
+          CSV.open(full_output_filename, "a+", :col_sep => "\t") do |csv| # 'a+' for all - read, write... everything
+            # confine the size of the file to zero if forcing overwrite, thereby emptying the file
+            csv.truncate(0) if @options[:force_overwrite]
+            @output_data.each { |record| csv << record }
+          end
         end
       end
 
