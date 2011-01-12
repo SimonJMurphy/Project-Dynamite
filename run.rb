@@ -17,9 +17,6 @@ option_parser = OptionParser.new do |opts|
   opts.on("-f", "--[no-]force_overwrite", "Force overwrite existing output files") do |f|
     options[:force_overwrite] = f
   end
-  opts.on("-i", "--input PATH", Array, "Specify the path to the input file") do |p|
-    options[:input_path] = p
-  end
   opts.on("-o", "--output PATH", String, "Specify the path to the output directory. Defaults to data/output") do |p|
     options[:output_path] = p
   end
@@ -42,7 +39,7 @@ option_parser = OptionParser.new do |opts|
 end
 
 begin
-  option_parser.parse!
+  options[:input_path] = option_parser.parse!
 rescue
   puts $! # print out error
   option_parser.parse('--help') # print out command glossary
@@ -56,7 +53,7 @@ end
 
 options[:input_path].each do |filename|
   begin
-    c = options[:command].new(filename, options)
+    c = options[:command].new filename, options
     c.run
   rescue KeplerProcessor::FileExistsError
     puts "Your output file (#{c.full_output_filename}) already exists, please remove it first (or something)."
