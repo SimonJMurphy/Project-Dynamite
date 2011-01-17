@@ -1,15 +1,16 @@
 #!/usr/bin/env ruby
 require 'optparse'
+require 'gnuplot'
 require_relative 'kepler_processor.rb'
 
 options = { :command => KeplerProcessor::Convertor, :input_paths => [], :output_path => "data/output", :transform => :dft, :samplerate => 450.0, :polynomial_degree => 2 }
 
 option_parser = OptionParser.new do |opts|
   opts.banner = "Usage: ruby run.rb -c command [-o output_directory] path_to_input_file(s)"
-  opts.on("-c", "--command COMMAND", String, "Specify the command to run [convert/transform/merge]") do |c|
-    options[:command] = { "convert" => KeplerProcessor::Convertor, "transform" => KeplerProcessor::Transformer, "merge" => KeplerProcessor::Merger }[c]
+  opts.on("-c", "--command COMMAND", String, "Specify the command to run [convert/transform/merge/plot_lc/compute]") do |c|
+    options[:command] = { "convert" => KeplerProcessor::Convertor, "transform" => KeplerProcessor::Transformer, "merge" => KeplerProcessor::Merger, "plot_lc" => KeplerProcessor::LightCurvePlotter, "compute" => KeplerProcessor::Computor }[c]
     if options[:command].nil?
-      puts "Invalid command. Options are [convert/transform/merge/]"
+      puts "Invalid command. Options are [convert/transform/merge/plot_lc/compute]"
       puts opts
       exit
     end

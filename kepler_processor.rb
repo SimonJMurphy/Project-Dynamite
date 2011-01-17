@@ -1,9 +1,10 @@
 require 'gsl'
-require 'gnuplot'
 
 require_relative 'kepler_processor/base.rb'
+require_relative 'kepler_processor/computor.rb'
 require_relative 'kepler_processor/convertor.rb'
 require_relative 'kepler_processor/fourier.rb'
+require_relative 'kepler_processor/light_curve_plotter.rb'
 require_relative 'kepler_processor/merger.rb'
 require_relative 'kepler_processor/transformer.rb'
 
@@ -16,7 +17,8 @@ class Array
   def to_hash
     # create an empty hash with inject. The key is made lower case and spaces swapped to underscore.
     self.inject({}) do |accumulator, element|
-      accumulator[element[0].downcase.gsub(" ", "_").to_sym] = element[1].gsub(" ", "").strip; accumulator
+      accumulator[element[0].downcase.gsub(" ", "_").to_sym] = element[1].gsub(" ", "").strip 
+      accumulator
     end
   end
 end

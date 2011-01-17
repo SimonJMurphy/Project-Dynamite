@@ -34,8 +34,8 @@ module KeplerProcessor
       end
 
       def split_comments!
-        # matches (=~) regular expression (//) hash at start of line (^)
-        @comments, @input_data = @input_data.partition { |line| line =~ /^#/ }
+        # matches (=~) regular expression (/../) hash at start of line (^), preceeded by any number of spaces (\s*)
+        @comments, @input_data = @input_data.partition { |line| line =~ /^(\s*#)/ }
       end
 
       def parse_header_attributes
@@ -46,7 +46,11 @@ module KeplerProcessor
 
       def convert_from_string!
         # convert @input_data to a two dimensional float array: time, flux
-        @input_data.map! { |line| line.split(" ").map(&:to_f)[0..1] }
+        # @input_data.map! { |line| line.split(" ").map(&:to_f)[ 0..1 ] }
+        @input_data.map! do |line|
+          l = line.split(" ").map &:to_f
+          [l[0], l[1]]
+        end
       end
 
       def output_filename
