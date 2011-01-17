@@ -25,7 +25,7 @@ module KeplerProcessor
 
           # Amplitude calculated using product rather than ^2 in the hope of saving computing time
           amp_j = 2 * Math.sqrt(real_component * real_component + imaginary_component * imaginary_component) / @input_data.size
-          phi_j = Math.atan2(-imaginary_component / real_component)
+          phi_j = (Math.atan(-imaginary_component / real_component)) ** 2
 
           # Output data is a hash of frequency-complex number pairs, with a new line for each frequency step.
           @output_data[f] = Complex(0,0) unless @output_data.has_key?(f)
