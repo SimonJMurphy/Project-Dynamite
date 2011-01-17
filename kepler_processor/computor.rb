@@ -8,28 +8,30 @@ module KeplerProcessor
     end
 
     def dft
-      initial_frequency = 0.0
       final_frequency = 100.0
-      dataset_length = @input_data.last[0] - @input_data.first[0]
-      frequency_step = 1 / (10.0 * dataset_length)
-      i = 0
-      j = 0
+      dataset_length = @input_data.last[0] - @input_data.first[0]   # gives length of dataset in days by difference in final and initial time
+      frequency_step = 1 / (10.0 * dataset_length)                  # step is 1/10T
+      j = 0       # looping from zero is the same as setting the starting frequency of the range to be analysed to zero.
       k = 0.0
 
       @output_data = []
       @input_data.each do |line|                        # |line| is representing 'i' - more intuitive and ruby-like
-        while k < dataset_length do |j|
-          k = j * frequency_step                        # = f_j
-          cos_i = Math.cos(2 * Math::PI * k * @input_data.map { |line| line[0])  # may need to rewrite to access zero'th column of i'th line properly? :s
-          sin_i = Math.sin(2 * Math::PI * k * @input_data.map { |line| line[0])
+        time = line[0]
+        magnitude = line[1]
+        while k < final_frequency do |j|
+          k = j * frequency_step                        # k represents the frequency currently being looked at, or f_j
+          cos_i = Math.cos(2 * Math::PI * k * time)
+          sin_i = Math.sin(2 * Math::PI * k * time)
 
-          fr += cos_i * line[1]
-          fi += sin_i * line[1]
+          real_component += cos_i * magnitude           # the sum of all the cosine terms times the magnitudes
+          imaginary_component += sin_i * magnitude
 
-          amp_j = 2 * Math.sqrt(fr * fr + fi * fi) / @input_data.size
-          phi_j = Math.atan2(-fi / fr)
+          # Amplitude calculated using product rather than ^2 in the hope of saving computing time
+          amp_j = 2 * Math.sqrt(real_component * real_component + imaginary_component * imaginary_component) / @input_data.size
+          phi_j = Math.atan2(-imaginary_component / real_component)
 
-          @output_data << "#{k} #{amp_j} #{phi_j}"      # probably a better way of doing this
+          # Output data array will have three columns, frequency, amplitude and phase (separated by spaces), and a line for each frequency step
+          @output_data << "#{k} #{amp_j} #{phi_j}"
           j += 1
         end
       end
