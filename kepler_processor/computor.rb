@@ -32,9 +32,8 @@ module KeplerProcessor
           @output_data[f] += Complex(amp_j, phi_j)
         end
       end
+      puts @output_data.inspect
     end
-
-    puts @output_data.inspect
 
   end
 end
