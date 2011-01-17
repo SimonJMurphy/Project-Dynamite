@@ -20,15 +20,16 @@ module KeplerProcessor
           cos_i = Math.cos(2 * Math::PI * f * time)
           sin_i = Math.sin(2 * Math::PI * f * time)
 
-          real_component += cos_i * magnitude           # the sum of all the cosine terms times the magnitudes
-          imaginary_component += sin_i * magnitude
+          real_component = cos_i * magnitude           # the sum of all the cosine terms times the magnitudes
+          imaginary_component = sin_i * magnitude
 
           # Amplitude calculated using product rather than ^2 in the hope of saving computing time
           amp_j = 2 * Math.sqrt(real_component * real_component + imaginary_component * imaginary_component) / @input_data.size
           phi_j = Math.atan2(-imaginary_component / real_component)
 
           # Output data is a hash of frequency-complex number pairs, with a new line for each frequency step.
-          @output_data[k] += Complex(amp_j, phi_j)
+          @output_data[f] = Complex(0,0) unless @output_data.has_key?(f)
+          @output_data[f] += Complex(amp_j, phi_j)
         end
       end
     end
