@@ -11,11 +11,11 @@ module KeplerProcessor
       final_frequency = 100.0
       dataset_length = @input_data.last[0] - @input_data.first[0]   # gives length of dataset in days by difference in final and initial time
       frequency_step = 1 / (10.0 * dataset_length)                  # step is 1/10T
-      j = 0       # looping from zero is the same as setting the starting frequency of the range to be analysed to zero.
-      k = 0.0
 
-      @output_data = []
+      @output_data = {}
       @input_data.each do |line|                        # |line| is representing 'i' - more intuitive and ruby-like
+        j = 0       # looping from zero is the same as setting the starting frequency of the range to be analysed to zero.
+        k = 0.0
         time = line[0]
         magnitude = line[1]
         while k < final_frequency do |j|
@@ -30,8 +30,8 @@ module KeplerProcessor
           amp_j = 2 * Math.sqrt(real_component * real_component + imaginary_component * imaginary_component) / @input_data.size
           phi_j = Math.atan2(-imaginary_component / real_component)
 
-          # Output data array will have three columns, frequency, amplitude and phase (separated by spaces), and a line for each frequency step
-          @output_data << "#{k} #{amp_j} #{phi_j}"
+          # Output data is a hash of frequency-complex number pairs, with a new line for each frequency step.
+          @output_data[k] += Complex(amp_j, phi_j)
           j += 1
         end
       end
