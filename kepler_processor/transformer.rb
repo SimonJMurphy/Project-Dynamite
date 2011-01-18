@@ -12,9 +12,7 @@ module KeplerProcessor
     private
 
       def zero_pad_input
-        @input_data.size.distance_to_next_power_of_two.times do
-          @input_data << [0,0]
-        end
+        @input_data.pad_to_next_power_of_two_with [0,0]
       end
 
       def compute_amplitude_spectrum

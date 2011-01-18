@@ -20,6 +20,14 @@ class Array
       accumulator
     end
   end
+
+  def pad_with(number_of_times, padder = 0)
+    number_of_times.times { self << padder }
+  end
+
+  def pad_to_next_power_of_two_with(padder = 0)
+    self.pad_with self.size.distance_to_next_power_of_two, padder
+  end
 end
 
 class Float
