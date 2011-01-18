@@ -25,23 +25,34 @@ module KeplerProcessor
       end
 
       def compute_amplitude_spectrum
-        signal = @input_data.map { |d| d[1] }
-        @fourier = FourierTransform.new(signal.size, @options[:samplerate])
-        @fourier.send(@options[:transform], signal) # runs either fft or dft transform
+        dataset_length = @input_data.last[0] - @input_data.first[0]
+        frequency_step = 1 / (10.0 * dataset_length)
+        frequencies = (0..20).in_steps_of frequency_step
 
-        puts "[#{@options[:transform].to_s.upcase}] Sample rate: #{@fourier.samplerate.freq_to_per_day} c/d.  Buffer size: #{@fourier.buffersize} samples\n\n"
-        puts "      Found fundamental peak frequency of #{@fourier.peak_frequency.freq_to_per_day.round_to(5)}c/d +/- #{(@fourier.bandwidth/2.0).freq_to_per_day.round_to(5)}\n\n"
+        @fourier = FourierTransform.new @input_data, frequencies
+        @fourier.send(@options[:transform]) # runs either fft or dft transform
       end
 
       def plot_DFT
-        # y2    = @fft.subvector(1, @input_data.size-2).to_complex2
-        # mag   = y2.abs
-        # phase = y2.arg
-        # f     = Vector.linspace 0, SAMPLING/2, mag.size
-        # graph f, mag, "-T png -C -g 3 -x 0 200 -X 'Frequency [Hz]' > fft.png"
+        ::Gnuplot.open do |gp|
+          ::Gnuplot::Plot.new( gp ) do |plot|
 
-        @fourier.spectrum.each { |p| puts p.inspect }
-        @fourier.plot
+            plot.terminal "png"
+            plot.output "#{@input_filename.split(".")[0]}_fourier_plot.png"
+            kic_number, data_type, season, cadence = @input_filename.split("/").last.split(".").first.split("_")
+            plot.title  "Fourier for #{kic_number} #{season} #{cadence}"
+            plot.ylabel "Amplitude (mag)"
+            plot.xlabel "Frequency (c/d)"
+
+            x = @fourier.spectrum.map { |pair| pair[0] }
+            y = @fourier.spectrum.map { |pair| pair[1] }
+
+            plot.data << ::Gnuplot::DataSet.new( [x, y] ) do |ds|
+              ds.with = "lines"
+              ds.notitle
+            end
+          end
+        end
       end
 
       def plot_lightcurve
@@ -51,3 +62,5 @@ module KeplerProcessor
       # no output filename method, because we don't want to save any text, just the plots.
   end
 end
+
+

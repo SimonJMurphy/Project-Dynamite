@@ -1,7 +1,6 @@
 require 'gsl'
 
 require_relative 'kepler_processor/base.rb'
-require_relative 'kepler_processor/computor.rb'
 require_relative 'kepler_processor/convertor.rb'
 require_relative 'kepler_processor/fourier.rb'
 require_relative 'kepler_processor/light_curve_plotter.rb'
