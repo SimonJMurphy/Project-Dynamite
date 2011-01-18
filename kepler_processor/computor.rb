@@ -20,8 +20,7 @@ module KeplerProcessor
       frequencies.each { |f| @output_data[f] = Complex(0,0) }
       
       @input_data.each do |line|
-        time = line[0]
-        magnitude = line[1]
+        time, magnitude = line
         frequencies.each do |f|
           omega_t = 2 * Math::PI * f * time
           @output_data[f] += Complex(Math.cos(omega_t) * magnitude, Math.sin(omega_t) * magnitude)
