@@ -23,7 +23,7 @@ module KeplerProcessor
         time, magnitude = line
         frequencies.each do |f|
           omega_t = 2 * Math::PI * f * time
-          @output_data[f] += Complex(Math.cos(omega_t) * magnitude, Math.sin(omega_t) * magnitude)
+          @output_data[f] += Complex(Math.cos(omega_t) * magnitude, Math.sin(omega_t) * magnitude) # complex(real, imaginary)
         end
       end
     end
@@ -34,9 +34,10 @@ module KeplerProcessor
 
           plot.terminal "png"
           plot.output "#{@input_filename.split(".")[0]}_fourier_plot.png"
-          plot.title  "Sample Fourier"
-          plot.ylabel "Amplitude"
-          plot.xlabel "Frequency"
+          kic_number, data_type, season, cadence = @input_filename.split("/").last.split(".").first.split("_")
+          plot.title  "Fourier for #{kic_number} #{season} #{cadence}"
+          plot.ylabel "Amplitude (mag)"
+          plot.xlabel "Frequency (c/d)"
 
           x = @output_data.map { |pair| pair[0] }
           y = @output_data.map { |pair| pair[1].magnitude * 2 / @input_data.size }
