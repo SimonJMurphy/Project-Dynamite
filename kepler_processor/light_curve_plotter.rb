@@ -14,7 +14,7 @@ module KeplerProcessor
           ::Gnuplot::Plot.new( gp ) do |plot|
             
             plot.terminal "png"
-            plot.output "#{@options[:output_path]}/#{@input_filename.split(".")[0]}_plot.png"
+            plot.output "#{@input_filename.split(".")[0]}_plot.png"
             plot.title  "Sample Lightcurve"
             plot.ylabel "Amplitude"
             plot.xlabel "Time"
