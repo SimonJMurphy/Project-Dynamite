@@ -4,6 +4,7 @@ module KeplerProcessor
     def run
       super do
         dft
+        plot
       end
     end
 
@@ -18,21 +19,45 @@ module KeplerProcessor
         time = line[0]
         magnitude = line[1]
         frequencies.each do |f|
-          cos_i = Math.cos(2 * Math::PI * f * time)
-          sin_i = Math.sin(2 * Math::PI * f * time)
 
-          real_component = cos_i * magnitude           # the sum of all the cosine terms times the magnitudes
-          imaginary_component = sin_i * magnitude
+          omega_t = 2 * Math::PI * f * time
+          cos_i = Math.cos omega_t
+          sin_i = Math.sin omega_t
+
+          real_component = 0
+          imaginary_component = 0
+          real_component += cos_i * magnitude           # the sum? of all the cosine terms times the magnitudes
+          imaginary_component += sin_i * magnitude
 
           # Amplitude calculated using product rather than ^2 in the hope of saving computing time
-          amp_j = 2 * Math.sqrt(real_component * real_component + imaginary_component * imaginary_component) / @input_data.size
-          phi_j = (Math.atan(-imaginary_component / real_component))
+          # amp_j = 2 * Math.sqrt(real_component * real_component + imaginary_component * imaginary_component) / @input_data.size
+          # phi_j = (Math.atan(-imaginary_component / real_component))
 
           # Output data is a hash of frequency-complex number pairs, with a new line for each frequency step.
-          @output_data[f] += Complex(amp_j, phi_j)
+          @output_data[f] += Complex(real_component, imaginary_component)
         end
       end
-      puts @output_data.inspect
+    end
+
+    def plot
+      ::Gnuplot.open do |gp|
+        ::Gnuplot::Plot.new( gp ) do |plot|
+
+          plot.terminal "png"
+          plot.output "#{@input_filename.split(".")[0]}_fourier_plot.png"
+          plot.title  "Sample Fourier"
+          plot.ylabel "Amplitude"
+          plot.xlabel "Frequency"
+
+          x = @output_data.map { |pair| pair[0] }
+          y = @output_data.map { |pair| pair[1].magnitude }
+
+          plot.data << ::Gnuplot::DataSet.new( [x, y] ) do |ds|
+            ds.with = "lines"
+            ds.notitle
+          end
+        end
+      end
     end
 
   end
