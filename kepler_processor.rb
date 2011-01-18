@@ -68,3 +68,17 @@ class Range
     IntervalArray.new self, n
   end
 end
+
+class Numeric
+  def next_power_of_two
+    power_of_two = 1
+    while power_of_two < self do
+      power_of_two = power_of_two * 2
+    end
+    power_of_two
+  end
+
+  def distance_to_next_power_of_two
+    self.next_power_of_two - self
+  end
+end

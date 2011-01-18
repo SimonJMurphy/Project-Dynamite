@@ -1,11 +1,8 @@
 module KeplerProcessor
   class Transformer < Base
-    include GSL
 
     def run
       super do
-        calculate_polynomial_fit
-        subtract_polynomial_fit!
         compute_amplitude_spectrum
         plot_DFT
         plot_lightcurve
@@ -14,23 +11,20 @@ module KeplerProcessor
 
     private
 
-      def calculate_polynomial_fit
-        # @input_data is currently an array of arrays e.g [ [time1, mag1], [time2, mag2] ... ]
-        # need an array of the times, and an array of the mags to apply a fit to, final argument is degree of fit
-        @fit = Poly.fit(@input_data.map { |d| d[0] }.to_gsl_vector, @input_data.map { |d| d[1] }.to_gsl_vector, @options[:polynomial_degree])
-      end
-
-      def subtract_polynomial_fit!
-        @formatted_data = @input_data.map { |p| p[1] -= @fit.at(p[0]).to_f || 0.0; p }
+      def zero_pad_input
+        @input_data.size.distance_to_next_power_of_two.times do
+          @input_data << [0,0]
+        end
       end
 
       def compute_amplitude_spectrum
         dataset_length = @input_data.last[0] - @input_data.first[0]
+        zero_pad_input
         frequency_step = 1 / (10.0 * dataset_length)
         frequencies = (0..20).in_steps_of frequency_step
 
         @fourier = FourierTransform.new @input_data, frequencies
-        @fourier.send(@options[:transform]) # runs either fft or dft transform
+        @fourier.dft
       end
 
       def plot_DFT
@@ -40,7 +34,8 @@ module KeplerProcessor
             plot.terminal "png"
             plot.output "#{@input_filename.split(".")[0]}_fourier_plot.png"
             kic_number, data_type, season, cadence = @input_filename.split("/").last.split(".").first.split("_")
-            plot.title  "Fourier for #{kic_number} #{season} #{cadence}"
+            peak_frequency = @fourier.peak_frequency
+            plot.title  "Fourier for #{kic_number} #{season} #{cadence}. Peak frequency is #{peak_frequency.round_to 4} with amplitude #{@fourier.spectrum[peak_frequency].round_to 4}"
             plot.ylabel "Amplitude (mag)"
             plot.xlabel "Frequency (c/d)"
 

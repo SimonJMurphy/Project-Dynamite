@@ -2,29 +2,31 @@ module KeplerProcessor
   class FourierTransform
     attr_reader :spectrum
 
-    def initialize buffer, analysis_frequencies
-    end
+    def initialize(input_data, analysis_frequencies)
+      @input_data = input_data
+      @analysis_frequencies = analysis_frequencies
 
-    def dft
+      # Make spectrum a hash of frequency-complex number pairs for the loop (phase is important when adding), then replace with freq-amp pairs
+      @spectrum = {}
+
+      # populates a hash with initial zero values (quicker here than in the loop)
+      @analysis_frequencies.each { |f| @spectrum[f] = Complex(0,0) }
     end
 
     def peak_frequency
+      @spectrum.sort_by { |x| x[1] }.last[0]
     end
-end
 
-# def dft
-#   # Output data is a hash of frequency-complex number pairs, with a new line for each frequency step.
-#   @output_data = {}
-#
-#   # populates a hash with initial zero values (quicker here than in the loop)
-#   frequencies.each { |f| @output_data[f] = Complex(0,0) }
-#
-#   @input_data.each do |line|
-#     time, magnitude = line
-#     frequencies.each do |f|
-#       omega_t = 2 * Math::PI * f * time
-#       @output_data[f] += Complex(Math.cos(omega_t) * magnitude, Math.sin(omega_t) * magnitude) # complex(real, imaginary)
-#     end
-#   end
-#   @output_data.each { |f, val| @output_data[f] = @output_data[f].magnitude * 2 / @input_data.size }
-# end
+    def dft
+      @input_data.each do |point|
+        time, magnitude = point
+        @analysis_frequencies.each do |f|
+          omega_t = 2 * Math::PI * f * time
+          @spectrum[f] += Complex(Math.cos(omega_t) * magnitude, Math.sin(omega_t) * magnitude) # complex(real, imaginary)
+        end
+      end
+      @spectrum.each { |f, val| @spectrum[f] = @spectrum[f].magnitude * 2 / @input_data.size }
+      @spectrum
+    end
+  end
+end
