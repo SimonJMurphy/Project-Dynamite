@@ -30,7 +30,7 @@ module KeplerProcessor
 
       def output_filename
         # Determine the output filename from header and input_filename. May require changing according to file location
-        "kic#{@attributes[:kic_number]}_WG4CorFlux_#{@attributes[:season]}_#{@input_filename.split("_")[3]}.txt"
+        "converted_#{@input_filename.split("/")[2]}/kic#{@attributes[:kic_number]}_CFlux_#{@attributes[:season]}_#{@input_filename.split("_").last.split(".").first}.txt"
       end
 
   end
