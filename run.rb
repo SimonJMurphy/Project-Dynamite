@@ -58,5 +58,7 @@ options[:input_paths].each do |filename|
     c.run
   rescue KeplerProcessor::FileExistsError
     puts "Your output file (#{c.full_output_filename}) already exists, please remove it first (or something)."
+  ensure
+    c = nil
   end
 end
