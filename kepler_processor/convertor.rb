@@ -13,6 +13,7 @@ module KeplerProcessor
 
       def strip_invalid!
         @input_data.delete_if { |record| record[1] == 0.0 }
+        @input_data.delete_if { |record| record =~ /$(i)/}
       end
 
       def convert_fluxes_to_magnitudes!
