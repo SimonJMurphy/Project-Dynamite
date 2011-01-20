@@ -22,10 +22,10 @@ module KeplerProcessor
         time, magnitude = point
         @analysis_frequencies.each do |f|
           omega_t = 2 * Math::PI * f * time
-          @spectrum[f] += Complex(Math.cos(omega_t) * magnitude, Math.sin(omega_t) * magnitude) # complex(real, imaginary)
+          @spectrum[f] += Complex(Math.cos(omega_t) * magnitude, Math.sin(omega_t) * magnitude) # complex(real, imaginary) magnitude is brightness
         end
       end
-      @spectrum.each { |f, val| @spectrum[f] = @spectrum[f].magnitude * 2 / @input_data.size }
+      @spectrum.each { |f, val| @spectrum[f] = @spectrum[f].magnitude * 2 / @input_data.size } # magnitude of the complex number
       @spectrum
     end
   end
