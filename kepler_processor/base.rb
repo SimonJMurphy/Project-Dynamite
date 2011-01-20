@@ -46,10 +46,9 @@ module KeplerProcessor
 
       def convert_from_string!
         # convert @input_data to a two dimensional float array: time, flux
-        # @input_data.map! { |line| line.split(" ").map(&:to_f)[ 0..1 ] }
         @input_data.map! do |line|
           l = line.split(" ").map &:to_f
-          [l[0], l[1]]
+          [l[0], l[3]]
         end
       end
 
