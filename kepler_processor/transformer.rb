@@ -13,7 +13,7 @@ module KeplerProcessor
 
       def compute_amplitude_spectrum
         dataset_length = @input_data.last[0] - @input_data.first[0]
-        frequency_step = 1 / (10.0 * dataset_length)
+        frequency_step = 1 / (20.0 * dataset_length)
         frequencies = (0..20).in_steps_of frequency_step
 
         @fourier = FourierTransform.new @input_data, frequencies
