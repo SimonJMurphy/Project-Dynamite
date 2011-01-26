@@ -1,5 +1,6 @@
 module KeplerProcessor
   class Transformer < Base
+    include KeplerDFT
 
     def run
       super do
@@ -12,12 +13,13 @@ module KeplerProcessor
     private
 
       def compute_amplitude_spectrum
-        dataset_length = @input_data.last[0] - @input_data.first[0]
-        frequency_step = 1 / (20.0 * dataset_length)
-        frequencies = (0..20).in_steps_of frequency_step
-
-        @fourier = FourierTransform.new @input_data, frequencies
-        @fourier.dft
+        bandwidth = @input_data.last.first - @input_data.first.first
+        @spectrum = dft(@input_data.map { |x| x[0] }, @input_data.map { |x| x[1] }, @input_data.size, bandwidth).to_a
+        puts peak_frequency
+      end
+      
+      def peak_frequency
+        @spectrum.sort_by { |x| x[1] }.last[0]
       end
 
       def plot_DFT
@@ -27,13 +29,12 @@ module KeplerProcessor
             plot.terminal "png"
             plot.output "#{@input_filename.split(".")[0]}_fourier_plot.png"
             kic_number, data_type, season, cadence = @input_filename.split("/").last.split(".").first.split("_")
-            peak_frequency = @fourier.peak_frequency
-            plot.title  "Fourier for #{kic_number} #{season} #{cadence}. Peak frequency is #{peak_frequency.round_to 4} with amplitude #{@fourier.spectrum[peak_frequency].round_to 4}"
+            plot.title  "Fourier for #{kic_number} #{season} #{cadence}. Peak frequency is #{peak_frequency.round_to 4} with amplitude" # #{@spectrum[peak_frequency].round_to 4}"
             plot.ylabel "Amplitude (mag)"
             plot.xlabel "Frequency (c/d)"
 
-            x = @fourier.spectrum.map { |pair| pair[0] }
-            y = @fourier.spectrum.map { |pair| pair[1] }
+            x = @spectrum.map { |pair| pair[0] }
+            y = @spectrum.map { |pair| pair[1] }
 
             plot.data << ::Gnuplot::DataSet.new( [x, y] ) do |ds|
               ds.with = "lines"

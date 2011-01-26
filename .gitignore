@@ -2,3 +2,6 @@ data/*
 data/**/*
 .prawn.pdf.swp
 fourier_in_c/build/*
+kepler_dft/Makefile
+kepler_dft/kepler_dft.bundle
+kepler_dft/kepler_dft.o

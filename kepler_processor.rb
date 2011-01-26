@@ -2,7 +2,6 @@ require 'gsl'
 
 require_relative 'kepler_processor/base.rb'
 require_relative 'kepler_processor/convertor.rb'
-require_relative 'kepler_processor/fourier.rb'
 require_relative 'kepler_processor/light_curve_plotter.rb'
 require_relative 'kepler_processor/merger.rb'
 require_relative 'kepler_processor/transformer.rb'
@@ -19,14 +18,6 @@ class Array
       accumulator[element[0].downcase.gsub(" ", "_").to_sym] = element[1].gsub(" ", "").strip
       accumulator
     end
-  end
-
-  def pad_with(number_of_times, padder = 0)
-    number_of_times.times { self << padder }
-  end
-
-  def pad_to_next_power_of_two_with(padder = 0)
-    self.pad_with self.size.distance_to_next_power_of_two, padder
   end
 end
 
@@ -74,19 +65,5 @@ end
 class Range
   def in_steps_of(n = 1)
     IntervalArray.new self, n
-  end
-end
-
-class Numeric
-  def next_power_of_two
-    power_of_two = 1
-    while power_of_two < self do
-      power_of_two = power_of_two * 2
-    end
-    power_of_two
-  end
-
-  def distance_to_next_power_of_two
-    self.next_power_of_two - self
   end
 end

@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'optparse'
 require 'gnuplot'
+require 'kepler_dft'
 require_relative 'kepler_processor.rb'
 
 options = { :command => KeplerProcessor::Convertor, :input_paths => [], :output_path => "data/output", :transform => :dft, :samplerate => 450.0, :polynomial_degree => 2 }
