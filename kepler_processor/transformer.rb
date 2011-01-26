@@ -15,9 +15,8 @@ module KeplerProcessor
       def compute_amplitude_spectrum
         bandwidth = @input_data.last.first - @input_data.first.first
         @spectrum = dft(@input_data.map { |x| x[0] }, @input_data.map { |x| x[1] }, @input_data.size, bandwidth).to_a
-        puts peak_frequency
       end
-      
+
       def peak_frequency
         @spectrum.sort_by { |x| x[1] }.last[0]
       end
