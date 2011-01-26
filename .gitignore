@@ -1,3 +1,4 @@
 data/*
 data/**/*
 .prawn.pdf.swp
+fourier_in_c/build/*
