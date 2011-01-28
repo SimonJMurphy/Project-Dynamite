@@ -49,10 +49,11 @@ VALUE method_dft(VALUE self, VALUE times, VALUE magnitudes, VALUE number_of_poin
 		sin_wt = sin(omega_step_t);
 		cos_wt = cos(omega_step_t);
 
+		double *real = real_component, *imaginary = imaginary_component;
 		for(j = 0; j < num_frequencies; ++j)
 		{
-			real_component[j] += LastSin;
-			imaginary_component[j] += LastCos;
+			(*real++) += LastSin;
+			(*imaginary++) += LastCos;
 
 			ThisSin = LastSin * cos_wt + LastCos * sin_wt;
 			ThisCos = LastCos * cos_wt - LastSin * sin_wt;
@@ -61,11 +62,17 @@ VALUE method_dft(VALUE self, VALUE times, VALUE magnitudes, VALUE number_of_poin
 		}
 	} // end main loop
 
+	double *real = real_component, *imaginary = imaginary_component;
 	for(j = 0; j < num_frequencies; ++j)
 	{
-		amplitude = 2 * sqrt(real_component[j] * real_component[j] + imaginary_component[j] * imaginary_component[j]) / num_points;
+		amplitude = 2 * sqrt((*real) * (*real) + (*imaginary) * (*imaginary)) / num_points;
 		rb_hash_aset(output, DBL2NUM(frequency_array[j]), DBL2NUM(amplitude));
+		real++; imaginary++;
 	}
+
+	// free(real_component);
+	// free(imaginary_component);
+	// free(frequency_array);
 
 	return output;
 }
