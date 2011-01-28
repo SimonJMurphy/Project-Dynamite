@@ -28,8 +28,9 @@ module KeplerProcessor
     private
 
       def read_in_data
-        File.new(@input_filename, "r").each { |line| @input_data << line }
-        # file closes automatically because it's opened in this method
+        File.open(@input_filename, "r") do |file|
+          file.each { |line| @input_data << line }
+        end
         raise NoDataError if @input_data.empty?
       end
 
@@ -62,9 +63,8 @@ module KeplerProcessor
           ::FileUtils.mkpath @options[:output_path]
           raise FileExistsError if File.exist?(full_output_filename) && !@options[:force_overwrite]
           puts "Writing output to #{full_output_filename}"
-          CSV.open(full_output_filename, "a+", :col_sep => "\t") do |csv| # 'a+' for all - read, write... everything
-            # confine the size of the file to zero if forcing overwrite, thereby emptying the file
-            csv.truncate(0) if @options[:force_overwrite]
+          CSV.open(full_output_filename, @options[:force_overwrite] ? "w+" : "a+", :col_sep => "\t") do |csv|
+            # impicitly truncate file by file mode when force overwriting
             @output_data.each { |record| csv << record }
           end
         end
