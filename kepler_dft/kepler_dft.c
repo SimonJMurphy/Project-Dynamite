@@ -12,26 +12,60 @@ void Init_kepler_dft() {
 
 VALUE method_dft(VALUE self, VALUE times, VALUE magnitudes, VALUE number_of_points, VALUE bandwidth) {
   VALUE output = rb_hash_new();
-  const int num_points = NUM2INT(number_of_points), start_frequency = 0, final_frequency = 100;
-  const double dataset_length = NUM2DBL(bandwidth), step_size = 1 / (20 * dataset_length), PI = 3.1415926535;
-  double C_i, S_i, frequency, real_component = 0, imaginary_component = 0, omega_t, amplitude, magnitude;
-  int i, j;
-  for (j = 0; start_frequency + (j * step_size) <= final_frequency; ++j)
-  {
-    frequency = start_frequency + (j * step_size);
-    real_component = 0, imaginary_component = 0;
-    for (i = 0; i < num_points; ++i)
-    {
-      omega_t = 2 * PI * frequency * NUM2DBL(rb_ary_entry(times, i));
-      C_i = cos(omega_t);
-      S_i = sin(omega_t);
+  const int num_points = NUM2INT(number_of_points);
+  const double dataset_length = NUM2DBL(bandwidth), step_size = 1 / (20 * dataset_length), two_PI = 6.283185307179586477, start_frequency = 0, final_frequency = 20;
+  double C_i, S_i, omega_t, magnitude, time, amplitude;
+	int i, j, k, num_frequencies = 0;
 
-      magnitude = NUM2DBL(rb_ary_entry(magnitudes, i));
-      real_component += C_i * magnitude;
-      imaginary_component += S_i * magnitude;
-    }
+	for(k = 0; start_frequency + (k * step_size) <= final_frequency; ++k)
+	{
+		++num_frequencies;
+	}
 
-    rb_hash_aset(output, DBL2NUM(frequency), DBL2NUM(2 * sqrt(real_component * real_component + imaginary_component * imaginary_component) / num_points));
-  }
-  return output;
+	double frequency_array[num_frequencies], real_component[num_frequencies], imaginary_component[num_frequencies];
+
+	for(k = 0; k < num_frequencies; ++k)
+	{
+		frequency_array[k] = start_frequency + (k * step_size);
+		real_component[k] = 0;
+		imaginary_component[k] = 0;
+	}
+
+	// main loop
+	for (i = 0; i < num_points; ++i)
+	{
+		time = NUM2DBL(rb_ary_entry(times, i));
+		magnitude = NUM2DBL(rb_ary_entry(magnitudes, i));
+
+		// prepare SIN-Approximation
+		double ThisSin, LastSin, sin_wt, ThisCos, LastCos, cos_wt;
+		const double two_pi_t = two_PI * time;
+
+		double omega_0_t = two_pi_t * start_frequency;
+		double omega_step_t = two_pi_t * step_size;
+
+		LastSin = magnitude * sin(omega_0_t);
+		LastCos = magnitude * cos(omega_0_t);
+		sin_wt = sin(omega_step_t);
+		cos_wt = cos(omega_step_t);
+
+		for(j = 0; j < num_frequencies; ++j)
+		{
+			real_component[j] += LastSin;
+			imaginary_component[j] += LastCos;
+
+			ThisSin = LastSin * cos_wt + LastCos * sin_wt;
+			ThisCos = LastCos * cos_wt - LastSin * sin_wt;
+			LastSin = ThisSin;
+			LastCos = ThisCos;
+		}
+	} // end main loop
+
+	for(j = 0; j < num_frequencies; ++j)
+	{
+		amplitude = 2 * sqrt(real_component[j] * real_component[j] + imaginary_component[j] * imaginary_component[j]) / num_points;
+		rb_hash_aset(output, DBL2NUM(frequency_array[j]), DBL2NUM(amplitude));
+	}
+
+	return output;
 }
