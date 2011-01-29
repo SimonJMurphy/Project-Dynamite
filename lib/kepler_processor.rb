@@ -10,3 +10,4 @@ end
 
 require_relative 'kepler_processor/base.rb'
 require_relative 'kepler_processor/tasks.rb'
+require_relative 'kepler_processor/version.rb'

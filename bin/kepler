@@ -8,7 +8,8 @@ require 'kepler_processor'
 options = { :command => KeplerProcessor::Convertor, :input_paths => [], :output_path => "data/output", :transform => :dft, :samplerate => 450.0, :polynomial_degree => 2 }
 
 option_parser = OptionParser.new do |opts|
-  opts.banner = "Usage: ruby run.rb -c command [-o output_directory] path_to_input_file(s)"
+  opts.banner = "Usage: kepler -c command [-o output_directory] path_to_input_file(s)"
+
   opts.on("-c", "--command COMMAND", String, "Specify the command to run [convert/transform/merge/plot_lc]") do |c|
     options[:command] = { "convert" => KeplerProcessor::Convertor, "transform" => KeplerProcessor::Transformer, "merge" => KeplerProcessor::Merger, "plot_lc" => KeplerProcessor::LightCurvePlotter }[c]
     if options[:command].nil?
@@ -26,31 +27,30 @@ option_parser = OptionParser.new do |opts|
   opts.on("-m", "--merge-ratio RATIO", Integer, "Specify a merge ratio to use.") do |p|
     options[:merge_ratio] = p
   end
-  opts.on("--fft", "Perform a Fast Fourier Transform (quicker)") do
-    options[:transform] = :fft
-  end
-  opts.on("-r", "--samplerate SAMPLERATE", Float, "Specify the sample rate of the generated signal") do |r|
-    options[:samplerate] = r
-  end
-  opts.on("-d", "--polynomial-degree POLY_DEGREE", Integer, "Specify the degree of the polynomial fit to be subtracted when transforming. Defaults to 2") do |d|
-    options[:polynomial_degree] = d
-  end
   opts.on_tail("-h", "--help", "Show this message") do
     puts opts
     exit
   end
+  opts.on_tail("-v", "--version", "Show version") do
+    puts KeplerProcessor::VERSION
+    exit
+  end
 end
 
-begin
-  options[:input_paths] = option_parser.parse! # returns anything not handled by the options above - the input filenames.
-rescue
-  puts $! # print out error
-  option_parser.parse('--help') # print out command glossary
+if ARGV.size.zero?
+  option_parser.parse '--help'
+else
+  begin
+    options[:input_paths] = option_parser.parse! # returns anything not handled by the options above - the input filenames.
+  rescue
+    puts $! # print out error
+    option_parser.parse '--help' # print out command glossary
+  end
 end
 
 if options[:command] == KeplerProcessor::Merger && !options.has_key?(:merge_ratio)
   puts "You must provide an integer merge ratio"
-  option_parser.parse('--help')
+  option_parser.parse '--help'
   exit
 end
 
