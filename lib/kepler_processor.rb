@@ -1,4 +1,3 @@
-require 'gsl'
 require 'gnuplot'
 require 'kepler_dft'
 

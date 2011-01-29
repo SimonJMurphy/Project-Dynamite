@@ -21,7 +21,6 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib", "ext"]
 
   s.required_ruby_version = '>= 1.9.2'
-  s.add_dependency "gsl"
   s.add_dependency "gnuplot"
   s.add_development_dependency "rspec"
 end
