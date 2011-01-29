@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Simon Murphy", "Ben Langfeld"]
   s.email       = ["smurphy6@uclan.ac.uk", "ben@langfeld.me"]
   s.homepage    = "https://github.com/Smurfmeister/Project-Dynamite"
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{A set of conversion tools for Kepler data}
+  s.description = %q{Allows conversion of raw data to usable formats, DFT, plotting, etc.}
 
   s.rubyforge_project = "kepler_processor"
 
