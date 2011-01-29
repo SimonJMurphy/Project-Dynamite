@@ -1,11 +1,6 @@
 # Loads mkmf which is used to make makefiles for Ruby extensions
 require 'mkmf'
 
-# Give it a name
 extension_name = 'kepler_dft'
-
-# The destination
-dir_config(extension_name)
-
-# Do the work
-create_makefile(extension_name)
+dir_config extension_name
+create_makefile extension_name

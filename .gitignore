@@ -1,7 +1,10 @@
+*.gem
+.bundle
+Gemfile.lock
+pkg/*
 data/*
 data/**/*
 .prawn.pdf.swp
-fourier_in_c/build/*
-kepler_dft/Makefile
-kepler_dft/kepler_dft.bundle
-kepler_dft/kepler_dft.o
+ext/kepler_dft/Makefile
+ext/kepler_dft/kepler_dft.bundle
+ext/kepler_dft/kepler_dft.o

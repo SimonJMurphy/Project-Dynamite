@@ -1,4 +1,6 @@
 require 'gsl'
+require 'gnuplot'
+require 'kepler_dft'
 
 require_relative 'kepler_processor/base.rb'
 require_relative 'kepler_processor/convertor.rb'

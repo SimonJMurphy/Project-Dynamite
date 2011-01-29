@@ -1,8 +1,9 @@
 #!/usr/bin/env ruby
+$:.unshift File.expand_path(File.dirname(__FILE__) + "/../lib")
+
+require 'rubygems'
 require 'optparse'
-require 'gnuplot'
-require 'kepler_dft'
-require_relative 'kepler_processor.rb'
+require 'kepler_processor'
 
 options = { :command => KeplerProcessor::Convertor, :input_paths => [], :output_path => "data/output", :transform => :dft, :samplerate => 450.0, :polynomial_degree => 2 }
 
