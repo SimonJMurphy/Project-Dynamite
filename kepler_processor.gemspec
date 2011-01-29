@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "kepler_processor/version"
 
 Gem::Specification.new do |s|
-  s.name        = "KeplerProcessor"
+  s.name        = "kepler-processor"
   s.version     = KeplerProcessor::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Simon Murphy", "Ben Langfeld"]
