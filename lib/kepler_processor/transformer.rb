@@ -23,8 +23,7 @@ module KeplerProcessor
 
       def plot_DFT
         ::Gnuplot.open do |gp|
-          ::Gnuplot::Plot.new( gp ) do |plot|
-
+          ::Gnuplot::Plot.new(gp) do |plot|
             plot.terminal "png"
             plot.output "#{@input_filename.split(".")[0]}_fourier_plot.png"
             kic_number, data_type, season, cadence = @input_filename.split("/").last.split(".").first.split("_")
@@ -35,7 +34,7 @@ module KeplerProcessor
             x = @spectrum.map { |pair| pair[0] }
             y = @spectrum.map { |pair| pair[1] }
 
-            plot.data << ::Gnuplot::DataSet.new( [x, y] ) do |ds|
+            plot.data << ::Gnuplot::DataSet.new([x, y]) do |ds|
               ds.with = "lines"
               ds.notitle
             end
