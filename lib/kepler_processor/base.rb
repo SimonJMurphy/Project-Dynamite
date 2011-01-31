@@ -11,14 +11,14 @@ module KeplerProcessor
     end
 
     def run
-      puts "Processing file #{@input_filename}"
+      LOGGER.info "Processing file #{@input_filename}"
       read_in_data
       split_comments!
       parse_header_attributes
       convert_from_string!
       yield
       save!
-      puts "Finished processing file #{@input_filename}"
+      LOGGER.info "Finished processing file #{@input_filename}"
     end
 
     def full_output_filename
@@ -62,7 +62,7 @@ module KeplerProcessor
           @output_data ||= @input_data
           ::FileUtils.mkpath @options[:output_path]
           raise FileExistsError if File.exist?(full_output_filename) && !@options[:force_overwrite]
-          puts "Writing output to #{full_output_filename}"
+          LOGGER.info "Writing output to #{full_output_filename}"
           CSV.open(full_output_filename, @options[:force_overwrite] ? "w+" : "a+", :col_sep => "\t") do |csv|
             # impicitly truncate file by file mode when force overwriting
             @output_data.each { |record| csv << record }
