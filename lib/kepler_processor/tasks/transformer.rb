@@ -6,7 +6,6 @@ module KeplerProcessor
       super do
         compute_amplitude_spectrum
         plot_DFT
-        plot_lightcurve
       end
     end
 
@@ -22,12 +21,11 @@ module KeplerProcessor
       end
 
       def plot_DFT
-        input_filename_without_extension = @input_filename.split("/").last.split(".").first
         ::Gnuplot.open do |gp|
           ::Gnuplot::Plot.new(gp) do |plot|
             plot.terminal "png"
-            plot.output "#{@options[:output_path]}#{input_filename_without_extension}_fourier_plot.png"
-            kic_number, data_type, season, cadence = input_filename_without_extension.split("_")
+            plot.output "#{@options[:output_path]}#{@input_filename_without_extension}_fourier_plot.png"
+            kic_number, data_type, season, cadence = @input_filename_without_extension.split("_")
             plot.title  "Fourier for #{kic_number} #{season} #{cadence}. Peak frequency is #{peak_frequency.round_to 4} with amplitude" # #{@spectrum[peak_frequency].round_to 4}"
             plot.ylabel "Amplitude (mag)"
             plot.xlabel "Frequency (c/d)"
@@ -41,10 +39,6 @@ module KeplerProcessor
             end
           end
         end
-      end
-
-      def plot_lightcurve
-
       end
 
       # no output filename method, because we don't want to save any text, just the plots.

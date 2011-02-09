@@ -13,8 +13,9 @@ module KeplerProcessor
         ::Gnuplot.open do |gp|
           ::Gnuplot::Plot.new(gp) do |plot|
             plot.terminal "png"
-            plot.output "#{@input_filename.split(".")[0]}_plot.png"
-            plot.title  "Sample Lightcurve"
+            plot.output "#{@options[:output_path]}/#{@input_filename_without_extension}_plot.png"
+            kic_number, data_type, season, cadence = @input_filename_without_extension.split("_")
+            plot.title  "Lightcurve of #{kic_number} #{season} #{cadence}"
             plot.ylabel "Amplitude"
             plot.xlabel "Time"
 
