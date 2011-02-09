@@ -13,11 +13,11 @@ module KeplerProcessor
 
       def compute_amplitude_spectrum
         bandwidth = @input_data.last.first - @input_data.first.first
-        @spectrum = dft(@input_data.map { |x| x[0] }, @input_data.map { |x| x[1] }, @input_data.size, bandwidth).to_a
+        @spectrum = dft @input_data.map { |x| x[0] }, @input_data.map { |x| x[1] }, @input_data.size, bandwidth
       end
 
       def peak_frequency
-        @spectrum.sort_by { |x| x[1] }.last[0]
+        @spectrum.to_a.sort_by { |x| x[1] }.last[0]
       end
 
       def plot_DFT
@@ -26,12 +26,13 @@ module KeplerProcessor
             plot.terminal "png"
             plot.output "#{@options[:output_path]}/#{@input_filename_without_extension}_fourier_plot.png"
             kic_number, data_type, season, cadence = @input_filename_without_extension.split("_")
-            plot.title  "Fourier for #{kic_number} #{season} #{cadence}. Peak frequency is #{peak_frequency.round_to 4} with amplitude" # #{@spectrum[peak_frequency].round_to 4}"
+            plot.title  "Fourier for #{kic_number} #{season} #{cadence}"
+            plot.label "'Peak of #{@spectrum[peak_frequency].round_to 4} @ #{peak_frequency.round_to 4} c/d' at screen 0.3, screen 0.8"
             plot.ylabel "Amplitude (mag)"
             plot.xlabel "Frequency (c/d)"
 
-            x = @spectrum.map { |pair| pair[0] }
-            y = @spectrum.map { |pair| pair[1] }
+            x = @spectrum.keys
+            y = @spectrum.values
 
             plot.data << ::Gnuplot::DataSet.new([x, y]) do |ds|
               ds.with = "lines"
@@ -44,5 +45,3 @@ module KeplerProcessor
       # no output filename method, because we don't want to save any text, just the plots.
   end
 end
-
-
