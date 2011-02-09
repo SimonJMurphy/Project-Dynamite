@@ -3,17 +3,17 @@
 
 VALUE KeplerDFT = Qnil;
 void Init_kepler_dft();
-VALUE method_dft(VALUE self, VALUE times, VALUE magnitudes, VALUE number_of_points, VALUE bandwidth);
+VALUE method_dft(VALUE self, VALUE times, VALUE magnitudes, VALUE number_of_points, VALUE bandwidth, VALUE max_frequency);
 
 void Init_kepler_dft() {
   VALUE KeplerDFT = rb_define_module("KeplerDFT");
-  rb_define_method(KeplerDFT, "dft", method_dft, 4);
+  rb_define_method(KeplerDFT, "dft", method_dft, 5);
 }
 
-VALUE method_dft(VALUE self, VALUE times, VALUE magnitudes, VALUE number_of_points, VALUE bandwidth) {
+VALUE method_dft(VALUE self, VALUE times, VALUE magnitudes, VALUE number_of_points, VALUE bandwidth, VALUE max_frequency) {
   VALUE output = rb_hash_new();
   const int num_points = NUM2INT(number_of_points);
-  const double dataset_length = NUM2DBL(bandwidth), step_size = 1 / (20 * dataset_length), two_PI = 6.283185307179586477, start_frequency = 0, final_frequency = 24;
+  const double dataset_length = NUM2DBL(bandwidth), step_size = 1 / (20 * dataset_length), two_PI = 6.283185307179586477, start_frequency = 0, final_frequency = NUM2DBL(max_frequency);
   double C_i, S_i, omega_t, magnitude, time, amplitude;
   int i, j, k, num_frequencies = 0;
 
