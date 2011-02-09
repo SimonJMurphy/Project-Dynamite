@@ -66,7 +66,7 @@ VALUE method_dft(VALUE self, VALUE times, VALUE magnitudes, VALUE number_of_poin
   for(j = 0; j < num_frequencies; ++j)
   {
     amplitude = 2 * sqrt((*real) * (*real) + (*imaginary) * (*imaginary)) / num_points;
-    rb_hash_aset(output, DBL2NUM(frequency_array[j]), DBL2NUM(amplitude));
+    rb_hash_aset(output, DBL2NUM(frequency_array[j]), DBL2NUM(amplitude * 1000));
     real++; imaginary++;
   }
 
