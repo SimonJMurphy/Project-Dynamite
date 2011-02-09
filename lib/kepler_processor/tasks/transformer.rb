@@ -22,11 +22,12 @@ module KeplerProcessor
       end
 
       def plot_DFT
+        input_filename_without_extension = @input_filename.split("/").last.split(".").first
         ::Gnuplot.open do |gp|
           ::Gnuplot::Plot.new(gp) do |plot|
             plot.terminal "png"
-            plot.output "#{@input_filename.split(".")[0]}_fourier_plot.png"
-            kic_number, data_type, season, cadence = @input_filename.split("/").last.split(".").first.split("_")
+            plot.output "#{@options[:output_path]}#{input_filename_without_extension}_fourier_plot.png"
+            kic_number, data_type, season, cadence = input_filename_without_extension.split("_")
             plot.title  "Fourier for #{kic_number} #{season} #{cadence}. Peak frequency is #{peak_frequency.round_to 4} with amplitude" # #{@spectrum[peak_frequency].round_to 4}"
             plot.ylabel "Amplitude (mag)"
             plot.xlabel "Frequency (c/d)"
