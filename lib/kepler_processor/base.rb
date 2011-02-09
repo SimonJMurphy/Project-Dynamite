@@ -49,7 +49,7 @@ module KeplerProcessor
         # convert @input_data to a two dimensional float array: time, flux
         @input_data.map! do |line|
           l = line.split(" ").map &:to_f
-          [l[0], l[1]]
+          [l[@options[:file_columns][0]], l[@options[:file_columns][1]]]
         end
       end
 
