@@ -31,10 +31,8 @@ module KeplerProcessor
           ::Gnuplot::Plot.new(gp) do |plot|
             plot.terminal "png size 1000,500"
             plot.output "#{@options[:output_path]}/#{@input_filename_without_extension}_fourier_plot_0to#{data.last[0].round_to(0).to_i}.png"
-            kic_number, data_type, season, cadence = @input_filename_without_extension.split("_")
-            plot.title  "Fourier for #{kic_number} #{season} #{cadence}"
             peak = peak_point data
-            plot.label "'Peak of #{peak[1].round_to 3} mmag at #{peak[0].round_to 3} c/d' at screen 0.72, screen 0.9"
+            plot.label "'Peak of #{peak[1].round_to 3} mmag at #{peak[0].round_to 3} c/d' at screen 0.74, screen 0.02"
             plot.ylabel "Amplitude (mmag)"
             plot.xlabel "Frequency (c/d)"
 
