@@ -6,7 +6,9 @@ module KeplerProcessor
 
     def initialize(input_filename, options)
       @input_filename                   = input_filename
-      @input_filename_without_extension = @input_filename.split("/").last.split(".").first
+      input_filename_without_path       = @input_filename.split("/").last.split(".")
+      input_filename_without_path.delete_at(-1)
+      @input_filename_without_extension = input_filename_without_path.join '.'
       @options                          = options
       @input_data                       = []
     end
