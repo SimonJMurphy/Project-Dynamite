@@ -19,7 +19,7 @@ module KeplerProcessor
       split_comments!
       parse_header_attributes
       convert_from_string!
-      yield
+      yield if block_given?
       save!
       LOGGER.info "Finished processing file #{@input_filename}"
     end
