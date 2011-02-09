@@ -29,10 +29,10 @@ module KeplerProcessor
       def plot_DFT(data)
         ::Gnuplot.open do |gp|
           ::Gnuplot::Plot.new(gp) do |plot|
-            plot.terminal "png size 1000,500"
+            plot.terminal "png size 900,300"
             plot.output "#{@options[:output_path]}/#{@input_filename_without_extension}_fourier_plot_0to#{data.last[0].round_to(0).to_i}.png"
             peak = peak_point data
-            plot.label "'Peak of #{peak[1].round_to 3} mmag at #{peak[0].round_to 3} c/d' at screen 0.74, screen 0.02"
+            plot.label "'Peak of #{peak[1].round_to 3} mmag at #{peak[0].round_to 3} c/d' at screen 0.71, screen 0.034"
             plot.ylabel "Amplitude (mmag)"
             plot.xlabel "Frequency (c/d)"
 
