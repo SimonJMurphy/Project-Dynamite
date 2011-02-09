@@ -9,15 +9,15 @@ require 'kepler_processor'
 LOGGER = Logger.new STDOUT
 LOGGER.level = Logger::INFO
 
-options = { :command => KeplerProcessor::Convertor, :input_paths => [], :output_path => "data/output", :file_columns => [0,1] }
+options = { :command => KeplerProcessor::Convertor, :input_paths => [], :output_path => "data/output", :file_columns => [0,1], :column_delimiter => " " }
 
 option_parser = OptionParser.new do |opts|
-  opts.banner = "Usage: kepler -c command [-o output_directory] [--columns 0,1] path_to_input_file(s)"
+  opts.banner = "Usage: kepler -c command [-o output_directory] [--columns 0,1] [-d ,] path_to_input_file(s)"
 
-  opts.on("-c", "--command COMMAND", String, "Specify the command to run [convert/transform/merge/plot_lc]") do |c|
-    options[:command] = { "convert" => KeplerProcessor::Convertor, "transform" => KeplerProcessor::Transformer, "merge" => KeplerProcessor::Merger, "plot_lc" => KeplerProcessor::LightCurvePlotter }[c]
+  opts.on("-c", "--command COMMAND", String, "Specify the command to run [convert/transform/merge/plot_lc/uniquify]") do |c|
+    options[:command] = { "convert" => KeplerProcessor::Convertor, "transform" => KeplerProcessor::Transformer, "merge" => KeplerProcessor::Merger, "plot_lc" => KeplerProcessor::LightCurvePlotter, "uniquify" => KeplerProcessor::IndexDupRemover }[c]
     if options[:command].nil?
-      LOGGER.error "Invalid command. Options are [convert/transform/merge/plot_lc]"
+      LOGGER.error "Invalid command. Options are [convert/transform/merge/plot_lc/uniquify]"
       puts opts
       exit
     end
@@ -25,8 +25,11 @@ option_parser = OptionParser.new do |opts|
   opts.on("-f", "--[no-]force_overwrite", "Force overwrite existing output files") do |f|
     options[:force_overwrite] = f
   end
-  opts.on("-C", "--columns 0,1", Array, "Choose input file columns to be read") do |f|
+  opts.on("-C", "--columns 0,1", Array, "Choose input file columns to be read. Defaults to 0,1") do |f|
     options[:file_columns] = f.map(&:to_i)
+  end
+  opts.on("-d", "--delimiter DELIMITER", String, "Specify delimiting character. Defaults to a single space") do |f|
+    options[:column_delimiter] = f
   end
   opts.on("-o", "--output PATH", String, "Specify the path to the output directory. Defaults to data/output") do |p|
     options[:output_path] = p
@@ -60,6 +63,8 @@ if options[:command] == KeplerProcessor::Merger && !options.has_key?(:merge_rati
   option_parser.parse '--help'
   exit
 end
+
+puts options.inspect
 
 options[:input_paths].each do |filename|
   begin
