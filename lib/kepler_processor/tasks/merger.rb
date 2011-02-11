@@ -12,7 +12,7 @@ module KeplerProcessor
       def merge!
         # the gap between consecutive points it time for slc data is just over 0.00068 and for llc data is just greater than 0.02
         # therefore, if the data is slc, as indicated by input_filename, take the first value for std_range, if not, take second.
-        std_range = @input_filename.split("_")[1] == "slc" ? 0.00068 : 0.02
+        std_range = @input_filename.split("_")[3] == "slc" ? 0.00068 : 0.02
 
         # slice the input data array into arrays of size merge_ratio
         # for each slice, replace the slice by the arithmetic mean value, unless there is a time gap in the data greater than the std gap or <10 items in slice (eof).
