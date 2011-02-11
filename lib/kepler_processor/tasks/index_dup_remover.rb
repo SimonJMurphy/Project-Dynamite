@@ -8,7 +8,7 @@ module KeplerProcessor
     end
 
     private
-    
+
     # in terminal, specify columns 0,1,2,3,4,5,6. Table to include: KIC-10 number, Magnitude, Teff (K), Radius, log G, [Fe/H], Contamination.
 
       def kill_duplicates!
