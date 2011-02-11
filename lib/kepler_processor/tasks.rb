@@ -1,3 +1,4 @@
+require_relative 'tasks/appender.rb'
 require_relative 'tasks/catalogue_maker.rb'
 require_relative 'tasks/convertor.rb'
 require_relative 'tasks/index_dup_remover.rb'
