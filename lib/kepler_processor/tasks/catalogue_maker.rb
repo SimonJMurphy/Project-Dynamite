@@ -48,5 +48,6 @@ module KeplerProcessor
         number_pages "page <page> of <total>", [bounds.right - 80, 0] # must go at end to number all pages
       end
     end
+
   end
 end
