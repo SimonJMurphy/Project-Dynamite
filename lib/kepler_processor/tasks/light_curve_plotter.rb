@@ -1,5 +1,5 @@
 module KeplerProcessor
-  class LightCurvePlotter < Base
+  class LightCurvePlotter < TaskRunBase
 
     def run
       super do

@@ -1,7 +1,7 @@
 require 'prawn'
 
 module KeplerProcessor
-  class CatalogueMaker < Base
+  class CatalogueMaker < TaskRunBase
 
     def run
       super do

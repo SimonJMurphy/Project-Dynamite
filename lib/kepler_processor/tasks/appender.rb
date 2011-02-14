@@ -1,5 +1,5 @@
 module KeplerProcessor
-  class Appender < Base
+  class Appender < TaskRunBase
 
     def run
       super do

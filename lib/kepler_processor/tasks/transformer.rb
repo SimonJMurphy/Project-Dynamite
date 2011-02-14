@@ -1,5 +1,5 @@
 module KeplerProcessor
-  class Transformer < Base
+  class Transformer < TaskRunBase
     include KeplerDFT
 
     def run
