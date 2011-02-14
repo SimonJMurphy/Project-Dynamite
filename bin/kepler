@@ -64,8 +64,6 @@ if options[:command] == KeplerProcessor::Merger && !options.has_key?(:merge_rati
   exit
 end
 
-puts options.inspect
-
 options[:input_paths].each do |filename|
   begin
     c = options[:command].new filename, options
