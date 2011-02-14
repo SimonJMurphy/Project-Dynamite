@@ -4,10 +4,10 @@ module KeplerProcessor
       @options = options
     end
 
-    def run
+    def run(runner)
       @options[:input_paths].each do |filename|
         begin
-          c = Run.new filename, @options
+          c = runner.new filename, @options
           c.run
         rescue KeplerProcessor::FileExistsError
           LOGGER.info "Your output file (#{c.full_output_filename}) already exists, please remove it first (or something)."

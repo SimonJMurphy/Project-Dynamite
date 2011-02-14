@@ -1,6 +1,10 @@
 module KeplerProcessor
   class IndexDupRemover < Base
 
+    def run
+      super Run
+    end
+
     class Run < TaskRunBase
       def run
         super do
