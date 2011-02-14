@@ -36,7 +36,7 @@ module KeplerProcessor
             image observation[:short_fourier_path], :at => [0, 560], :width => 580
             image observation[:long_fourier_path], :at => [0, 360], :width => 580
 
-            font_size 20 { draw_text "#{observation[:cycle]}", :at => [5, 760] }
+            font_size(20) { draw_text observation[:cycle], :at => [5, 760] }
 
             star_metadata = @star_metadata[observation[:kic_number]]
 
