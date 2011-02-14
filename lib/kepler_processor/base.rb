@@ -1,7 +1,7 @@
 module KeplerProcessor
   class Base
     def initialize(options)
-      @option = options
+      @options = options
     end
 
     def run
