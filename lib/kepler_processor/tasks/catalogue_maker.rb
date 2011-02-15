@@ -4,6 +4,8 @@ module KeplerProcessor
   class CatalogueMaker < Base
 
     def run
+      @options[:column_delimiter] = ","
+      @options[:file_columns] = (0..6).to_a
       super Run
     end
 
