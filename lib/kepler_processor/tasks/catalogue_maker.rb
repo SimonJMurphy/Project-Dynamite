@@ -5,12 +5,13 @@ module KeplerProcessor
 
     def run
       @options[:column_delimiter] = ","
-      @options[:file_columns] = (0..6).to_a
+      @options[:file_columns] = (0..8).to_a
+      @options[:column_converters] = [:integer, :float, :float, :float, :float, :float, :float, :float, :float]
       super Run
     end
 
     class Run < TaskRunBase
-      CATALOGUE_IMAGES_PATH = "Users/sjm/code/Project-Dynamite/data/output/wg4_catalogue_images/"
+      CATALOGUE_IMAGES_PATH = "/Users/sjm/code/Project-Dynamite/data/output/wg4_catalogue_images/"
       def run
         super do
           create_star_metadata_hash
@@ -29,7 +30,6 @@ module KeplerProcessor
       def create_observation_index
         @observation_index = @input_data.map do |observation|
           kic_number, cadence, season = observation
-          kic_number = kic_number.to_i
           cadence = cadence == "SC" ? "slc" : "llc"
           hash = { :kic_number => kic_number, :cadence => cadence, :season => season, :cycle => "kic#{kic_number} #{season} #{cadence}", :lightcurve_path => "#{CATALOGUE_IMAGES_PATH}kic#{kic_number}_CFlux_#{season}_#{cadence}_plot.png", :short_fourier_path => "#{CATALOGUE_IMAGES_PATH}kic#{kic_number}_CFlux_#{season}_#{cadence}_fourier_plot_0to24.png" }
           hash[:long_fourier_path] = "#{CATALOGUE_IMAGES_PATH}kic#{kic_number}_CFlux_#{season}_#{cadence}_fourier_plot_0to100.png" if cadence == "slc"
