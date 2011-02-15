@@ -18,7 +18,7 @@ module KeplerProcessor
       read_in_data
       split_comments!
       parse_header_attributes
-      convert_from_string!
+      select_appropriate_columns
       yield if block_given?
       save!
       LOGGER.info "Finished processing file #{@input_filename}"
@@ -31,28 +31,30 @@ module KeplerProcessor
     private
 
       def read_in_data
-        File.open(@input_filename, "r") do |file|
-          file.each { |line| @input_data << line }
-        end
+        @input_data = CSV.read @input_filename, :col_sep => @options[:column_delimiter], :converters => @options[:column_converters]
         raise NoDataError if @input_data.empty?
       end
 
       def split_comments!
         # matches (=~) regular expression (/../) hash at start of line (^), preceeded by any number of spaces (\s*)
-        @comments, @input_data = @input_data.partition { |line| line =~ /^(\s*#)/ }
+        @comments, @input_data = @input_data.partition { |line| line[0] =~ /^#/ }
       end
 
       def parse_header_attributes
         # select lines from comments containing a colon, map them into an array, remove the '#' and split
         # about that colon. Create a hash out of the result.
-        @attributes = @comments.select { |line| line.include? ":" }.map { |line| line.gsub("# ", "").split ":" }.to_hash
+        @attributes = @comments.select { |line| line.any? { |x| x.include? ":" } }.map do |line|
+          line.map! { |x| x.split(" ") }.flatten!
+          line.delete_at 0
+          value = line.delete_at(-1).to_s
+          [line.join(" ").split(":").first, value]
+        end.to_hash
       end
 
-      def convert_from_string!
+      def select_appropriate_columns
         # convert @input_data to a two dimensional float array: time, flux
         @input_data.map! do |line|
-          l = line.split(@options[:column_delimiter]).map &:to_f
-          @options[:file_columns].map { |x| l[x] }
+          @options[:file_columns].map { |x| line[x] }
         end
       end
 
