@@ -20,6 +20,8 @@ module KeplerProcessor
         end
       end
 
+      # NEED TO PERFORM A SORT PRIMARILY BY KIC NUMBER, AND THEN SECONDARILY BY SEASON, BECAUSE TABLE WON'T DOWNLOAD THAT WAY
+
       def create_star_metadata_hash
         @star_metadata = {}
         @input_data.each do |star|
