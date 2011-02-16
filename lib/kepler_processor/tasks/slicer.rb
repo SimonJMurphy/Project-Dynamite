@@ -1,5 +1,5 @@
 module KeplerProcessor
-  class slicer < Base
+  class Slicer < Base
 
     def run
       super Run
