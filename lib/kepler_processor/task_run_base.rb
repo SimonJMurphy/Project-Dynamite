@@ -44,7 +44,7 @@ module KeplerProcessor
         # select lines from comments containing a colon, map them into an array, remove the '#' and split
         # about that colon. Create a hash out of the result.
         @attributes = @comments.select { |line| line.any? { |x| x.include? ":" } }.map do |line|
-          line.map! { |x| x.split(" ") }.flatten!
+          line.map! { |x| x.is_a? String ? x.split(" ") : x }.flatten!
           line.delete_at 0
           value = line.delete_at(-1).to_s
           [line.join(" ").split(":").first, value]
