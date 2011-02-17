@@ -27,7 +27,7 @@ module KeplerProcessor
 
         def output_filename
           # Determine the output filename from input_filename and slice properties
-          @input_filename.dup.split("/").last.insert(-5, "_#{@options[:slice_size]}d_slices_part#{@slice_number}")
+          @input_filename.dup.split("/").last.insert(-9, "_#{@options[:slice_size]}d-slices-part#{@slice_number}")
         end
 
         def save!
