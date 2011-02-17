@@ -49,6 +49,7 @@ module KeplerProcessor
           value = line.delete_at(-1).to_s
           [line.join(" ").split(":").first, value]
         end.to_hash
+        @attributes[:kic_number] = @attributes[:kic_number].to_i if @attributes[:kic_number]
       end
 
       def select_appropriate_columns
