@@ -65,11 +65,12 @@ describe KeplerProcessor::Appender do
 end
 
 describe KeplerProcessor::Appender::Run do
+
   it "should inherit from TaskRunBase" do
-    pending
+    KeplerProcessor::Appender::Run.should < KeplerProcessor::TaskRunBase
   end
 
   it "should not have an output filename" do
-    pending
+    KeplerProcessor::Appender::Run.new("someinputfilename").output_filename.should be_nil
   end
 end
