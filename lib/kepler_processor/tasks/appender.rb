@@ -11,8 +11,8 @@ module KeplerProcessor
 
     def run
       check_input_file_count
-      check_consistent_kic_number
       get_input_files
+      check_consistent_kic_number
       collate_input_data
       save!
     end
@@ -22,13 +22,16 @@ module KeplerProcessor
         raise(RuntimeError, "Two or more input files required") if @options[:input_paths].count < 2
       end
 
-      def check_consistent_kic_number
-        raise(RuntimeError, "All files must be for the same star") if @runners.map { |r| r.attributes[:kic_number] }.uniq.count > 1
-      end
-
       def get_input_files
         @options[:input_paths].each do |input_path|
           @runners << Run.new(input_path, @options)
+        end
+      end
+
+      def check_consistent_kic_number
+        puts @runners.inspect
+        if @runners.map { |r| r.attributes[:kic_number] }.uniq.count > 1
+          raise(RuntimeError, "All files must be for the same star")
         end
       end
 
@@ -37,7 +40,7 @@ module KeplerProcessor
       end
 
       def output_filename
-        @runners.first.input_filename_without_path.sub(/\d{13}/, "appended_#{@runners.first.season}-#{@runners.last.season}") # Timestamp always has 13 digits in it
+        @runners.first.input_filename_without_path.sub(/\d{13}/, "appended_#{@runners.first.attributes[:season]}-#{@runners.last.attributes[:season]}") # Timestamp always has 13 digits in it
       end
 
     class Run < TaskRunBase

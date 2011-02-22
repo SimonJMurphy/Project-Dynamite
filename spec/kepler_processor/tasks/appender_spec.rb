@@ -26,32 +26,6 @@ describe KeplerProcessor::Appender do
     runners.each { |runner| runner.should be_instance_of(KeplerProcessor::Appender::Run) }
   end
 
-  it "should collate input file data" do
-    runners = []
-    2.times { runners << mock('runner', :input_data => [[1,2,3,4], [1,2,3,4]]) }
-    @app.instance_variable_set(:"@runners", runners)
-    @app.send :collate_input_data
-    @app.instance_variable_get(:"@output_data").should == [[1,2,3,4], [1,2,3,4], [1,2,3,4], [1,2,3,4]]
-  end
-
-  it "should figure out its output filename" do
-    runners = []
-    2.times do |i|
-      runner = mock('runner', :input_filename_without_path => @input_filenames.first)
-      runner.should_receive(:season).and_return("Q#{i+1}")
-      runners << runner
-    end
-    @app.instance_variable_set(:"@runners", runners)
-    @app.send(:output_filename).should == "kplr001432149-appended_Q1-Q2_llc_wg4.dat"
-  end
-
-  it "should save output data to correct output file" do
-    output_filename = "someoutputfilename"
-    @app.stub(:output_filename).and_return(output_filename)
-    CSV.should_receive(:open).with("#{@options[:output_path]}/#{output_filename}", "a+", {:col_sep=>"\t"})
-    @app.send :save!
-  end
-
   it "should raise an error if there are fewer than two files" do
     @input_filenames = %w{kplr001432149-2009131105131_llc_wg4.dat}
     @options = { :input_paths => @input_filenames, :output_path => "somewhere" }
@@ -63,26 +37,39 @@ describe KeplerProcessor::Appender do
   end
 
   it "should not raise an error if files have the same kic number" do
-    runners = []
-    2.times { runners << mock('runner', :attributes => { :kic_number => 100}) }
+    runners = [1,2].map { mock('runner', :attributes => { :kic_number => 100}) }
     @app.instance_variable_set(:"@runners", runners)
     lambda { @app.send :check_consistent_kic_number }.should_not raise_error(RuntimeError, /All files must be for the same star/)
   end
 
   it "should raise an error if files do not have the same kic number" do
-    runners = []
-    2.times { |i| runners << mock('runner', :attributes => { :kic_number => i}) }
+    runners = [1,2].map { |i| mock('runner', :attributes => { :kic_number => i}) }
     @app.instance_variable_set(:"@runners", runners)
     lambda { @app.send :check_consistent_kic_number }.should raise_error(RuntimeError, /All files must be for the same star/)
   end
+  it "should collate input file data" do
+    runners = [1,2].map { mock('runner', :input_data => [[1,2,3,4], [1,2,3,4]]) }
+    @app.instance_variable_set(:"@runners", runners)
+    @app.send :collate_input_data
+    @app.instance_variable_get(:"@output_data").should == [[1,2,3,4], [1,2,3,4], [1,2,3,4], [1,2,3,4]]
+  end
 
-  it "should perform full execution correctly" do
-    @app.should_receive(:check_input_file_count).ordered
-    @app.should_receive(:check_consistent_kic_number).ordered
-    @app.should_receive(:get_input_files).ordered
-    @app.should_receive(:collate_input_data).ordered
-    @app.should_receive(:save!).ordered
-    @app.run
+  it "should figure out its output filename" do
+    runners = [1,2].map { |i| mock('runner', :input_filename_without_path => @input_filenames.first, :attributes => {:season => "Q#{i}"}) }
+    @app.instance_variable_set(:"@runners", runners)
+    @app.send(:output_filename).should == "kplr001432149-appended_Q1-Q2_llc_wg4.dat"
+  end
+
+  it "should save output data to correct output file" do
+    output_filename = "someoutputfilename"
+    @app.stub(:output_filename).and_return(output_filename)
+    CSV.should_receive(:open).with("#{@options[:output_path]}/#{output_filename}", "a+", {:col_sep=>"\t"})
+    @app.send :save!
+  end
+
+
+
+
   end
 end
 
