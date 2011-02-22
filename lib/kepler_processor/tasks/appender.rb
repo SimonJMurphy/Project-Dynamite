@@ -13,6 +13,7 @@ module KeplerProcessor
       check_input_file_count
       get_input_files
       check_consistent_kic_number
+      sort_runners_by_season
       collate_input_data
       save!
     end
@@ -33,6 +34,10 @@ module KeplerProcessor
         if @runners.map { |r| r.attributes[:kic_number] }.uniq.count > 1
           raise(RuntimeError, "All files must be for the same star")
         end
+      end
+
+      def sort_runners_by_season
+        @runners.sort! { |a,b| a.attributes[:season] <=> b.attributes[:season] }
       end
 
       def collate_input_data

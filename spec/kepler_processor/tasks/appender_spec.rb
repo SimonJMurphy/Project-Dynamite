@@ -47,6 +47,14 @@ describe KeplerProcessor::Appender do
     @app.instance_variable_set(:"@runners", runners)
     lambda { @app.send :check_consistent_kic_number }.should raise_error(RuntimeError, /All files must be for the same star/)
   end
+
+  it "should sort input files by season" do
+    runners = [2,3,1].map { |i| mock('runner', :attributes => {:season => "Q#{i}"}) }
+    @app.instance_variable_set(:"@runners", runners)
+    @app.send :sort_runners_by_season
+    @app.instance_variable_get(:"@runners").map { |r| r.attributes[:season] }.should == %w{Q1 Q2 Q3}
+  end
+
   it "should collate input file data" do
     runners = [1,2].map { mock('runner', :input_data => [[1,2,3,4], [1,2,3,4]]) }
     @app.instance_variable_set(:"@runners", runners)
