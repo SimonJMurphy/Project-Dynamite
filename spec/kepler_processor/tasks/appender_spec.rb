@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe KeplerProcessor::Appender do
   # Future features:
-  # require condition that there are at least two files.
   # all files must have the same kic number
   # reinsert the partitioned comments, but change the 'season' parameter's value to read 'multiple' or something more specific if possible
   # could ask for user input for 'season' parameter
@@ -52,6 +51,16 @@ describe KeplerProcessor::Appender do
     @app.stub(:output_filename).and_return(output_filename)
     CSV.should_receive(:open).with("#{@options[:output_path]}/#{output_filename}", "a+", {:col_sep=>"\t"})
     @app.send :save!
+  end
+
+  it "should raise an error if there are fewer than two files" do
+    @input_filenames = %w{kplr001432149-2009131105131_llc_wg4.dat}
+    @options = { :input_paths => @input_filenames, :output_path => "somewhere" }
+    lambda { KeplerProcessor::Appender.new(@options).run }.should raise_error(RuntimeError, /Two or more input files required/)
+  end
+
+  it "should not raise an error if there are two or more files" do
+    lambda { @app.run }.should_not raise_error(RuntimeError, /Two or more input files required/)
   end
 end
 

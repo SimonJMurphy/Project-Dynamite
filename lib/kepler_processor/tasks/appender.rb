@@ -10,10 +10,14 @@ module KeplerProcessor
     end
 
     def run
+      check_input_file_count
       get_input_files
     end
 
     private
+      def check_input_file_count
+        raise(RuntimeError, "Two or more input files required") if @options[:input_paths].count < 2
+      end
 
       def get_input_files
         @options[:input_paths].each do |input_path|
