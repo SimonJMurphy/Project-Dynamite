@@ -64,10 +64,10 @@ describe KeplerProcessor::Appender do
   end
 
   it "should perform full execution correctly" do
-    @app.should_receive(:check_input_file_count)
-    @app.should_receive(:get_input_files)
-    @app.should_receive(:collate_input_data)
-    @app.should_receive(:save!)
+    @app.should_receive(:check_input_file_count).ordered
+    @app.should_receive(:get_input_files).ordered
+    @app.should_receive(:collate_input_data).ordered
+    @app.should_receive(:save!).ordered
     @app.run
   end
 end
