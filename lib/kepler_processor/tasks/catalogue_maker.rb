@@ -16,11 +16,10 @@ module KeplerProcessor
         super do
           create_star_metadata_hash
           create_observation_index
+          sort_observation_index_by_kic_number
           create_pdf
         end
       end
-
-      # NEED TO PERFORM A SORT PRIMARILY BY KIC NUMBER, AND THEN SECONDARILY BY SEASON, BECAUSE TABLE WON'T DOWNLOAD THAT WAY
 
       def create_star_metadata_hash
         @star_metadata = {}
@@ -37,6 +36,15 @@ module KeplerProcessor
           hash[:long_fourier_path] = "#{CATALOGUE_IMAGES_PATH}kic#{kic_number}_CFlux_#{season}_#{cadence}_fourier_plot_0to100.png" if cadence == "slc"
           hash
         end
+      end
+
+      def sort_observation_index_by_kic_number
+        @observation_index.sort! do |a, b|
+          comparison_result = a[:kic_number] <=> b[:kic_number]
+          comparison_result = a[:season] <=> b[:season] if comparison_result == 0
+          comparison_result
+        end
+        puts @observation_index.map { |x| x[:kic_number] }
       end
 
       # input_filenames of the form:        kic10000056_CFlux_Q4.2_slc.txt
