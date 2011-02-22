@@ -6,7 +6,7 @@ module KeplerProcessor
 
     attr_accessor :input_filename_without_path, :input_data, :output_data, :options
 
-    def initialize(input_filename, options)
+    def initialize(input_filename, options = {})
       @input_filename                   = input_filename
       @input_filename_without_path       = @input_filename.split("/").last.split(".")
       input_filename_without_path.delete_at(-1)
