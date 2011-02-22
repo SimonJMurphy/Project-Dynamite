@@ -30,7 +30,8 @@ module KeplerProcessor
     private
 
       def read_in_data
-        @input_data = CSV.read @input_filename, :col_sep => @options[:column_delimiter], :converters => @options[:column_converters]
+        # TODO: The marshaling here is for a deep copy to get Appender spec to pass. This is a memory consumption bitch. Need to figure out a better way to do the testing
+        @input_data = Marshal.load Marshal.dump(CSV.read(@input_filename, :col_sep => @options[:column_delimiter], :converters => @options[:column_converters]))
         raise NoDataError if @input_data.empty?
       end
 
@@ -42,7 +43,7 @@ module KeplerProcessor
       def parse_header_attributes
         # select lines from comments containing a colon, map them into an array, remove the '#' and split
         # about that colon. Create a hash out of the result.
-        @attributes = @comments.select { |line| line.any? { |x| x.include? ":" } }.map do |line|
+        @attributes = @comments.select { |line| line.any? { |x| x.is_a?(String) ? x.include?(":") : false } }.map do |line|
           line.map! { |x| x.is_a?(String) ? x.split(" ") : x }.flatten!
           line.delete_at 0
           value = line.delete_at(-1).to_s
