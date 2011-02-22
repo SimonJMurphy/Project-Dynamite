@@ -60,12 +60,19 @@ describe KeplerProcessor::Appender do
   end
 
   it "should not raise an error if there are two or more files" do
-    lambda { @app.run }.should_not raise_error(RuntimeError, /Two or more input files required/)
+    lambda { @app.check_input_file_count }.should_not raise_error(RuntimeError, /Two or more input files required/)
+  end
+
+  it "should perform full execution correctly" do
+    @app.should_receive(:check_input_file_count)
+    @app.should_receive(:get_input_files)
+    @app.should_receive(:collate_input_data)
+    @app.should_receive(:save!)
+    @app.run
   end
 end
 
 describe KeplerProcessor::Appender::Run do
-
   it "should inherit from TaskRunBase" do
     KeplerProcessor::Appender::Run.should < KeplerProcessor::TaskRunBase
   end

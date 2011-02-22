@@ -12,6 +12,8 @@ module KeplerProcessor
     def run
       check_input_file_count
       get_input_files
+      collate_input_data
+      save!
     end
 
     private
