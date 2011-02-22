@@ -4,9 +4,11 @@ require 'csv'
 module KeplerProcessor
   class TaskRunBase
 
+    attr_accessor :input_filename_without_path, :input_data, :output_data, :options
+
     def initialize(input_filename, options)
       @input_filename                   = input_filename
-      input_filename_without_path       = @input_filename.split("/").last.split(".")
+      @input_filename_without_path       = @input_filename.split("/").last.split(".")
       input_filename_without_path.delete_at(-1)
       @input_filename_without_extension = input_filename_without_path.join '.'
       @options                          = options
@@ -22,10 +24,6 @@ module KeplerProcessor
       yield if block_given?
       save!
       LOGGER.info "Finished processing file #{@input_filename}"
-    end
-
-    def full_output_filename
-      "#{@options[:output_path]}/#{output_filename}"
     end
 
     private
@@ -59,22 +57,7 @@ module KeplerProcessor
         end
       end
 
-      def output_filename
-        nil # defaults to nil, child class must override output_filename in order to save
-      end
-
-      def save!
-        if output_filename
-          @output_data ||= @input_data
-          ::FileUtils.mkpath @options[:output_path]
-          raise FileExistsError if File.exist?(full_output_filename) && !@options[:force_overwrite]
-          LOGGER.info "Writing output to #{full_output_filename}"
-          CSV.open(full_output_filename, @options[:force_overwrite] ? "w+" : "a+", :col_sep => "\t") do |csv|
-            # impicitly truncate file by file mode when force overwriting
-            @output_data.each { |record| csv << record }
-          end
-        end
-      end
+      include Saveable
 
   end
 end

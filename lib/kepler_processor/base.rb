@@ -1,5 +1,7 @@
 module KeplerProcessor
   class Base
+    attr_accessor :options
+
     def initialize(options)
       @options = options
     end

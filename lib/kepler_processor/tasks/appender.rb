@@ -1,28 +1,35 @@
 module KeplerProcessor
   class Appender < Base
 
-    def run
-      super Run
+    include Saveable
+    attr_accessor :input_data, :output_data
+
+    def initialize(*args)
+      super
+      @runners = []
     end
 
-    class Run < TaskRunBase
-      def run
-        super do
-          append!
+    def run
+      get_input_files
+    end
+
+    private
+
+      def get_input_files
+        @options[:input_paths].each do |input_path|
+          @runners << Run.new(input_path, @options)
         end
       end
 
-      private
+      def collate_input_data
+        @output_data = @runners.map { |runner| runner.input_data }.flatten 1
+      end
 
-       def append!
-         # comments are already partitioned off in base
-         # directly after last datapoint of first file, first datapoint of next file should be added to @input_data
-         # continue for all files given
-         # reinsert the partitioned comments, but change the 'season' parameter's value to read 'multiple' or something more specific if possible
-         # could ask for user input for 'season' parameter
-         # require condition that there are at least two files.
-         # all files must have the same kic number
-       end
+      def output_filename
+        @runners.first.input_filename_without_path.sub(/\d{13}/, "appended_#{@runners.first.season}-#{@runners.last.season}") # Timestamp always has 13 digits in it
+      end
+
+    class Run < TaskRunBase
     end
   end
 end
