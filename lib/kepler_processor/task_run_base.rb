@@ -4,7 +4,7 @@ require 'csv'
 module KeplerProcessor
   class TaskRunBase
 
-    attr_accessor :input_filename_without_path, :input_data, :output_data, :options
+    attr_accessor :input_filename_without_path, :input_data, :output_data, :options, :attributes
 
     def initialize(input_filename, options = {})
       @input_filename                   = input_filename

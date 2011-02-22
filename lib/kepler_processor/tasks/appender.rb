@@ -11,6 +11,7 @@ module KeplerProcessor
 
     def run
       check_input_file_count
+      check_consistent_kic_number
       get_input_files
       collate_input_data
       save!
@@ -19,6 +20,10 @@ module KeplerProcessor
     private
       def check_input_file_count
         raise(RuntimeError, "Two or more input files required") if @options[:input_paths].count < 2
+      end
+
+      def check_consistent_kic_number
+        raise(RuntimeError, "All files must be for the same star") if @runners.map { |r| r.attributes[:kic_number] }.uniq.count > 1
       end
 
       def get_input_files

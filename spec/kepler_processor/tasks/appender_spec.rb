@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe KeplerProcessor::Appender do
   # Future features:
-  # all files must have the same kic number
   # reinsert the partitioned comments, but change the 'season' parameter's value to read 'multiple' or something more specific if possible
   # could ask for user input for 'season' parameter
 
@@ -56,15 +55,30 @@ describe KeplerProcessor::Appender do
   it "should raise an error if there are fewer than two files" do
     @input_filenames = %w{kplr001432149-2009131105131_llc_wg4.dat}
     @options = { :input_paths => @input_filenames, :output_path => "somewhere" }
-    lambda { KeplerProcessor::Appender.new(@options).run }.should raise_error(RuntimeError, /Two or more input files required/)
+    lambda { KeplerProcessor::Appender.new(@options).send :check_input_file_count }.should raise_error(RuntimeError, /Two or more input files required/)
   end
 
   it "should not raise an error if there are two or more files" do
-    lambda { @app.check_input_file_count }.should_not raise_error(RuntimeError, /Two or more input files required/)
+    lambda { @app.send :check_input_file_count }.should_not raise_error(RuntimeError, /Two or more input files required/)
+  end
+
+  it "should not raise an error if files have the same kic number" do
+    runners = []
+    2.times { runners << mock('runner', :attributes => { :kic_number => 100}) }
+    @app.instance_variable_set(:"@runners", runners)
+    lambda { @app.send :check_consistent_kic_number }.should_not raise_error(RuntimeError, /All files must be for the same star/)
+  end
+
+  it "should raise an error if files do not have the same kic number" do
+    runners = []
+    2.times { |i| runners << mock('runner', :attributes => { :kic_number => i}) }
+    @app.instance_variable_set(:"@runners", runners)
+    lambda { @app.send :check_consistent_kic_number }.should raise_error(RuntimeError, /All files must be for the same star/)
   end
 
   it "should perform full execution correctly" do
     @app.should_receive(:check_input_file_count).ordered
+    @app.should_receive(:check_consistent_kic_number).ordered
     @app.should_receive(:get_input_files).ordered
     @app.should_receive(:collate_input_data).ordered
     @app.should_receive(:save!).ordered

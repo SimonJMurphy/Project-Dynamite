@@ -60,6 +60,11 @@ describe KeplerProcessor::TaskRunBase do
     pending
   end
 
+  it "should make attributes available publicly" do
+    @trb.instance_variable_set(:"@attributes", :foo)
+    @trb.attributes.should == :foo
+  end
+
   it "should split out the appropriate columns" do
     pending
   end
