@@ -30,8 +30,7 @@ module KeplerProcessor
     private
 
       def read_in_data
-        # TODO: The marshaling here is for a deep copy to get Appender spec to pass. This is a memory consumption bitch. Need to figure out a better way to do the testing
-        @input_data = Marshal.load Marshal.dump(CSV.read(@input_filename, :col_sep => @options[:column_delimiter], :converters => @options[:column_converters]))
+        @input_data = CSV.read @input_filename, :col_sep => @options[:column_delimiter], :converters => @options[:column_converters]
         raise NoDataError if @input_data.empty?
       end
 
