@@ -7,7 +7,7 @@ describe KeplerProcessor::TaskBase do
   end
 
   describe "when executing" do
-    it "should take a runner class as an argument to execute" do
+    it "should take an input file processor class as an argument to execute" do
       pending
     end
 

@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe KeplerProcessor::TaskRunBase do
+describe KeplerProcessor::InputFileProcessorBase do
   before(:each) do
     @options = { :foo => :bar, :output_path => "output_path" }
     @complete_filename = "/Users/simon/filename.txt"
-    @trb = KeplerProcessor::TaskRunBase.new(@complete_filename, @options)
+    @trb = KeplerProcessor::InputFileProcessorBase.new(@complete_filename, @options)
   end
 
   describe "on instantiation" do

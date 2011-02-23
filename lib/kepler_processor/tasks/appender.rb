@@ -26,7 +26,7 @@ module KeplerProcessor
 
       def get_input_files
         @options[:input_paths].each do |input_path|
-          @runners << Run.new(input_path, @options)
+          @runners << InputFileProcessor.new(input_path, @options)
         end
       end
 
@@ -50,7 +50,7 @@ module KeplerProcessor
         @runners.first.input_filename_without_path.sub(/\d{13}/, "appended_#{@runners.first.attributes[:season]}-#{@runners.last.attributes[:season]}") # Timestamp always has 13 digits in it
       end
 
-    class Run < TaskRunBase
+    class InputFileProcessor < InputFileProcessorBase
     end
   end
 end

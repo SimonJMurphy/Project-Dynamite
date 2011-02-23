@@ -7,10 +7,10 @@ module KeplerProcessor
       @options[:column_delimiter] = ","
       @options[:file_columns] = (0..8).to_a
       @options[:column_converters] = [:integer, :float, :float, :float, :float, :float, :float, :float, :float]
-      super Run
+      super InputFileProcessor
     end
 
-    class Run < TaskRunBase
+    class InputFileProcessor < InputFileProcessorBase
       CATALOGUE_IMAGES_PATH = "/Users/sjm/code/Project-Dynamite/data/output/wg4_catalogue_images/"
       def execute!
         super do

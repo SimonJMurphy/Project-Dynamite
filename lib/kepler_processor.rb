@@ -10,6 +10,6 @@ end
 
 require_relative 'kepler_processor/task_base.rb'
 require_relative 'kepler_processor/saveable.rb'
-require_relative 'kepler_processor/task_run_base.rb'
+require_relative 'kepler_processor/input_file_processor_base.rb'
 require_relative 'kepler_processor/tasks.rb'
 require_relative 'kepler_processor/version.rb'

@@ -13,8 +13,8 @@ describe KeplerProcessor::Appender do
   end
 
   it "creates a runner object for each specified input file" do
-    KeplerProcessor::Appender::Run.should_receive(:new).with(@input_filenames[0], @options)
-    KeplerProcessor::Appender::Run.should_receive(:new).with(@input_filenames[1], @options)
+    KeplerProcessor::Appender::InputFileProcessor.should_receive(:new).with(@input_filenames[0], @options)
+    KeplerProcessor::Appender::InputFileProcessor.should_receive(:new).with(@input_filenames[1], @options)
     @app.send :get_input_files
   end
 
@@ -23,7 +23,7 @@ describe KeplerProcessor::Appender do
     runners = @app.instance_variable_get(:"@runners")
     runners.should be_instance_of(Array)
     runners.size.should == 2
-    runners.each { |runner| runner.should be_instance_of(KeplerProcessor::Appender::Run) }
+    runners.each { |runner| runner.should be_instance_of(KeplerProcessor::Appender::InputFileProcessor) }
   end
 
   it "runs all runners" do
@@ -110,12 +110,12 @@ describe KeplerProcessor::Appender do
   end
 end
 
-describe KeplerProcessor::Appender::Run do
+describe KeplerProcessor::Appender::InputFileProcessor do
   it "should inherit from TaskRunBase" do
-    KeplerProcessor::Appender::Run.should < KeplerProcessor::TaskRunBase
+    KeplerProcessor::Appender::InputFileProcessor.should < KeplerProcessor::InputFileProcessorBase
   end
 
   it "should not have an output filename" do
-    KeplerProcessor::Appender::Run.new("someinputfilename").output_filename.should be_nil
+    KeplerProcessor::Appender::InputFileProcessor.new("someinputfilename").output_filename.should be_nil
   end
 end

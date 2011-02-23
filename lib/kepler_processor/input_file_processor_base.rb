@@ -2,7 +2,7 @@ require 'fileutils'
 require 'csv'
 
 module KeplerProcessor
-  class TaskRunBase
+  class InputFileProcessorBase
 
     attr_accessor :input_filename_without_path, :input_data, :output_data, :options, :attributes
 

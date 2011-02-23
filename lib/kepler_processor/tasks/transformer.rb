@@ -2,10 +2,10 @@ module KeplerProcessor
   class Transformer < TaskBase
 
     def execute!
-      super Run
+      super InputFileProcessor
     end
 
-    class Run < TaskRunBase
+    class InputFileProcessor < InputFileProcessorBase
       include KeplerDFT
 
       def execute!

@@ -2,10 +2,10 @@ module KeplerProcessor
   class Merger < TaskBase
 
     def execute!
-      super Run
+      super InputFileProcessor
     end
 
-    class Run < TaskRunBase
+    class InputFileProcessor < InputFileProcessorBase
       def execute!
         super do
           merge!
