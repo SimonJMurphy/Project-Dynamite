@@ -21,6 +21,7 @@ module KeplerProcessor
               plot.output "#{@options[:output_path]}/#{@input_filename_without_extension}_plot.png"
               plot.ylabel "Amplitude"
               plot.xlabel "BJD"
+              plot.yrange "[] reverse"
 
               x = @input_data.map { |point| point[0] }
               y = @input_data.map { |point| point[1] * 1000 }
