@@ -1,5 +1,5 @@
 module KeplerProcessor
-  class Appender < Base
+  class Appender < TaskBase
 
     include Saveable
     attr_accessor :input_data, :output_data

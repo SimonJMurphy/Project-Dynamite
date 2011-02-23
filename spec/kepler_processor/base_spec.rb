@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe KeplerProcessor::Base do
+describe KeplerProcessor::TaskBase do
   it "should assign options to an instance variable" do
     options = { :foo => :bar }
-    KeplerProcessor::Base.new(options).instance_variable_get(:"@options").should == options
+    KeplerProcessor::TaskBase.new(options).instance_variable_get(:"@options").should == options
   end
 
   describe "when executing" do

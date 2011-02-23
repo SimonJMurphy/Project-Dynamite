@@ -1,5 +1,5 @@
 module KeplerProcessor
-  class Transformer < Base
+  class Transformer < TaskBase
 
     def execute!
       super Run

@@ -1,5 +1,5 @@
 module KeplerProcessor
-  class Merger < Base
+  class Merger < TaskBase
 
     def execute!
       super Run

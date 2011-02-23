@@ -1,5 +1,5 @@
 module KeplerProcessor
-  class Base
+  class TaskBase
     attr_accessor :options
 
     def initialize(options)

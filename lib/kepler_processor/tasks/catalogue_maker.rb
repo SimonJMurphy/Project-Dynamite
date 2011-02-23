@@ -1,7 +1,7 @@
 require 'prawn'
 
 module KeplerProcessor
-  class CatalogueMaker < Base
+  class CatalogueMaker < TaskBase
 
     def execute!
       @options[:column_delimiter] = ","

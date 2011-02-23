@@ -1,5 +1,5 @@
 module KeplerProcessor
-  class Convertor < Base
+  class Convertor < TaskBase
 
     def execute!
       super Run
