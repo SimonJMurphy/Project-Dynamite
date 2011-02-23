@@ -16,7 +16,7 @@ module KeplerProcessor
       @input_data                       = []
     end
 
-    def run
+    def execute!
       LOGGER.info "Processing file #{@input_filename}"
       read_in_data
       split_comments!

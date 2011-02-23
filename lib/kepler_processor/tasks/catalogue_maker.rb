@@ -3,7 +3,7 @@ require 'prawn'
 module KeplerProcessor
   class CatalogueMaker < Base
 
-    def run
+    def execute!
       @options[:column_delimiter] = ","
       @options[:file_columns] = (0..8).to_a
       @options[:column_converters] = [:integer, :float, :float, :float, :float, :float, :float, :float, :float]
@@ -12,7 +12,7 @@ module KeplerProcessor
 
     class Run < TaskRunBase
       CATALOGUE_IMAGES_PATH = "/Users/sjm/code/Project-Dynamite/data/output/wg4_catalogue_images/"
-      def run
+      def execute!
         super do
           create_star_metadata_hash
           create_observation_index

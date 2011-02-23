@@ -29,11 +29,11 @@ describe KeplerProcessor::Appender do
   it "runs all runners" do
     runners = [1,2].map do
       runner = mock('runner')
-      runner.should_receive(:run)
+      runner.should_receive(:execute!)
       runner
     end
     @app.instance_variable_set(:"@runners", runners)
-    @app.send :run_all_runners
+    @app.send :execute_all_runners
   end
 
   it "should raise an error if there are fewer than two files" do
@@ -90,12 +90,12 @@ describe KeplerProcessor::Appender do
     it "in order" do
       @app.should_receive(:check_input_file_count).ordered
       @app.should_receive(:get_input_files).ordered
-      @app.should_receive(:run_all_runners).ordered
+      @app.should_receive(:execute_all_runners).ordered
       @app.should_receive(:check_consistent_kic_number).ordered
       @app.should_receive(:sort_runners_by_season).ordered
       @app.should_receive(:collate_input_data).ordered
       @app.should_receive(:save!).ordered
-      @app.run
+      @app.execute!
     end
 
     it "without errors" do
@@ -104,7 +104,7 @@ describe KeplerProcessor::Appender do
         Marshal.load Marshal.dump(example_input_file_contents)
       end
       CSV.should_receive(:open)
-      lambda { @app.run }.should_not raise_error
+      lambda { @app.execute! }.should_not raise_error
     end
 
   end

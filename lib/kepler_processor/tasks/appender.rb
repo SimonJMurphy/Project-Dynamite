@@ -9,10 +9,10 @@ module KeplerProcessor
       @runners = []
     end
 
-    def run
+    def execute!
       check_input_file_count
       get_input_files
-      run_all_runners
+      execute_all_runners
       check_consistent_kic_number
       sort_runners_by_season
       collate_input_data
@@ -30,8 +30,8 @@ module KeplerProcessor
         end
       end
 
-      def run_all_runners
-        @runners.each &:run
+      def execute_all_runners
+        @runners.each &:execute!
       end
 
       def check_consistent_kic_number

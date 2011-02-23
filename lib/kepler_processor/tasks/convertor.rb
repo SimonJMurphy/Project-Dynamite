@@ -1,12 +1,12 @@
 module KeplerProcessor
   class Convertor < Base
 
-    def run
+    def execute!
       super Run
     end
 
     class Run < TaskRunBase
-      def run
+      def execute!
         super do
           strip_invalid!
           convert_fluxes_to_magnitudes!

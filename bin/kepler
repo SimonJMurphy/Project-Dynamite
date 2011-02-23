@@ -73,6 +73,6 @@ if options[:command] == KeplerProcessor::Slicer && !options.has_key?(:slice_size
   exit
 end
 
-options[:command].new(options).run
+options[:command].new(options).execute!
 
 LOGGER.close

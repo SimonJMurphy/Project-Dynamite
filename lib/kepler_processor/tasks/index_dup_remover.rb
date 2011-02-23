@@ -1,12 +1,12 @@
 module KeplerProcessor
   class IndexDupRemover < Base
 
-    def run
+    def execute!
       super Run
     end
 
     class Run < TaskRunBase
-      def run
+      def execute!
         super do
           kill_duplicates!
         end

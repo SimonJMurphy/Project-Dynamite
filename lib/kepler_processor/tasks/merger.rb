@@ -1,12 +1,12 @@
 module KeplerProcessor
   class Merger < Base
 
-    def run
+    def execute!
       super Run
     end
 
     class Run < TaskRunBase
-      def run
+      def execute!
         super do
           merge!
         end

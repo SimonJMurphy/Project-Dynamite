@@ -6,12 +6,12 @@ describe KeplerProcessor::Base do
     KeplerProcessor::Base.new(options).instance_variable_get(:"@options").should == options
   end
 
-  describe "when running" do
-    it "should take a runner class as an argument to run" do
+  describe "when executing" do
+    it "should take a runner class as an argument to execute" do
       pending
     end
 
-    it "should run for each input filepath provided" do
+    it "should execute for each input filepath provided" do
       pending
     end
 

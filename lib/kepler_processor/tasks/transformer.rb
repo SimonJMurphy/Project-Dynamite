@@ -1,14 +1,14 @@
 module KeplerProcessor
   class Transformer < Base
 
-    def run
+    def execute!
       super Run
     end
 
     class Run < TaskRunBase
       include KeplerDFT
 
-      def run
+      def execute!
         super do
           compute_amplitude_spectrum
           plot_DFT @spectrum.to_a if cadence == :slc
