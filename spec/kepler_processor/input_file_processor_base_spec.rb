@@ -1,29 +1,16 @@
 require 'spec_helper'
 
 describe KeplerProcessor::InputFileProcessorBase do
-  before(:each) do
-    @options = { :foo => :bar, :output_path => "output_path" }
-    @complete_filename = "/Users/simon/filename.txt"
-  end
+  let(:options) { { :foo => :bar, :output_path => "output_path" } }
+  let(:complete_filename) { "/Users/simon/filename.txt" }
 
-  subject { KeplerProcessor::InputFileProcessorBase.new(@complete_filename, @options) }
+  subject { KeplerProcessor::InputFileProcessorBase.new(complete_filename, options) }
 
   describe "on instantiation" do
-    it "should assign options to an instance variable" do
-      subject.instance_variable_get(:"@options").should == @options
-    end
-
-    it "should assign filename to an instance variable" do
-      subject.instance_variable_get(:"@input_filename").should == @complete_filename
-    end
-
-    it "should assign filename to an instance variable" do
-      subject.instance_variable_get(:"@input_filename_without_extension").should == "filename"
-    end
-
-    it "should assign an empty array for input data to an instance variable" do
-      subject.instance_variable_get(:"@input_data").should == []
-    end
+    its(:options) { should == options }
+    its(:input_filename) { should == complete_filename }
+    its(:input_filename_without_extension) { should == "filename" }
+    its(:input_data) { should == [] }
   end
 
   describe "should determine correct full output filename" do
@@ -31,9 +18,7 @@ describe KeplerProcessor::InputFileProcessorBase do
     its(:full_output_filename) { should == "output_path/output_file.txt" }
   end
 
-  it "should have a nil output filename by default" do
-    subject.send(:output_filename).should be_nil
-  end
+  its(:output_filename) { should be_nil }
 
   describe "reading in data" do
     it "should read data from the input filename" do
