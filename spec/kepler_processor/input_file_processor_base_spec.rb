@@ -4,34 +4,35 @@ describe KeplerProcessor::InputFileProcessorBase do
   before(:each) do
     @options = { :foo => :bar, :output_path => "output_path" }
     @complete_filename = "/Users/simon/filename.txt"
-    @trb = KeplerProcessor::InputFileProcessorBase.new(@complete_filename, @options)
   end
+
+  subject { KeplerProcessor::InputFileProcessorBase.new(@complete_filename, @options) }
 
   describe "on instantiation" do
     it "should assign options to an instance variable" do
-      @trb.instance_variable_get(:"@options").should == @options
+      subject.instance_variable_get(:"@options").should == @options
     end
 
     it "should assign filename to an instance variable" do
-      @trb.instance_variable_get(:"@input_filename").should == @complete_filename
+      subject.instance_variable_get(:"@input_filename").should == @complete_filename
     end
 
     it "should assign filename to an instance variable" do
-      @trb.instance_variable_get(:"@input_filename_without_extension").should == "filename"
+      subject.instance_variable_get(:"@input_filename_without_extension").should == "filename"
     end
 
     it "should assign an empty array for input data to an instance variable" do
-      @trb.instance_variable_get(:"@input_data").should == []
+      subject.instance_variable_get(:"@input_data").should == []
     end
   end
 
-  it "should determine correct full output filename" do
-    @trb.should_receive(:output_filename).and_return("output_file.txt")
-    @trb.full_output_filename.should == "output_path/output_file.txt"
+  describe "should determine correct full output filename" do
+    before { subject.should_receive(:output_filename).and_return("output_file.txt") }
+    its(:full_output_filename) { should == "output_path/output_file.txt" }
   end
 
   it "should have a nil output filename by default" do
-    @trb.send(:output_filename).should be_nil
+    subject.send(:output_filename).should be_nil
   end
 
   describe "reading in data" do
@@ -60,9 +61,9 @@ describe KeplerProcessor::InputFileProcessorBase do
     pending
   end
 
-  it "should make attributes available publicly" do
-    @trb.instance_variable_set(:"@attributes", :foo)
-    @trb.attributes.should == :foo
+  describe "should make attributes available publicly" do
+    before { subject.instance_variable_set(:"@attributes", :foo) }
+    its(:attributes) { should == :foo }
   end
 
   it "should split out the appropriate columns" do

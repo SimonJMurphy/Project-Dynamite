@@ -5,22 +5,23 @@ describe KeplerProcessor::Appender do
   # reinsert the partitioned comments, but change the 'season' parameter's value to read 'multiple' or something more specific if possible
   # could ask for user input for 'season' parameter
 
-  before(:each) do
-    LOGGER ||= mock('logger').as_null_object
-    @input_filenames = %w{kplr001432149-2009131105131_llc_wg4.dat kplr001436149-2009131105131_llc_wg4.dat}
-    @options = { :input_paths => @input_filenames, :output_path => "somewhere", :file_columns => [1,2,3,4] }
-    @app = KeplerProcessor::Appender.new(@options)
-  end
+  before(:each) { LOGGER ||= mock('logger').as_null_object }
+
+  let(:input_filenames) { %w{kplr001432149-2009131105131_llc_wg4.dat kplr001436149-2009131105131_llc_wg4.dat} }
+
+  let(:options) { { :input_paths => input_filenames, :output_path => "somewhere", :file_columns => [1,2,3,4] } }
+
+  subject { KeplerProcessor::Appender.new options }
 
   it "creates a runner object for each specified input file" do
-    KeplerProcessor::Appender::InputFileProcessor.should_receive(:new).with(@input_filenames[0], @options)
-    KeplerProcessor::Appender::InputFileProcessor.should_receive(:new).with(@input_filenames[1], @options)
-    @app.send :get_input_files
+    KeplerProcessor::Appender::InputFileProcessor.should_receive(:new).with(input_filenames[0], options)
+    KeplerProcessor::Appender::InputFileProcessor.should_receive(:new).with(input_filenames[1], options)
+    subject.send :get_input_files
   end
 
   it "collects an array of runner objects for all specified input files" do
-    @app.send :get_input_files
-    runners = @app.instance_variable_get(:"@runners")
+    subject.send :get_input_files
+    runners = subject.instance_variable_get(:"@runners")
     runners.should be_instance_of(Array)
     runners.size.should == 2
     runners.each { |runner| runner.should be_instance_of(KeplerProcessor::Appender::InputFileProcessor) }
@@ -32,70 +33,70 @@ describe KeplerProcessor::Appender do
       runner.should_receive(:execute!)
       runner
     end
-    @app.instance_variable_set(:"@runners", runners)
-    @app.send :execute_all_runners
+    subject.instance_variable_set(:"@runners", runners)
+    subject.send :execute_all_runners
   end
 
   it "should raise an error if there are fewer than two files" do
-    @input_filenames = %w{kplr001432149-2009131105131_llc_wg4.dat}
-    @options = { :input_paths => @input_filenames, :output_path => "somewhere" }
-    lambda { KeplerProcessor::Appender.new(@options).send :check_input_file_count }.should raise_error(RuntimeError, /Two or more input files required/)
+    input_filenames = %w{kplr001432149-2009131105131_llc_wg4.dat}
+    options = { :input_paths => input_filenames, :output_path => "somewhere" }
+    lambda { KeplerProcessor::Appender.new(options).send :check_input_file_count }.should raise_error(RuntimeError, /Two or more input files required/)
   end
 
   it "should not raise an error if there are two or more files" do
-    lambda { @app.send :check_input_file_count }.should_not raise_error(RuntimeError, /Two or more input files required/)
+    lambda { subject.send :check_input_file_count }.should_not raise_error(RuntimeError, /Two or more input files required/)
   end
 
   it "should not raise an error if files have the same kic number" do
     runners = [1,2].map { mock('runner', :attributes => { :kic_number => 100}) }
-    @app.instance_variable_set(:"@runners", runners)
-    lambda { @app.send :check_consistent_kic_number }.should_not raise_error(RuntimeError, /All files must be for the same star/)
+    subject.instance_variable_set(:"@runners", runners)
+    lambda { subject.send :check_consistent_kic_number }.should_not raise_error(RuntimeError, /All files must be for the same star/)
   end
 
   it "should raise an error if files do not have the same kic number" do
     runners = [1,2].map { |i| mock('runner', :attributes => { :kic_number => i}) }
-    @app.instance_variable_set(:"@runners", runners)
-    lambda { @app.send :check_consistent_kic_number }.should raise_error(RuntimeError, /All files must be for the same star/)
+    subject.instance_variable_set(:"@runners", runners)
+    lambda { subject.send :check_consistent_kic_number }.should raise_error(RuntimeError, /All files must be for the same star/)
   end
 
   it "should sort input files by season" do
     runners = [2,3,1].map { |i| mock('runner', :attributes => {:season => "Q#{i}"}) }
-    @app.instance_variable_set(:"@runners", runners)
-    @app.send :sort_runners_by_season
-    @app.instance_variable_get(:"@runners").map { |r| r.attributes[:season] }.should == %w{Q1 Q2 Q3}
+    subject.instance_variable_set(:"@runners", runners)
+    subject.send :sort_runners_by_season
+    subject.instance_variable_get(:"@runners").map { |r| r.attributes[:season] }.should == %w{Q1 Q2 Q3}
   end
 
   it "should collate input file data" do
     runners = [1,2].map { mock('runner', :input_data => [[1,2,3,4], [1,2,3,4]]) }
-    @app.instance_variable_set(:"@runners", runners)
-    @app.send :collate_input_data
-    @app.instance_variable_get(:"@output_data").should == [[1,2,3,4], [1,2,3,4], [1,2,3,4], [1,2,3,4]]
+    subject.instance_variable_set(:"@runners", runners)
+    subject.send :collate_input_data
+    subject.instance_variable_get(:"@output_data").should == [[1,2,3,4], [1,2,3,4], [1,2,3,4], [1,2,3,4]]
   end
 
   it "should figure out its output filename" do
-    runners = [1,2].map { |i| mock('runner', :input_filename_without_path => @input_filenames.first, :attributes => {:season => "Q#{i}"}) }
-    @app.instance_variable_set(:"@runners", runners)
-    @app.send(:output_filename).should == "kplr001432149-appended_Q1-Q2_llc_wg4.dat"
+    runners = [1,2].map { |i| mock('runner', :input_filename_without_path => input_filenames.first, :attributes => {:season => "Q#{i}"}) }
+    subject.instance_variable_set(:"@runners", runners)
+    subject.send(:output_filename).should == "kplr001432149-appended_Q1-Q2_llc_wg4.dat"
   end
 
   it "should save output data to correct output file" do
     output_filename = "someoutputfilename"
-    @app.stub(:output_filename).and_return(output_filename)
-    CSV.should_receive(:open).with("#{@options[:output_path]}/#{output_filename}", "a+", {:col_sep=>"\t"})
-    @app.send :save!
+    subject.stub(:output_filename).and_return(output_filename)
+    CSV.should_receive(:open).with("#{options[:output_path]}/#{output_filename}", "a+", {:col_sep=>"\t"})
+    subject.send :save!
   end
 
   describe "should perform full execution" do
 
     it "in order" do
-      @app.should_receive(:check_input_file_count).ordered
-      @app.should_receive(:get_input_files).ordered
-      @app.should_receive(:execute_all_runners).ordered
-      @app.should_receive(:check_consistent_kic_number).ordered
-      @app.should_receive(:sort_runners_by_season).ordered
-      @app.should_receive(:collate_input_data).ordered
-      @app.should_receive(:save!).ordered
-      @app.execute!
+      subject.should_receive(:check_input_file_count).ordered
+      subject.should_receive(:get_input_files).ordered
+      subject.should_receive(:execute_all_runners).ordered
+      subject.should_receive(:check_consistent_kic_number).ordered
+      subject.should_receive(:sort_runners_by_season).ordered
+      subject.should_receive(:collate_input_data).ordered
+      subject.should_receive(:save!).ordered
+      subject.execute!
     end
 
     it "without errors" do
@@ -104,16 +105,16 @@ describe KeplerProcessor::Appender do
         Marshal.load Marshal.dump(example_input_file_contents)
       end
       CSV.should_receive(:open)
-      lambda { @app.execute! }.should_not raise_error
+      lambda { subject.execute! }.should_not raise_error
     end
 
   end
 end
 
 describe KeplerProcessor::Appender::InputFileProcessor do
-  it "should inherit from TaskRunBase" do
-    KeplerProcessor::Appender::InputFileProcessor.should < KeplerProcessor::InputFileProcessorBase
-  end
+  subject { KeplerProcessor::Appender::InputFileProcessor }
+
+  it { should < KeplerProcessor::InputFileProcessorBase }
 
   it "should not have an output filename" do
     KeplerProcessor::Appender::InputFileProcessor.new("someinputfilename").output_filename.should be_nil
