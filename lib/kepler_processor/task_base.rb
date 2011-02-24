@@ -14,7 +14,7 @@ module KeplerProcessor
         rescue KeplerProcessor::FileExistsError
           LOGGER.info "Your output file (#{c.full_output_filename}) already exists, please remove it first (or something)."
         rescue => e
-          LOGGER.error e.exception
+          LOGGER.error e.message
         ensure
           c = nil
         end
