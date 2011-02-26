@@ -1,5 +1,7 @@
 require 'spec_helper'
 
-describe KeplerProcessor::IndexDupRemover do
-  pending "write it"
+module KeplerProcessor
+  describe IndexDupRemover do
+    pending "write it"
+  end
 end

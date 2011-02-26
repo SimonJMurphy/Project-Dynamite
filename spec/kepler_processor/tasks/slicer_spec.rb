@@ -1,5 +1,7 @@
 require 'spec_helper'
 
-describe KeplerProcessor::Slicer do
-  pending "write it"
+module KeplerProcessor
+  describe Slicer do
+    pending "write it"
+  end
 end

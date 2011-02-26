@@ -1,5 +1,7 @@
 require 'spec_helper'
 
-describe KeplerProcessor::Convertor do
-  pending "write it"
+module KeplerProcessor
+  describe Convertor do
+    pending "write it"
+  end
 end

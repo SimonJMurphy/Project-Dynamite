@@ -1,5 +1,7 @@
 require 'spec_helper'
 
-describe KeplerProcessor::Merger do
-  pending "write it"
+module KeplerProcessor
+  describe Merger do
+    pending "write it"
+  end
 end
