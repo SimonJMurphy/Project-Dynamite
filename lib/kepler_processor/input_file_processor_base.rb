@@ -4,7 +4,7 @@ require 'csv'
 module KeplerProcessor
   class InputFileProcessorBase
 
-    attr_accessor :input_filename, :input_filename_without_path, :input_filename_without_extension, :input_data, :output_data, :options, :attributes
+    attr_accessor :input_filename, :input_filename_without_path, :input_filename_without_extension, :input_data, :output_data, :options, :attributes, :comments
 
     def initialize(input_filename, options = {})
       @input_filename                   = input_filename
