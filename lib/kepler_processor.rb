@@ -1,4 +1,5 @@
 require 'gnuplot'
+require 'gsl'
 require 'kepler_dft'
 
 require_relative 'kepler_processor/monkey_patches.rb'
