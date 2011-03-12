@@ -25,4 +25,6 @@ Gem::Specification.new do |s|
   s.add_dependency "gsl"
   s.add_dependency "prawn"
   s.add_development_dependency "rspec"
+  s.add_development_dependency "cucumber"
+  s.add_development_dependency "aruba"
 end
