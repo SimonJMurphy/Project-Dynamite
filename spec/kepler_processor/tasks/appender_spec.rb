@@ -15,8 +15,8 @@ module KeplerProcessor
     subject { Appender.new options }
 
     it "creates a runner object for each specified input file" do
-      Appender::InputFileProcessor.should_receive(:new).with(input_filenames[0], options)
-      Appender::InputFileProcessor.should_receive(:new).with(input_filenames[1], options)
+      InputFileProcessorBase.should_receive(:new).with(input_filenames[0], options)
+      InputFileProcessorBase.should_receive(:new).with(input_filenames[1], options)
       subject.send :get_input_files
     end
 
@@ -25,7 +25,7 @@ module KeplerProcessor
       runners = subject.instance_variable_get(:"@runners")
       runners.should be_instance_of(Array)
       runners.size.should == 2
-      runners.each { |runner| runner.should be_instance_of(KeplerProcessor::Appender::InputFileProcessor) }
+      runners.each { |runner| runner.should be_instance_of(KeplerProcessor::InputFileProcessorBase) }
     end
 
     it "runs all runners" do
@@ -109,16 +109,6 @@ module KeplerProcessor
         lambda { subject.execute! }.should_not raise_error
       end
 
-    end
-  end
-
-  describe Appender::InputFileProcessor do
-    subject { Appender::InputFileProcessor }
-
-    it { should < InputFileProcessorBase }
-
-    it "should not have an output filename" do
-      Appender::InputFileProcessor.new("someinputfilename").output_filename.should be_nil
     end
   end
 end

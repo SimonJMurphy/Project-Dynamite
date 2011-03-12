@@ -44,7 +44,6 @@ module KeplerProcessor
           comparison_result = a[:season] <=> b[:season] if comparison_result == 0
           comparison_result
         end
-        puts @observation_index.map { |x| x[:kic_number] }
       end
 
       # input_filenames of the form:        kic10000056_CFlux_Q4.2_slc.txt

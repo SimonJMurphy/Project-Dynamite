@@ -31,7 +31,7 @@ module KeplerProcessor
 
       def get_input_files
         @options[:input_paths].each do |input_path|
-          @runners << InputFileProcessor.new(input_path, @options)
+          @runners << InputFileProcessorBase.new(input_path, @options)
         end
       end
 
@@ -46,8 +46,5 @@ module KeplerProcessor
       def sort_runners_by_season
         @runners.sort! { |a,b| a.attributes[:season] <=> b.attributes[:season] }
       end
-
-    class InputFileProcessor < InputFileProcessorBase
-    end
   end
 end

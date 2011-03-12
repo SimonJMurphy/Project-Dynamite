@@ -16,7 +16,6 @@ module KeplerProcessor
 
       def collate_input_data
         @output_data = @runners.map { |runner| runner.input_data }.flatten 1
-        puts @runners.inspect
       end
 
       def reinsert_header
@@ -31,8 +30,5 @@ module KeplerProcessor
       def output_filename
         @runners.first.input_filename_without_path.sub(/\d{13}/, "appended_#{season_range}") # Timestamp always has 13 digits in it
       end
-
-    class InputFileProcessor < InputFileProcessorBase
-    end
   end
 end
