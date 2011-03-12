@@ -15,6 +15,7 @@ module KeplerProcessor
           LOGGER.info "Your output file (#{c.full_output_filename}) already exists, please remove it first (or something)."
         rescue => e
           LOGGER.error e.message
+          LOGGER.error e.backtrace.join("\n")
         ensure
           c = nil
         end
