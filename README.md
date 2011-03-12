@@ -78,6 +78,14 @@ The catalogue created is in pdf format, with one observation cycle per page. Cat
 
 Appender is designed to combine consecutive raw data files into a single data file, before conversion. This removes some systematic errors from converting the files first, and appending them afterwards.
 
+Development
+-----------
+
+* Do `bundle install` to get all of the development dependencies.
+* Do `rake features` to run the acceptance tests
+* Do `rake spec` to run the RSpec examples
+* Do `bundle exec kepler` to manually run the app for testing
+
 Note on Patches/Pull Requests
 -----------------------------
 
