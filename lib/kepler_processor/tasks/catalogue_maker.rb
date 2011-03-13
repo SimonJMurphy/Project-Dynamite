@@ -1,6 +1,15 @@
 require 'prawn'
 
 module KeplerProcessor
+  class CLI
+    desc 'catalogue', 'Produce a PDF catalogue of star data'
+    common_method_options
+    def catalogue
+      clean_options
+      CatalogueMaker.new(options).execute!
+    end
+  end
+
   class CatalogueMaker < TaskBase
 
     def execute!

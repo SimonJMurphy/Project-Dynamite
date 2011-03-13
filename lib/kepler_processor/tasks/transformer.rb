@@ -1,4 +1,13 @@
 module KeplerProcessor
+  class CLI
+    desc 'transform', 'Produce fourier transforms of input data'
+    common_method_options
+    def transform
+      clean_options
+      Transformer.new(options).execute!
+    end
+  end
+
   class Transformer < TaskBase
 
     def execute!

@@ -1,4 +1,14 @@
 module KeplerProcessor
+  class CLI
+    desc 'slice', 'Slice file into multiple segments'
+    common_method_options
+    method_option :slice_size, :aliases => '-s', :type => :numeric, :required => true, :desc => 'Specify a slice size to use.'
+    def slice
+      clean_options
+      Slicer.new(options).execute!
+    end
+  end
+
   class Slicer < TaskBase
 
     def execute!

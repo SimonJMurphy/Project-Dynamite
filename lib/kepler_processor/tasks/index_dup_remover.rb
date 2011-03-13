@@ -1,4 +1,13 @@
 module KeplerProcessor
+  class CLI
+    desc 'uniquify', 'Remove non-unique stars from index data'
+    common_method_options
+    def uniquify
+      clean_options
+      IndexDupRemover.new(options).execute!
+    end
+  end
+
   class IndexDupRemover < TaskBase
 
     def execute!

@@ -1,4 +1,13 @@
 module KeplerProcessor
+  class CLI
+    desc 'plot_lc', 'Plot raw input data as a lightcurve'
+    common_method_options
+    def plot_lc
+      clean_options
+      LightCurvePlotter.new(options).execute!
+    end
+  end
+
   class LightCurvePlotter < TaskBase
 
     def execute!

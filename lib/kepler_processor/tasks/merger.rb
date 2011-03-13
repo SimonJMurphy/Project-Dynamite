@@ -1,4 +1,15 @@
 module KeplerProcessor
+
+  class CLI
+    desc 'merge', 'Merge multiple files together'
+    common_method_options
+    method_option :merge_ratio, :aliases => '-m', :type => :numeric, :required => true, :desc => 'Specify a merge ratio to use.'
+    def merge
+      clean_options
+      Merger.new(options).execute!
+    end
+  end
+
   class Merger < TaskBase
 
     def execute!

@@ -1,4 +1,13 @@
 module KeplerProcessor
+  class CLI
+    desc 'convert', 'Convert raw data into a more sensible format'
+    common_method_options
+    def convert
+      clean_options
+      Convertor.new(options).execute!
+    end
+  end
+
   class Convertor < TaskBase
 
     def execute!

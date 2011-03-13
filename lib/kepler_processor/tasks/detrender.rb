@@ -1,4 +1,13 @@
 module KeplerProcessor
+  class CLI
+    desc 'detrend', 'Remove linear trends in data'
+    common_method_options
+    def detrend
+      clean_options
+      Detrender.new(options).execute!
+    end
+  end
+
   class Detrender < TaskBase
 
     def execute!

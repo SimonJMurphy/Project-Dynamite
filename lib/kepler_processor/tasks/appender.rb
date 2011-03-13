@@ -1,4 +1,13 @@
 module KeplerProcessor
+  class CLI
+    desc 'append', 'Append multiple datafiles together'
+    common_method_options
+    def append
+      clean_options
+      Appender.new(options).execute!
+    end
+  end
+
   class Appender < MultifileTaskBase
 
     attr_accessor :output_data
