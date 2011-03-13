@@ -5,7 +5,7 @@ Feature: Running
 
   Scenario: Finding out the version
     When I run "kepler version"
-    Then the output should contain "2.0.0"
+    Then the output should contain "Kepler Processor v2.0.0"
 
   Scenario: Asking for help
     When I run "kepler help"
