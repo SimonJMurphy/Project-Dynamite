@@ -11,7 +11,7 @@ Then:
 
 Usage
 -----
-    kepler -C command filename(s)
+    kepler command --input-paths filename(s)
 
 See kepler --help for details
 
@@ -24,7 +24,7 @@ Convertor is designed to take the raw kepler data, as downloaded from kasoc, and
 
 Typical usage:
 
-    kepler -c convert -C 0,3 -f data/input/filename.txt
+    kepler convert -c=0 3 -f --input-paths data/input/filename.txt
 
 This executes the convert command on columns 0 and 3 (time and corrected flux) of the file 'filename.txt' with relative path data/input/. Mutliple files can be converted simultaneously with, for example, data/input/*.txt as the input filename argument. As with all tasks, the input filename(s) must always be the final argument.
 
@@ -38,7 +38,7 @@ Merger is designed for use on excessively large files. It is preferable to have 
 
 Typical usage:
 
-    kepler -c merge -m 10 data/output/filename.txt
+    kepler merge -m=10 --input-paths data/output/filename.txt
 
 Note that Merger is designed to run on files that are already converted, and the input file will likely reside in the directory data/output/. Merger requires a merge-ratio. This is given with "-m" and then the merge-ratio, separated either side by a space. Users may also find the force overwrite option useful. The filename provided by merger is the same as that of convertor, but with "\_{merge_ratio}to1" inserted before the cadence.
 
@@ -48,7 +48,7 @@ Transformer is designed to work on converted files. A fourier transform of the c
 
 Typical usage:
 
-    kepler -c transform data/output/filename.txt
+    kepler transform --input-paths data/output/filename.txt
 
 Transformer is a ruby program that passes arguments to a program written in c to perform its calculations, because c was found to be much quicker than ruby at this task. The transform calculation code has the inner and outer for loops switched compared to those of Deeming, 1975, and trigonometric identities are used to further reduce the number of computationally expensive sine and cosine calculations.
 
@@ -58,7 +58,7 @@ Light Curve Plotter plots a light curve of the input data. The output filename o
 
 Typical usage:
 
-    kepler -c plot_lc data/output/filename.txt
+    kepler plot_lc --input-paths data/output/filename.txt
 
 ### Catalogue Maker
 
@@ -66,7 +66,7 @@ Catalogue Maker requires more scaffolding than other tasks. Firstly, there must 
 
 Typical usage:
 
-    kepler -c catalogue data/input/observation_index.txt
+    kepler catalogue --input-paths data/input/observation_index.txt
 
 By default, Catalogue Maker reads the input file as a list of comma separated values, rather than values separated by spaces, because this is the typical format of observation indexes when downloaded through kasoc. It is assumed that the table has nine columns, containing: (left to right) kic\_number, cadence, season, magnitude, Teff, radius, log g, metallicity and contamination. If this is not the case, line 28 of catalogue_maker.rb will need to be changed according to the contents of the index.
 
