@@ -1,4 +1,10 @@
 #!/usr/bin/env ruby
 $:.unshift File.expand_path(File.dirname(__FILE__) + "/../lib")
 require 'kepler_processor'
+
+LOGGER = Logger.new STDOUT
+LOGGER.level = Logger::INFO
+
 KeplerProcessor::CLI.start
+
+LOGGER.close

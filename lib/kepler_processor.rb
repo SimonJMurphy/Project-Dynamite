@@ -14,7 +14,4 @@
 module KeplerProcessor
   class FileExistsError < StandardError; end
   class NoDataError < StandardError; end
-
-  LOGGER = Logger.new STDOUT
-  LOGGER.level = Logger::INFO
 end
