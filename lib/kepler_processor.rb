@@ -1,18 +1,20 @@
-require 'gnuplot'
-require 'gsl'
-require 'kepler_dft'
-
-require_relative 'kepler_processor/monkey_patches.rb'
+(%w{logger
+  gnuplot
+  gsl
+  kepler_dft
+  kepler_processor/cli
+  kepler_processor/monkey_patches
+  kepler_processor/fourier_transformable
+  kepler_processor/saveable
+  kepler_processor/input_file_processor_base
+  kepler_processor/task_base
+  kepler_processor/multifile_task_base
+  kepler_processor/version} + Dir[File.dirname(__FILE__) + '/kepler_processor/tasks/*.rb']).each { |file| require file }
 
 module KeplerProcessor
   class FileExistsError < StandardError; end
   class NoDataError < StandardError; end
-end
 
-require_relative 'kepler_processor/fourier_transformable.rb'
-require_relative 'kepler_processor/saveable.rb'
-require_relative 'kepler_processor/input_file_processor_base.rb'
-require_relative 'kepler_processor/task_base.rb'
-require_relative 'kepler_processor/multifile_task_base.rb'
-require_relative 'kepler_processor/tasks.rb'
-require_relative 'kepler_processor/version.rb'
+  LOGGER = Logger.new STDOUT
+  LOGGER.level = Logger::INFO
+end
