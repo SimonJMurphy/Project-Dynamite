@@ -1,10 +1,11 @@
 module KeplerProcessor
   module FourierTransformable
     
-    def compute_amplitude_spectrum
-      bandwidth = input_data.last.first - input_data.first.first
+    def compute_amplitude_spectrum(source_data = nil)
+      source_data ||= input_data
+      dataset_length_in_time = source_data.last.first - source_data.first.first
       final_frequency = cadence == :slc ? 100 : 24
-      dft input_data.map { |x| x[0] }, input_data.map { |x| x[1] }, input_data.size, bandwidth, final_frequency
+      dft source_data.map { |x| x[0] }, source_data.map { |x| x[1] }, source_data.size, dataset_length_in_time, final_frequency
     end
 
     def cadence
