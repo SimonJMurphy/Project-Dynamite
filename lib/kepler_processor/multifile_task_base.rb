@@ -8,13 +8,12 @@ module KeplerProcessor
       @runners = []
     end
 
-    def execute!
+    def execute!(processor = InputFileProcessorBase)
       begin
+        @processor = processor
         check_input_file_count
         get_input_files
         execute_all_runners
-        check_consistent_kic_number
-        sort_runners_by_season
         yield if block_given?
       rescue KeplerProcessor::FileExistsError
         LOGGER.info "Your output file (#{full_output_filename}) already exists, please remove it first (or something)."
@@ -31,20 +30,12 @@ module KeplerProcessor
 
       def get_input_files
         @options[:input_paths].each do |input_path|
-          @runners << InputFileProcessorBase.new(input_path, @options)
+          @runners << @processor.new(input_path, @options)
         end
       end
 
       def execute_all_runners
         @runners.each &:execute!
-      end
-
-      def check_consistent_kic_number
-        raise(RuntimeError, "All files must be for the same star") if @runners.map { |r| r.attributes[:kic_number] }.uniq.count > 1
-      end
-
-      def sort_runners_by_season
-        @runners.sort! { |a,b| a.attributes[:season] <=> b.attributes[:season] }
       end
   end
 end
