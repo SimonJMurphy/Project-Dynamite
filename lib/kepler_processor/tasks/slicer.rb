@@ -15,7 +15,7 @@ module KeplerProcessor
       private
 
         def slice
-          # identify expected space between points, which may or may not be useful
+          # identify expected space between points, based on cadence
           std_range = @input_filename.split("_").last.split(".").first == "slc" ? 0.00068 : 0.02
           @slice_size = @options[:slice_size] / std_range
 

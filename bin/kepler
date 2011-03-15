@@ -37,7 +37,7 @@ option_parser = OptionParser.new do |opts|
   opts.on("-m", "--merge-ratio RATIO", Integer, "Specify a merge ratio to use.") do |p|
     options[:merge_ratio] = p
   end
-  opts.on("-s", "--slice-size SIZE", Integer, "Specify a slice size to use.") do |p|
+  opts.on("-s", "--slice-size SIZE", Float, "Specify a slice size to use.") do |p|
     options[:slice_size] = p
   end
   opts.on_tail("-h", "--help", "Show this message") do
