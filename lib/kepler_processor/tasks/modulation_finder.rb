@@ -42,7 +42,7 @@ module KeplerProcessor
       # automatically determine the nyquist frequency from the time span of each dataset, then make that the final frequency of the DFT
       final_frequency = (@runners.first.input_data.last.first - @runners.first.input_data.first.first) * 0.5
       time_span_of_dataset = @runners.last.input_data.last.first - @runners.first.input_data.first.first
-      dft (0..source_data.size).to_a, source_data, source_data.size, time_span_of_dataset, final_frequency
+      dft @mid_points, source_data, source_data.size, time_span_of_dataset, final_frequency
     end
     
     def plot(x, y, x_label, y_label, name)
