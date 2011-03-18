@@ -12,9 +12,13 @@ module KeplerProcessor
         peak_amplitudes = peak_points.map { |p| p[1] }
         plot @mid_points, peak_frequencies, "BJD -2400000", "frequency of highest peak", "freq-time"
         plot @mid_points, peak_amplitudes, "BJD -2400000", "amplitude of highest peak", "amp-time"
-        peak_freq_FT = compute_amplitude_spectrum peak_frequencies
+
+        # before computing the amplitude spectrum, we need to ensure that there is no zero-point shift in the data
+        zeroed_frequencies = peak_frequencies.map { |value| value -= peak_frequencies.mean }
+        zeroed_amplitudes = peak_amplitudes.map { |value| value -= peak_amplitudes.mean }
+        peak_freq_FT = compute_amplitude_spectrum zeroed_frequencies
         plot peak_freq_FT.map { |x| x[0] }, peak_freq_FT.map { |x| x[1] }, "frequency of frequency-variation (/d)", "amplitude", "freq-mod-FT"
-        peak_amp_FT = compute_amplitude_spectrum peak_amplitudes
+        peak_amp_FT = compute_amplitude_spectrum zeroed_amplitudes
         plot peak_amp_FT.map { |x| x[0] }, peak_amp_FT.map { |x| x[1] }, "frequency of amplitude-variation (/d)", "amplitude", "amp_mod-FT"        
         LOGGER.info "Peak Frequency Mean: #{peak_frequencies.mean}"
         LOGGER.info "Peak Frequency Standard Deviation: #{peak_frequencies.standard_deviation}"
@@ -36,9 +40,10 @@ module KeplerProcessor
       @runners.sort! { |a,b| a.part_number <=> b.part_number }
       @runners.delete_at(-1) # don't use last slice, there are often too few points and it might fuck up the results
     end
-    
+
     def compute_amplitude_spectrum(source_data = nil)
       source_data ||= input_data
+
       # automatically determine the nyquist frequency from the time span of each dataset, then make that the final frequency of the DFT
       final_frequency = (@runners.first.input_data.last.first - @runners.first.input_data.first.first) * 0.5
       time_span_of_dataset = @runners.last.input_data.last.first - @runners.first.input_data.first.first
