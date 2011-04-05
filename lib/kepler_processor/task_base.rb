@@ -18,6 +18,7 @@ module KeplerProcessor
           LOGGER.error e.backtrace.join("\n")
         ensure
           c = nil
+          PBAR.inc
         end
       end
     end

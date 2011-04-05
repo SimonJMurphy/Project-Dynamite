@@ -73,6 +73,10 @@ if options[:command] == KeplerProcessor::Slicer && !options.has_key?(:slice_size
   exit
 end
 
+PBAR = ProgressBar.new options[:command].to_s, options[:input_paths].size
+
 options[:command].new(options).execute!
+
+PBAR.finish
 
 LOGGER.close
