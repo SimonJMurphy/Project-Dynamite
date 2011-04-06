@@ -4,6 +4,7 @@ $:.unshift File.expand_path(File.dirname(__FILE__) + "/../lib")
 require 'rubygems'
 require 'optparse'
 require 'logger'
+require 'progressbar'
 require 'kepler_processor'
 
 LOGGER = Logger.new STDOUT
