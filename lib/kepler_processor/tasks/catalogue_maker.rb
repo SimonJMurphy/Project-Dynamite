@@ -12,6 +12,8 @@ module KeplerProcessor
 
     class InputFileProcessor < InputFileProcessorBase
       CATALOGUE_IMAGES_PATH = "/Users/sjm/code/Project-Dynamite/data/output/wg4_catalogue_images/"
+      @@txt_save = false
+
       def execute!
         super do
           create_star_metadata_hash

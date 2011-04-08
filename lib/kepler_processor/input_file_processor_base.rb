@@ -4,6 +4,8 @@ require 'csv'
 module KeplerProcessor
   class InputFileProcessorBase
 
+    @@txt_save = true
+
     attr_accessor :input_filename, :input_filename_without_path, :input_filename_without_extension, :input_data, :output_data, :options, :attributes, :comments
 
     def initialize(input_filename, options = {})
@@ -23,7 +25,7 @@ module KeplerProcessor
       parse_header_attributes
       select_appropriate_columns
       yield if block_given?
-      save!
+      save! if @@txt_save
       LOGGER.info "Finished processing file #{@input_filename}"
     end
 
