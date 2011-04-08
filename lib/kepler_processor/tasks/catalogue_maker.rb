@@ -11,7 +11,7 @@ module KeplerProcessor
     end
 
     class InputFileProcessor < InputFileProcessorBase
-      CATALOGUE_IMAGES_PATH = "/Users/sjm/code/Project-Dynamite/data/output/wg4_catalogue_images/"
+      CATALOGUE_IMAGES_PATH = "/Users/sjm/code/Project-Dynamite/data/output/wg#{@options[:working_group]}_catalogue_images/"
       @@txt_save = false
 
       def execute!
@@ -75,6 +75,10 @@ module KeplerProcessor
 
           number_pages "page <page> of <total>", :at => [bounds.right - 80, 0] # must go at end to number all pages
         end
+      end
+
+      def output_filename
+        "catalogue.pdf"
       end
     end
   end

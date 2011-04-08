@@ -41,6 +41,9 @@ option_parser = OptionParser.new do |opts|
   opts.on("-s", "--slice-size SIZE", Float, "Specify a slice size to use.") do |p|
     options[:slice_size] = p
   end
+  opts.on("-w", "--working-group WG", Integer, "Specify which working group's data to use.") do |p|
+    options[:working_group] = p
+  end
   opts.on_tail("-h", "--help", "Show this message") do
     puts opts
     exit
