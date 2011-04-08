@@ -63,12 +63,12 @@ module KeplerProcessor
 
             font_size(20) { draw_text observation[:cycle], :at => [5, 760] }
 
-            star_metadata = star_metadata[observation[:kic_number]]
-
-            draw_text "log g \t = #{star_metadata[:log_g]}", :at => [420, 770]
-            draw_text "[Fe/H] = #{star_metadata[:feh]}", :at => [420, 755]
-            draw_text "Teff \t = #{star_metadata[:t_eff]}", :at => [520, 770]
-            draw_text "radius = #{star_metadata[:radius]}", :at => [520, 755]
+            if metadata = star_metadata[observation[:kic_number]]
+              draw_text "log g \t = #{metadata[:log_g]}", :at => [420, 770]
+              draw_text "[Fe/H] = #{metadata[:feh]}", :at => [420, 755]
+              draw_text "Teff \t = #{metadata[:t_eff]}", :at => [520, 770]
+              draw_text "radius = #{metadata[:radius]}", :at => [520, 755]
+            end
           end
 
           number_pages "page <page> of <total>", [bounds.right - 80, 0] # must go at end to number all pages
