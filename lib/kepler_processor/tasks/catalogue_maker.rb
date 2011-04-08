@@ -52,6 +52,7 @@ module KeplerProcessor
 
       def create_pdf
         observation_index = @observation_index
+        star_metadata = @star_metadata
         Prawn::Document.generate(full_output_filename, :page_layout => :portrait, :margin => 5, :skip_page_creation => false) do
           observation_index.each do |observation|
             start_new_page
@@ -62,7 +63,7 @@ module KeplerProcessor
 
             font_size(20) { draw_text observation[:cycle], :at => [5, 760] }
 
-            star_metadata = @star_metadata[observation[:kic_number]]
+            star_metadata = star_metadata[observation[:kic_number]]
 
             draw_text "log g \t = #{star_metadata[:log_g]}", :at => [420, 770]
             draw_text "[Fe/H] = #{star_metadata[:feh]}", :at => [420, 755]
