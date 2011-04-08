@@ -71,7 +71,7 @@ module KeplerProcessor
             end
           end
 
-          number_pages "page <page> of <total>", [bounds.right - 80, 0] # must go at end to number all pages
+          number_pages "page <page> of <total>", :at => [bounds.right - 80, 0] # must go at end to number all pages
         end
       end
     end
