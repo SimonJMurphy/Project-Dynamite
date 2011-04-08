@@ -58,7 +58,7 @@ module KeplerProcessor
 
             image observation[:lightcurve_path], :at => [0,750], :width => 580
             image observation[:short_fourier_path], :at => [0, 560], :width => 580
-            image observation[:long_fourier_path], :at => [0, 360], :width => 580
+            image observation[:long_fourier_path], :at => [0, 360], :width => 580 if observation[:long_fourier_path]
 
             font_size(20) { draw_text observation[:cycle], :at => [5, 760] }
 
