@@ -10,7 +10,7 @@ require 'kepler_processor'
 LOGGER = Logger.new STDOUT
 LOGGER.level = Logger::INFO
 
-options = { :command => KeplerProcessor::Convertor, :input_paths => [], :output_path => "data/output", :file_columns => [0,1], :column_delimiter => " ", :column_converters => :float }
+options = { :command => KeplerProcessor::Convertor, :input_paths => [], :output_path => "data/output", :file_columns => [0,1], :column_delimiter => " ", :column_converters => :float, :working_group => 4 }
 
 option_parser = OptionParser.new do |opts|
   opts.banner = "Usage: kepler -c command [-o output_directory] [--columns 0,1] [-d ,] path_to_input_file(s)"

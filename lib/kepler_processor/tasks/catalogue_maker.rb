@@ -11,11 +11,11 @@ module KeplerProcessor
     end
 
     class InputFileProcessor < InputFileProcessorBase
-      CATALOGUE_IMAGES_PATH = "/Users/sjm/code/Project-Dynamite/data/output/wg#{@options[:working_group]}_catalogue_images/"
       @@txt_save = false
 
       def execute!
         super do
+          @catalogue_images_path = "/Users/sjm/code/Project-Dynamite/data/output/wg#{@options[:working_group]}_catalogue_images/"
           create_star_metadata_hash
           create_observation_index
           sort_observation_index_by_kic_number
@@ -34,8 +34,8 @@ module KeplerProcessor
         @observation_index = @input_data.map do |observation|
           kic_number, cadence, season = observation
           cadence = cadence == "SC" ? "slc" : "llc"
-          hash = { :kic_number => kic_number, :cadence => cadence, :season => season, :cycle => "kic#{kic_number} #{season} #{cadence}", :lightcurve_path => "#{CATALOGUE_IMAGES_PATH}kic#{kic_number}_CFlux_#{season}_#{cadence}_plot.png", :short_fourier_path => "#{CATALOGUE_IMAGES_PATH}kic#{kic_number}_CFlux_#{season}_#{cadence}_fourier_plot_0to24.png" }
-          hash[:long_fourier_path] = "#{CATALOGUE_IMAGES_PATH}kic#{kic_number}_CFlux_#{season}_#{cadence}_fourier_plot_0to100.png" if cadence == "slc"
+          hash = { :kic_number => kic_number, :cadence => cadence, :season => season, :cycle => "kic#{kic_number} #{season} #{cadence}", :lightcurve_path => "#{@catalogue_images_path}kic#{kic_number}_CFlux_#{season}_#{cadence}_plot.png", :short_fourier_path => "#{@catalogue_images_path}kic#{kic_number}_CFlux_#{season}_#{cadence}_fourier_plot_0to24.png" }
+          hash[:long_fourier_path] = "#{@catalogue_images_path}kic#{kic_number}_CFlux_#{season}_#{cadence}_fourier_plot_0to100.png" if cadence == "slc"
           hash
         end
       end
