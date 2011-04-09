@@ -16,8 +16,6 @@ module KeplerProcessor
 
       private
 
-        @@txt_save = true
-
         def strip_invalid!
           @input_data.delete_if { |record| record[1] == "-Inf" }
           @input_data.delete_if { |record| record =~ /$(i)/}

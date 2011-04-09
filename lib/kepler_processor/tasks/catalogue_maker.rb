@@ -11,10 +11,10 @@ module KeplerProcessor
     end
 
     class InputFileProcessor < InputFileProcessorBase
-      @@txt_save = false
 
       def execute!
         super do
+          @txt_save = false
           @catalogue_images_path = "/Users/sjm/code/Project-Dynamite/data/output/wg#{@options[:working_group]}_catalogue_images/"
           create_star_metadata_hash
           create_observation_index
