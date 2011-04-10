@@ -24,11 +24,11 @@ Convertor is designed to take the raw kepler data, as downloaded from kasoc, and
 
 Typical usage:
 
-    kepler -c convert -C 0,3 -f data/input/filename.txt
+    kepler -c convert -C 0,1 -f data/input/filename.txt
 
-This executes the convert command on columns 0 and 3 (time and corrected flux) of the file 'filename.txt' with relative path data/input/. Mutliple files can be converted simultaneously with, for example, data/input/*.txt as the input filename argument. As with all tasks, the input filename(s) must always be the final argument.
+This executes the convert command on columns 0 and 1 (time and raw flux) of the file 'filename.txt' with relative path data/input/. The default setting for the columns to convert is 0,3 (time and corrected flux). Multiple files can be converted simultaneously with, for example, data/input/*.txt as the input filename argument. As with all tasks, the input filename(s) must always be the final argument.
 
-Other useful options on convertor are '-f' (force overwrite) which automatically overwrites existing files with the same output filename in the output directory. The standard output directory is data/output, and convertor has the default filename format kic#\_CFlux\_{quarter}\_{short/long cadence}.txt, e.g "kic1234567\_CFlux\_Q6.1_slc.txt".
+Other useful options on convertor are '-f' (force overwrite), which automatically overwrites existing files with the same output filename in the output directory, and '-b' (batch), which uses a different output filename that is more useful for converting large batches of data, typically one working group at a time. The batch output filename uses the working group number from the input folder e.g. data/input/wg4 => data/output/converted\_wg4. The standard (non-batch) output directory is data/output. In both cases, convertor has the default filename format kic#\_CFlux\_{quarter}\_{short/long cadence}.txt, e.g. "kic1234567\_CFlux\_Q6.1_slc.txt".
 
 Convertor will delete any lines containing "-Inf", or containing imaginary numbers (containing 'i'). Any headers in the file are taken out if they start with the # character. All fluxes are converted to magnitudes, and are centered about zero.
 
@@ -66,13 +66,13 @@ Catalogue Maker requires more scaffolding than other tasks. Firstly, there must 
 
 Typical usage:
 
-    kepler -c catalogue data/input/observation_index.txt
+    kepler -c catalogue data/input/wg4_observation_index.txt
 
 By default, Catalogue Maker reads the input file as a list of comma separated values, rather than values separated by spaces, because this is the typical format of observation indexes when downloaded through kasoc. It is assumed that the table has nine columns, containing: (left to right) kic\_number, cadence, season, magnitude, Teff, radius, log g, metallicity and contamination. If this is not the case, line 28 of catalogue_maker.rb will need to be changed according to the contents of the index.
 
-For each observation cycle listed in the observation index, there must be a light curve and the correct number of fourier plots (one for long cadence, two for short) in the folder CATALOGUE\_IMAGES\_PATH (line 14).
+For each observation cycle listed in the observation index, there must be a light curve and the correct number of fourier plots (one for long cadence, two for short) in the folder CATALOGUE\_IMAGES\_PATH (line 14), e.g. data/output/wg4\_catalogue\_images.
 
-The catalogue created is in pdf format, with one observation cycle per page. Catalogue Maker sorts the observation index by kic number and then by season so that the pages are in a sensible order.
+The catalogue created is in pdf format, with one observation cycle per page. Catalogue Maker sorts the observation index by kic number and then by season so that the pages are in a sensible order. The path and filename of the catalogue produced is data/output/catalogue.pdf.
 
 ### Appender
 
@@ -84,7 +84,7 @@ Typical usage:
 
     kepler -c append data/input/kplr001234567*.txt
 
-where kplr001234567 is a unique object with only adjacent quarters.
+where kplr001234567 is a unique object with only consecutive quarters.
 
 ### Slicer
 
@@ -101,9 +101,9 @@ Typical usage:
 
 ### Modulation Finder
 
-Modulation finder seeks to identify variations in the frequency and amplitude of the maximum peak in a dataset's transform over time. The function of the program is to make a fourier transform of slices of data, find the highest peak in each one, and write the frequency and amplitude of that peak into an array. This array of peaks is built up for every slice, and then the frequencies and amplitudes are handled separately: each are plotted as a function of time (time is the mid-point of each slice), and a fourier transform of that is run for each to determine if there is a pattern in the variation of either frequency or amplitude with time.
+Modulation finder seeks to identify variations in the frequency and amplitude of the maximum peak in a dataset's transform over time. The function of the program is to make a fourier transform of slices of data, find the highest peak in each one, and write the frequency and amplitude of that peak into an array. This array of peaks is built up over all slices, and then the frequencies and amplitudes are handled separately: each are plotted as a function of time (time is the mid-point of each slice), and a fourier transform of that is run for each to determine if there is a pattern in the variation of either frequency or amplitude with time.
 
-Modulation finder automatically transforms the data within the Nyquist limit, by calculating the time-span of the slices and using half of that time as the upper frequency limit in the transform. The user must therefore be clever in selecting the correct slice size to unravel the secrets of the data - too short and the frequency of variation will be above the Nyquist; too long and there are too few points for a meaningful transform.
+Modulation finder automatically transforms the data within the Nyquist limit, by calculating the time-span of the slices and using half of that time as the upper frequency limit in the transform. The user must therefore be clever in selecting the correct slice size to suitably analyse the data - too short and the frequency of variation will be above the Nyquist; too long and there are too few slices for a meaningful transform.
 
 The mid-point of each data slice is found automatically, and the sliced dataset is automatically sorted into part-order before other processes are implemented.
 
@@ -113,7 +113,7 @@ Typical usage:
 
 where the slices have been kept in a separate directory within the output directory.
 
-The mean and standard deviation of both the frequencies and the amplitudes are written to the terminal.
+The mean and standard deviation of both the frequencies and the amplitudes are written to the terminal; four .png files are created in data/output.
 
 Note on Patches/Pull Requests
 -----------------------------
