@@ -25,12 +25,11 @@ module KeplerProcessor
         end
 
         def average_mag
-          @input_data.map { |record| record[1] }.inject(:+).to_f / @input_data.size
+          @avg_mag ||= @input_data.map { |record| record[1] }.inject(:+).to_f / @input_data.size
         end
 
         def center_mag_on_zero!
-          average = average_mag
-          @input_data.each { |record| record[1] -= average }
+          @input_data.each { |record| record[1] -= average_mag }
         end
 
         def output_filename
