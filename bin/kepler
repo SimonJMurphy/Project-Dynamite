@@ -26,6 +26,9 @@ option_parser = OptionParser.new do |opts|
   opts.on("-f", "--[no-]force_overwrite", "Force overwrite existing output files") do |f|
     options[:force_overwrite] = f
   end
+  opts.on("-b", "--batch", "Adopt batch format of output filename for convertor") do |b|
+    options[:batch] = b
+  end
   opts.on("-C", "--columns 0,1", Array, "Choose input file columns to be read. Defaults to 0,1") do |f|
     options[:file_columns] = f.map(&:to_i)
   end

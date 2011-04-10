@@ -35,12 +35,13 @@ module KeplerProcessor
         end
 
         def output_filename
-          # Determine the output filename from header and input_filename. May require changing according to file location:
-          # For converting an entire quarter when input stars are in folders like data/input/wg4:
-          # "converted_#{@input_filename.split("/")[2]}/kic#{@attributes[:kic_number]}_CFlux_#{@attributes[:season]}_#{@input_filename.split("_").last.split(".").first}.txt"
-
-          # For individual stars, in raw name format on their own in data/input (assuming CFlux and default output directory data/output):
-          "kic#{@attributes[:kic_number]}_CFlux_#{@attributes[:season]}_#{@input_filename.split("_").last.split(".").first}.txt"
+          if options[:batch]
+            # For converting an entire quarter when input stars are in folders like data/input/wg4:
+"converted_#{@input_filename.split("/")[2]}/kic#{@attributes[:kic_number]}_CFlux_#{@attributes[:season]}_#{@input_filename.split("_").last.split(".").first}.txt"
+          else
+            # For individual stars, in raw name format on their own in data/input (assuming CFlux and default output directory data/output):
+            "kic#{@attributes[:kic_number]}_CFlux_#{@attributes[:season]}_#{@input_filename.split("_").last.split(".").first}.txt"
+          end
         end
     end
 
