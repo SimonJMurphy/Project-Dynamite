@@ -17,8 +17,7 @@ module KeplerProcessor
       private
 
         def strip_invalid!
-          @input_data.delete_if { |record| record[1] == "-Inf" }
-          @input_data.delete_if { |record| record =~ /$(i)/}
+          @input_data.delete_if { |record| record =~ /$(i)/ || record[1] == "-Inf" }
         end
 
         def convert_fluxes_to_magnitudes!
@@ -37,7 +36,7 @@ module KeplerProcessor
         def output_filename
           if options[:batch]
             # For converting an entire quarter when input stars are in folders like data/input/wg4:
-"converted_#{@input_filename.split("/")[2]}/kic#{@attributes[:kic_number]}_CFlux_#{@attributes[:season]}_#{@input_filename.split("_").last.split(".").first}.txt"
+            "converted_#{@input_filename.split("/")[2]}/kic#{@attributes[:kic_number]}_CFlux_#{@attributes[:season]}_#{@input_filename.split("_").last.split(".").first}.txt"
           else
             # For individual stars, in raw name format on their own in data/input (assuming CFlux and default output directory data/output):
             "kic#{@attributes[:kic_number]}_CFlux_#{@attributes[:season]}_#{@input_filename.split("_").last.split(".").first}.txt"
