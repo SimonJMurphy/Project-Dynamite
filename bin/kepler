@@ -10,7 +10,7 @@ require 'kepler_processor'
 LOGGER = Logger.new STDOUT
 LOGGER.level = Logger::INFO
 
-options = { :command => KeplerProcessor::Convertor, :input_paths => [], :output_path => "data/output", :file_columns => [0,1], :column_delimiter => " ", :column_converters => :float, :working_group => 4 }
+options = { :command => KeplerProcessor::Convertor, :input_paths => [], :output_path => "data/output", :column_delimiter => " ", :column_converters => :float, :working_group => 4 }
 
 option_parser = OptionParser.new do |opts|
   opts.banner = "Usage: kepler -c command [-o output_directory] [--columns 0,1] [-d ,] path_to_input_file(s)"
@@ -79,6 +79,8 @@ if options[:command] == KeplerProcessor::Slicer && !options.has_key?(:slice_size
   option_parser.parse '--help'
   exit
 end
+
+options[:file_columns] ||= options[:command] == KeplerProcessor::Convertor ? [0,3] : [0,1]
 
 PBAR = ProgressBar.new options[:command].to_s, options[:input_paths].size
 
