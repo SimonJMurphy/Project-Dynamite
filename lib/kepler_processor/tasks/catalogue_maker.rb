@@ -72,8 +72,6 @@ module KeplerProcessor
               draw_text "radius = #{metadata[:radius]}", :at => [520, 755]
             end
           end
-
-          number_pages "page <page> of <total>", :at => [bounds.right - 80, 0] # must go at end to number all pages
         end
       end
 
