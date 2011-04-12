@@ -10,7 +10,7 @@ require 'kepler_processor'
 LOGGER = Logger.new STDOUT
 LOGGER.level = Logger::INFO
 
-options = { :command => KeplerProcessor::Convertor, :input_paths => [], :output_path => "data/output", :column_delimiter => " ", :column_converters => :float, :working_group => 4 }
+options = { :command => KeplerProcessor::Convertor, :input_paths => [], :output_path => "data/output", :column_delimiter => " ", :column_converters => :float }
 
 option_parser = OptionParser.new do |opts|
   opts.banner = "Usage: kepler -c command [-o output_directory] [--columns 0,1] [-d ,] path_to_input_file(s)"
@@ -43,9 +43,6 @@ option_parser = OptionParser.new do |opts|
   end
   opts.on("-s", "--slice-size SIZE", Float, "Specify a slice size to use.") do |p|
     options[:slice_size] = p
-  end
-  opts.on("-w", "--working-group WG", Integer, "Specify which working group's data to use.") do |p|
-    options[:working_group] = p
   end
   opts.on_tail("-h", "--help", "Show this message") do
     puts opts
