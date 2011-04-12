@@ -18,6 +18,8 @@ module KeplerProcessor
           ::Gnuplot.open do |gp|
             ::Gnuplot::Plot.new(gp) do |plot|
               plot.terminal "png size 900,300"
+              # plot.format 'y "%6.1f"'
+              plot.lmargin "10"
               plot.output "#{@options[:output_path]}/#{@input_filename_without_extension}_plot.png"
               plot.ylabel "Amplitude (mag)"
               plot.xlabel "BJD"
