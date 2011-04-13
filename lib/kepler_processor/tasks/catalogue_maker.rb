@@ -71,6 +71,8 @@ module KeplerProcessor
               draw_text "[Fe/H] = #{metadata[:feh]}", :at => [420, 755]
               draw_text "Teff \t = #{metadata[:t_eff]}", :at => [520, 770]
               draw_text "radius = #{metadata[:radius]}", :at => [520, 755]
+              draw_text "Kp mag \t = #{metadata[:magnitude]}", :at => [300, 770]
+              draw_text "contam. \t = #{metadata[:contamination]}", :at => [300, 755]
             end
           end
         end
