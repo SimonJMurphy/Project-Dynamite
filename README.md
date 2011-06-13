@@ -115,6 +115,14 @@ where the slices have been kept in a separate directory within the output direct
 
 The mean and standard deviation of both the frequencies and the amplitudes are written to the terminal; four .png files are created in data/output.
 
+### Detrender
+
+The detrender is designed to work on converted data. It uses GSL to find a linear least-squares fit to the data, then subtracts that from the data. The output filename duplicates the input filename and adds "\_detrended" immediately before "\_{s/l}lc".
+
+Typical usage:
+
+    kepler -c detrend data/output/kic01234567_CFlux_Q2.1_slc.txt
+
 Note on Patches/Pull Requests
 -----------------------------
 
