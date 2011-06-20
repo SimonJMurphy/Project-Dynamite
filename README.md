@@ -76,7 +76,7 @@ The catalogue created is in pdf format, with one observation cycle per page. Cat
 
 ### Appender
 
-Appender is designed to combine consecutive raw data files into a single data file, before conversion. This removes some systematic errors from converting the files first, and appending them afterwards. The files to be appended must have the same kic\_number, and are assumed to be adjacent in time. They are sorted by season before appending.
+Appender is designed to combine consecutive raw data files into a single data file, before conversion. This removes some systematic errors from converting the files first, then appending them afterwards. The files to be appended must have the same kic\_number, and are assumed to be adjacent in time. They are sorted by season before appending. Note that converted files are easily appended using the concatenating command in terminal: cat FileA FileB
 
 Since the comments of unconverted files contain information about the kic\_number and the season, appender reinserts these into the first two lines of the appended data. These are written in as comments (lines start with '#'), looking like they would in files that have not been appended. Therefore, convertor will work as it does on non-appended files. The season will be written as a range, in the form {first season}-{final season}, and this is reflected in the output filename.
 
