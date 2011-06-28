@@ -32,13 +32,21 @@ module KeplerProcessor
           @input_data.each { |record| record[1] -= average_mag }
         end
 
-        def output_filename
-          if options[:batch]
-            # For converting an entire quarter when input stars are in folders like data/input/wg4:
-            "converted_#{@input_filename.split("/")[2]}/kic#{@attributes[:kic_number]}_CFlux_#{@attributes[:season]}_#{@input_filename.split("_").last.split(".").first}.txt"
+        def flux_type
+          if flux_type = @input_filename.match(/(\w)flux/)
+            "#{flux_type[1]}flux"
           else
-            # For individual stars, in raw name format on their own in data/input (assuming CFlux and default output directory data/output):
-            "kic#{@attributes[:kic_number]}_CFlux_#{@attributes[:season]}_#{@input_filename.split("_").last.split(".").first}.txt"
+            @options[:file_columns] == [0, 1] ? :Rflux : :Cflux
+          end
+        end
+
+        def output_filename          
+          @output_filename ||= if options[:batch]
+            # For converting an entire quarter when input stars are in folders like data/input/wg4:
+            "converted_#{@input_filename.split("/")[2]}/kic#{[@attributes[:kic_number], flux_type, @attributes[:season], @input_filename.split("_").last.split(".").first].compact.join('_')}.txt"
+          else
+            # For individual stars, in raw name format on their own
+            "kic#{[@attributes[:kic_number], flux_type, @attributes[:season], @input_filename.split("_").last.split(".").first].compact.join('_')}.txt"
           end
         end
     end

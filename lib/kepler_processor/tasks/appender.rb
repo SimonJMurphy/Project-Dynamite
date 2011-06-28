@@ -38,7 +38,8 @@ module KeplerProcessor
       end
 
       def output_filename
-        @runners.first.input_filename_without_path.sub(/\d{13}/, "appended_#{season_range}") # Timestamp always has 13 digits in it
+        flux_type = @options[:file_columns] == [0, 1] ? :Rflux : :Cflux
+        @runners.first.input_filename_without_path.sub(/\d{13}/, "#{flux_type}_appended_#{season_range}") # Timestamp always has 13 digits
       end
   end
 end
