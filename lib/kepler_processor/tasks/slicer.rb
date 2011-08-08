@@ -22,7 +22,11 @@ module KeplerProcessor
           # slice the input data array into arrays of size slice_size
           # for each slice, save a series of output files named according to position in time (eg. @input_filename_slice4).
           @slices = []
-          @input_data.each_slice(@slice_size) { |slice| @slices << slice }
+          @input_data.each_slice(@slice_size) do |slice|
+            avg = slice.map { |record| record[1] }.inject(:+) / @slice_size
+            slice.each { |record| record[1] -= avg }
+            @slices << slice
+          end
         end
 
         def output_filename
