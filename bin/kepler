@@ -7,18 +7,20 @@ require 'logger'
 require 'progressbar'
 require 'kepler_processor'
 
+include KeplerProcessor
+
 LOGGER = Logger.new STDOUT
 LOGGER.level = Logger::INFO
 
-options = { :command => KeplerProcessor::Convertor, :input_paths => [], :output_path => "data/output", :column_delimiter => " ", :column_converters => :float }
+options = { :command => Convertor, :input_paths => [], :output_path => "data/output", :column_delimiter => " ", :column_converters => :float }
 
 option_parser = OptionParser.new do |opts|
   opts.banner = "Usage: kepler -c command [-o output_directory] [--columns 0,1] [-d ,] path_to_input_file(s)"
 
   opts.on("-c", "--command COMMAND", String, "Specify the command to execute [convert/transform/merge/append/plot_lc/uniquify/catalogue/slice]") do |c|
-    options[:command] = { "convert" => KeplerProcessor::Convertor, "transform" => KeplerProcessor::Transformer, "merge" => KeplerProcessor::Merger, "plot_lc" => KeplerProcessor::LightCurvePlotter, "uniquify" => KeplerProcessor::IndexDupRemover, "catalogue" => KeplerProcessor::CatalogueMaker, "append" => KeplerProcessor::Appender, "slice" => KeplerProcessor::Slicer, "detrend" => KeplerProcessor::Detrender, "find_mod" => KeplerProcessor::ModulationFinder }[c]
+    options[:command] = { convert: Convertor, transform: Transformer, merge: Merger, plot_lc: LightCurvePlotter, uniquify: IndexDupRemover, catalogue: CatalogueMaker, append: Appender, slice: Slicer, detrend: Detrender, find_mod: ModulationFinder, find_phase: PhaseFinder }[c.to_sym]
     if options[:command].nil?
-      LOGGER.error "Invalid command. Options are [convert/transform/merge/append/plot_lc/uniquify/catalogue/slice/detrend]"
+      LOGGER.error "Invalid command. Options are [convert/transform/merge/append/plot_lc/uniquify/catalogue/slice/detrend/find_phase]"
       puts opts
       exit
     end
@@ -49,7 +51,7 @@ option_parser = OptionParser.new do |opts|
     exit
   end
   opts.on_tail("-v", "--version", "Show version") do
-    puts KeplerProcessor::VERSION
+    puts VERSION
     exit
   end
 end
@@ -65,19 +67,19 @@ else
   end
 end
 
-if options[:command] == KeplerProcessor::Merger && !options.has_key?(:merge_ratio)
+if options[:command] == Merger && !options.has_key?(:merge_ratio)
   LOGGER.error "You must provide an integer merge ratio"
   option_parser.parse '--help'
   exit
 end
 
-if options[:command] == KeplerProcessor::Slicer && !options.has_key?(:slice_size)
+if options[:command] == Slicer && !options.has_key?(:slice_size)
   LOGGER.error "You must provide an slice size (in days)"
   option_parser.parse '--help'
   exit
 end
 
-options[:file_columns] ||= options[:command] == KeplerProcessor::Convertor ? [0,3] : [0,1]
+options[:file_columns] ||= options[:command] == Convertor ? [0,3] : [0,1]
 
 PBAR = ProgressBar.new options[:command].to_s, options[:input_paths].size
 

@@ -25,5 +25,6 @@ Gem::Specification.new do |s|
   s.add_dependency "gsl"
   s.add_dependency "prawn"
   s.add_dependency "ruby-progressbar"
+  s.add_dependency "polynomial"
   s.add_development_dependency "rspec"
 end
