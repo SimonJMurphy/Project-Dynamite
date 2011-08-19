@@ -14,7 +14,7 @@ module KeplerProcessor
         super do
           index
           calculate_combinations
-          piify
+          # piify
         end
       end
 
