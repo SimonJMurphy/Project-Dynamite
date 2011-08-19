@@ -92,7 +92,7 @@ Slicer is designed to take a converted dataset and cut it up into user-specified
 
 Slicer determines whether the data is long or short cadence by the filename, and bases the number of points in a slice from that. Users should note that the final slice will almost always be incomplete, and should account for this in their analyses.
 
-The output filename indicates the length of the slices and the part\_number of that slice - a 90 day dataset split into 2 day slices will have 45 slices in parts from 0 to 44. Since it is often appended data that is sliced, such an example is presented below.
+The output filename indicates the length of the slices and the part\_number of that slice - a 90 day dataset split into 2-day slices will have 45 slices in parts from 0 to 44. Since it is often appended data that is sliced, such an example is presented below.
 
 Typical usage:
 
@@ -121,7 +121,29 @@ The detrender is designed to work on converted data. It uses GSL to find a linea
 
 Typical usage:
 
-    kepler -c detrend data/output/kic01234567_CFlux_Q2.1_slc.txt
+    kepler -c detrend data/output/filename.txt
+
+
+### Phase Finder
+
+Phase finder takes an input (typically from an Excel spreadsheet) containing a frequency ID, frequency, amplitude, calculated phase (float in range -pi to +pi), frequency combination, and calculated phase error. With that it computes relative phases and relative phase errors, and returns them as two additional columns in the output file. The output filename duplicates the input filename and adds "\_phazered" immediately before the file extension. Note that the column delimiter of the input file is expected to be "\t", and lends itself to spreadsheet columns copied into a text editor.
+
+Typical usage:
+
+    kepler -c find_phase data/output/filename.txt
+
+The relative phases returned will be folded on multiples of 2 pi. By plotting a scatter diagram of the relative phase against frequency for the combination frequencies, one should see stripes of points if there is a correlated relationship. It is recommended to unfold these manually by shifting the points by multiples of 2 pi so that they form a straight line. Once the line is straight, albeit perhaps with a few outliers, the "Fitter" program is recommended to improve the fit.
+
+### Fitter
+
+Fitter takes a series of x and y values, fits a linear trend to them, and then tries to improve the fit by moving points up and down the y-axis. It does this by computing the residual from the fit for that point (y - (m * x + c)), and adding or subtracting 2pi if the residual is < -pi, > +pi respectively.
+
+Typical usage:
+
+    kepler -c improve_fit -f data/output/filename.txt
+
+Fitter may need to be run more than once to converge on the best fit, so the force overwrite command "-f" has been implemented in the above typical usage example. The output from the first iteration will need to be used as the input for the second iteration in this case - such a re-iterative procedure is not yet automated.
+
 
 Note on Patches/Pull Requests
 -----------------------------
