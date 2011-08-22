@@ -39,4 +39,33 @@ module Enumerable
     Math.sqrt self.sample_variance
   end
 
+  def advanced_slice(&block)
+    advanced_slice_with_index &block
+  end
+
+  def advanced_slice_with_index(&block)
+    [].tap do |slices|
+      sp = split_points &block
+      each_with_index do |element, index|
+        slices << [] if sp.include?(index) || index == 0
+        slices.last << element
+      end
+    end
+  end
+
+  def advanced_slice_splitters
+    [].tap do |splitters|
+      each_with_index do |element, index|
+        splitters << yield(element, index)
+      end
+    end
+  end
+
+  def split_points(&block)
+    [].tap do |p|
+      advanced_slice_splitters(&block).each_with_index do |element, index|
+        p << index if element
+      end
+    end
+  end
 end
