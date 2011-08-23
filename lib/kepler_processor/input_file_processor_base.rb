@@ -28,12 +28,12 @@ module KeplerProcessor
       LOGGER.info "Finished processing file #{@input_filename}"
     end
 
-    private
+    def read_in_data
+      @input_data = CSV.read @input_filename, :col_sep => @options[:column_delimiter], :converters => @options[:column_converters]
+      raise NoDataError if @input_data.empty?
+    end
 
-      def read_in_data
-        @input_data = CSV.read @input_filename, :col_sep => @options[:column_delimiter], :converters => @options[:column_converters]
-        raise NoDataError if @input_data.empty?
-      end
+    private
 
       def split_comments!
         # matches (=~) regular expression (/../) hash at start of line (^), preceeded by any number of spaces (\s*)

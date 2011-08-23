@@ -6,8 +6,6 @@ module KeplerProcessor
     # reinsert the partitioned comments, but change the 'season' parameter's value to read 'multiple' or something more specific if possible
     # could ask for user input for 'season' parameter
 
-    before(:each) { LOGGER ||= mock('logger').as_null_object }
-
     let(:input_filenames) { %w{kplr001432149-2009131105131_llc_wg4.dat kplr001436149-2009131105131_llc_wg4.dat} }
 
     let(:options) { { :input_paths => input_filenames, :output_path => "somewhere", :file_columns => [1,2,3,4] } }
