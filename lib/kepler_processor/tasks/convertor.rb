@@ -17,7 +17,7 @@ module KeplerProcessor
       private
 
         def strip_invalid!
-          @input_data.delete_if { |record| record =~ /$(i)/ || record[1] == "-Inf" || record[1] == "NaN" }
+          @input_data.delete_if { |record| record =~ /$(i)/ || record[1] == "-Inf" || record[1] == "NaN" || record[1].nil? }
         end
 
         def convert_fluxes_to_magnitudes!
