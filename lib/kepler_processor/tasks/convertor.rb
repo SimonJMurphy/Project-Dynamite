@@ -22,7 +22,7 @@ module KeplerProcessor
         end
 
         def correct_time!
-          @input_data.each { |record| record[0] += 55833.0 } if options[:time]
+          @input_data.each { |record| record[0] += 54833.0 } if options[:time]
         end
 
         def convert_fluxes_to_magnitudes!
