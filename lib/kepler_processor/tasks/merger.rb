@@ -46,8 +46,11 @@ module KeplerProcessor
         # delete padded points
         slice.delete_if { |point| point.any? &:nil? }
 
-        # merge points if slice is correct size
+        # merge points if slice is correct size (rough method, averages magnitudes)
         @output_data << [(slice.map { |e| e[0] }.inject(:+).to_f / @options[:merge_ratio]).round(5), (slice.map { |e| e[1] }.inject(:+).to_f / @options[:merge_ratio]).round(10)] if slice.size == @options[:merge_ratio]
+
+        # merge points if slice is correct size (precise method, for summing fluxes)
+        # @output_data << [(slice.map { |e| e[0] }.inject(:+).to_f / @options[:merge_ratio]).round(5), (slice.map { |e| e[1] }.inject(:+).to_f).round(10)] if slice.size == @options[:merge_ratio]
       end
 
       def output_filename
