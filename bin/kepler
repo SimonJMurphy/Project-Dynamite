@@ -31,6 +31,12 @@ option_parser = OptionParser.new do |opts|
   opts.on("-b", "--batch", "Adopt batch format of output filename for convertor") do |b|
     options[:batch] = b
   end
+  opts.on("-t", "--time", "Instruct convertor to add 55833.0 to the time values") do |t|
+    options[:time] = t
+  end
+  opts.on("-k", "--keep_name", "Keep the name of the input file when using convertor") do |k|
+    options[:keep_name] = k
+  end
   opts.on("-C", "--columns 0,1", Array, "Choose input file columns to be read. Defaults to 0,1") do |f|
     options[:file_columns] = f.map(&:to_i)
   end
