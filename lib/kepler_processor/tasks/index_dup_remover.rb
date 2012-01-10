@@ -2,6 +2,9 @@ module KeplerProcessor
   class IndexDupRemover < TaskBase
 
     def execute!
+      @options[:column_delimiter] = ","
+      @options[:file_columns] = (0..8).to_a
+      @options[:column_converters] = [:integer, :float, :float, :float, :float, :float, :float, :float, :float]
       super InputFileProcessor
     end
 
@@ -27,7 +30,11 @@ module KeplerProcessor
         end
 
         def output_filename
+          if options[:keep_name]
+            "#{@input_filename_without_extension.split("/").last}_improved.txt"
+          else
           "improved_observation_index.txt"
+          end
         end
     end
   end
