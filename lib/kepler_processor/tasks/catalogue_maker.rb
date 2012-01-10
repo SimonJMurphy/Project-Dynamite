@@ -24,6 +24,7 @@ module KeplerProcessor
 
       def create_star_metadata_hash
         @star_metadata = {}
+        @input_data.delete_if { |line| line.empty? }
         @input_data.each do |star|
           @star_metadata[star[0].to_i] = { :magnitude => star[3], :t_eff => star[4], :radius => star[5], :log_g => star[6], :feh => star[7], :contamination => star[8] }
         end
