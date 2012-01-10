@@ -9,6 +9,7 @@ module KeplerProcessor
       def execute!
         super do
           strip_invalid!
+          cherry_pick! if options[:good_data]
           correct_time!
           convert_fluxes_to_magnitudes!
           center_mag_on_zero!
@@ -21,8 +22,14 @@ module KeplerProcessor
           @input_data.delete_if { |record| record =~ /$(i)/ || record[1] == "-Inf" || record[1] == "NaN" || record[0] == "NaN" || record[1] == "nan" || record[1].nil? || record[1] == "" }
         end
 
+        def cherry_pick!
+          @input_data.delete_if { |record| record[2].round_to(0) != 0 }
+          @input_data.each { |record| record.pop }
+        end
+
         def correct_time!
-          @input_data.each { |record| record[0] += 54833.0 } if options[:time]
+          @input_data.each { |record| record[0] += 54833.0 } if options[:plus_time]
+          @input_data.each { |record| record[0] -= 2400000.0 } if options[:minus_time]
         end
 
         def convert_fluxes_to_magnitudes!
