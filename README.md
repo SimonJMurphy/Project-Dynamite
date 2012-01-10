@@ -24,11 +24,11 @@ Convertor is designed to take the raw kepler data, as downloaded from kasoc, and
 
 Typical usage:
 
-    kepler -c convert -C 0,1 -f data/input/filename.txt
+    kepler -c convert -C 0,1 -f ~/data/input/filename.txt
 
-This executes the convert command on columns 0 and 1 (time and raw flux) of the file 'filename.txt' with relative path data/input/. The default setting for the columns to convert is 0,3 (time and corrected flux). Multiple files can be converted simultaneously with, for example, data/input/*.txt as the input filename argument. As with all tasks, the input filename(s) must always be the final argument.
+This executes the convert command on columns 0 and 1 (time and raw flux) of the file 'filename.txt' with relative path ~/data/input/. The default setting for the columns to convert is 0,3 (time and corrected flux). Multiple files can be converted simultaneously with, for example, ~/data/input/*.txt as the input filename argument. As with all tasks, the input filename(s) must always be the final argument.
 
-Other useful options on convertor are '-f' (force overwrite), which automatically overwrites existing files with the same output filename in the output directory, and '-b' (batch), which uses a different output filename that is more useful for converting large batches of data, typically one working group at a time. The batch output filename uses the working group number from the input folder e.g. data/input/wg4 => data/output/converted\_wg4. The standard (non-batch) output directory is data/output. In both cases, convertor has the default filename format kic#\_CFlux\_{quarter}\_{short/long cadence}.txt, e.g. "kic1234567\_CFlux\_Q6.1_slc.txt".
+Other useful options on convertor are '-f' (force overwrite), which automatically overwrites existing files with the same output filename in the output directory, and '-b' (batch), which uses a different output filename that is more useful for converting large batches of data, typically one working group at a time. The batch output filename uses the working group number from the input folder e.g. ~/data/input/wg4 => ~/data/output/converted\_wg4. The standard (non-batch) output directory is ~/data/output. In both cases, convertor has the default filename format kic#\_CFlux\_{quarter}\_{short/long cadence}.txt, e.g. "kic1234567\_CFlux\_Q6.1_slc.txt".
 
 Convertor will delete any lines containing "-Inf", or containing imaginary numbers (containing 'i'). Any headers in the file are taken out if they start with the # character. All fluxes are converted to magnitudes, and are centered about zero.
 
@@ -38,9 +38,9 @@ Merger is designed for use on excessively large files. It is preferable to have 
 
 Typical usage:
 
-    kepler -c merge -m 10 data/output/filename.txt
+    kepler -c merge -m 10 ~/data/output/filename.txt
 
-Note that Merger is designed to run on files that are already converted, and the input file will likely reside in the directory data/output/. Merger requires a merge-ratio. This is given with "-m" and then the merge-ratio, separated either side by a space. Users may also find the force overwrite option useful. The filename provided by merger is the same as that of convertor, but with "\_{merge_ratio}to1" inserted before the cadence.
+Note that Merger is designed to run on files that are already converted, and the input file will likely reside in the directory ~/data/output/. Merger requires a merge-ratio. This is given with "-m" and then the merge-ratio, separated either side by a space. Users may also find the force overwrite option useful. The filename provided by merger is the same as that of convertor, but with "\_{merge_ratio}to1" inserted before the cadence.
 
 ### Transformer
 
@@ -48,7 +48,7 @@ Transformer is designed to work on converted files. A fourier transform of the c
 
 Typical usage:
 
-    kepler -c transform data/output/filename.txt
+    kepler -c transform ~/data/output/filename.txt
 
 Transformer is a ruby program that passes arguments to a program written in c to perform its calculations, because c was found to be much quicker than ruby at this task. The transform calculation code has the inner and outer for loops switched compared to those of Deeming (1975), and trigonometric identities are used to further reduce the number of computationally expensive sine and cosine calculations.
 
@@ -58,7 +58,7 @@ Light Curve Plotter plots a light curve of the input data. The output filename o
 
 Typical usage:
 
-    kepler -c plot_lc data/output/filename.txt
+    kepler -c plot_lc ~/data/output/filename.txt
 
 ### Catalogue Maker
 
@@ -66,13 +66,13 @@ Catalogue Maker requires more scaffolding than other tasks. Firstly, there must 
 
 Typical usage:
 
-    kepler -c catalogue data/input/wg4_observation_index.txt
+    kepler -c catalogue ~/data/input/wg4_observation_index.txt
 
 By default, Catalogue Maker reads the input file as a list of comma separated values, rather than values separated by spaces, because this is the typical format of observation indexes when downloaded through kasoc. It is assumed that the table has nine columns, containing: (left to right) kic\_number, cadence, season, magnitude, Teff, radius, log g, metallicity and contamination. If this is not the case, line 28 of catalogue_maker.rb will need to be changed according to the contents of the index.
 
-For each observation cycle listed in the observation index, there must be a light curve and the correct number of fourier plots (one for long cadence, two for short) in the folder CATALOGUE\_IMAGES\_PATH (line 14), e.g. data/output/wg4\_catalogue\_images.
+For each observation cycle listed in the observation index, there must be a light curve and the correct number of fourier plots (one for long cadence, two for short) in the folder CATALOGUE\_IMAGES\_PATH (line 14), e.g. ~/data/output/wg4\_catalogue\_images.
 
-The catalogue created is in pdf format, with one observation cycle per page. Catalogue Maker sorts the observation index by kic number and then by season so that the pages are in a sensible order. The path and filename of the catalogue produced is data/output/catalogue.pdf.
+The catalogue created is in pdf format, with one observation cycle per page. Catalogue Maker sorts the observation index by kic number and then by season so that the pages are in a sensible order. The path and filename of the catalogue produced is ~/data/output/catalogue.pdf.
 
 ### Appender
 
@@ -82,7 +82,7 @@ Since the comments of unconverted files contain information about the kic\_numbe
 
 Typical usage:
 
-    kepler -c append data/input/kplr001234567*.txt
+    kepler -c append ~/data/input/kplr001234567*.txt
 
 where kplr001234567 is a unique object with only consecutive quarters.
 
@@ -96,7 +96,7 @@ The output filename indicates the length of the slices and the part\_number of t
 
 Typical usage:
 
-    kepler -c slice -s 2 data/output/kic01234567-appended_Q2.1-Q2.3_slc.
+    kepler -c slice -s 2 ~/data/output/kic01234567-appended_Q2.1-Q2.3_slc.
 
 
 ### Modulation Finder
@@ -109,11 +109,11 @@ The mid-point of each data slice is found automatically, and the sliced dataset 
 
 Typical usage:
 
-    kepler -c find_mod data/output/01234567_slices/kic01234567_CFlux_Q2.1-2.3_1d-slices-part*.txt
+    kepler -c find_mod ~/data/output/01234567_slices/kic01234567_CFlux_Q2.1-2.3_1d-slices-part*.txt
 
 where the slices have been kept in a separate directory within the output directory.
 
-The mean and standard deviation of both the frequencies and the amplitudes are written to the terminal; four .png files are created in data/output.
+The mean and standard deviation of both the frequencies and the amplitudes are written to the terminal; four .png files are created in ~/data/output.
 
 ### Detrender
 
@@ -121,7 +121,7 @@ The detrender is designed to work on converted data. It uses GSL to find a linea
 
 Typical usage:
 
-    kepler -c detrend data/output/filename.txt
+    kepler -c detrend ~/data/output/filename.txt
 
 
 ### Phase Finder
@@ -130,7 +130,7 @@ Phase finder takes an input (typically from an Excel spreadsheet) containing a f
 
 Typical usage:
 
-    kepler -c find_phase data/output/filename.txt
+    kepler -c find_phase ~/data/output/filename.txt
 
 The relative phases returned will be folded on multiples of 2 pi. By plotting a scatter diagram of the relative phase against frequency for the combination frequencies, one should see stripes of points if there is a correlated relationship. It is recommended to unfold these manually by shifting the points by multiples of 2 pi so that they form a straight line. Once the line is straight, albeit perhaps with a few outliers, the "Fitter" program is recommended to improve the fit.
 
@@ -140,10 +140,19 @@ Fitter takes a series of x and y values, fits a linear trend to them, and then t
 
 Typical usage:
 
-    kepler -c improve_fit -f data/output/filename.txt
+    kepler -c improve_fit -f ~/data/output/filename.txt
 
 Fitter may need to be run more than once to converge on the best fit, so the force overwrite command "-f" has been implemented in the above typical usage example. The output from the first iteration will need to be used as the input for the second iteration in this case - such a re-iterative procedure is not yet automated.
 
+### Inspector
+
+Inspector provides information on the time span of Kepler observations and the duty cycle over that period. It can take single or multiple files, and will order them into season order. It appends the files to single file to calculate the time span and duty cycle, but doesn't save this file. It puts the results to the terminal instead.
+
+Typical usage:
+
+    kepler -c inspect ~/data/output/filename_Q*.txt
+
+Although it may well be possible to incorporate this feature into the catalogue making process, the generic application of Inspector would not be appropriate because of the different cadences available and the occasional wish to omit poor data from such statistics.
 
 Note on Patches/Pull Requests
 -----------------------------
