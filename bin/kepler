@@ -12,15 +12,15 @@ include KeplerProcessor
 LOGGER = Logger.new STDOUT
 LOGGER.level = Logger::INFO
 
-options = { :command => Convertor, :input_paths => [], :output_path => "data/output", :column_delimiter => " ", :column_converters => :float }
+options = { :command => Convertor, :input_paths => [], :output_path => "/Users/sjm/data/output", :column_delimiter => " ", :column_converters => :float }
 
 option_parser = OptionParser.new do |opts|
   opts.banner = "Usage: kepler -c command [-o output_directory] [--columns 0,1] [-d ,] path_to_input_file(s)"
 
   opts.on("-c", "--command COMMAND", String, "Specify the command to execute [convert/transform/merge/append/plot_lc/uniquify/catalogue/slice/find_mod/find_phase/improve_fit]") do |c|
-    options[:command] = { convert: Convertor, transform: Transformer, merge: Merger, plot_lc: LightCurvePlotter, uniquify: IndexDupRemover, catalogue: CatalogueMaker, append: Appender, slice: Slicer, detrend: Detrender, find_mod: ModulationFinder, find_phase: PhaseFinder, improve_fit: Fitter }[c.to_sym]
+    options[:command] = { convert: Convertor, transform: Transformer, merge: Merger, plot_lc: LightCurvePlotter, uniquify: IndexDupRemover, catalogue: CatalogueMaker, append: Appender, slice: Slicer, detrend: Detrender, find_mod: ModulationFinder, find_phase: PhaseFinder, improve_fit: Fitter, inspect: Inspector }[c.to_sym]
     if options[:command].nil?
-      LOGGER.error "Invalid command. Options are [convert/transform/merge/append/plot_lc/uniquify/catalogue/slice/detrend/find_mod/find_phase/improve_fit]"
+      LOGGER.error "Invalid command. Options are [convert/transform/merge/append/plot_lc/uniquify/catalogue/slice/detrend/find_mod/find_phase/improve_fit/inspect]"
       puts opts
       exit
     end
