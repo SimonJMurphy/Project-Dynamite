@@ -33,7 +33,7 @@ module KeplerProcessor
       def create_observation_index
         @observation_index = @input_data.map do |observation|
           @working_group = @input_filename_without_path.split("_").first
-          @catalogue_images_path = "/Users/sjm/code/Project-Dynamite/data/output/#{@working_group}_catalogue_images/"
+          @catalogue_images_path = "/Users/sjm/data/output/#{@working_group}_catalogue_images/"
           kic_number, cadence, season = observation
           cadence = cadence == "SC" ? "slc" : "llc"
           hash = { :kic_number => kic_number, :cadence => cadence, :season => season, :cycle => "kic#{kic_number} #{season} #{cadence}", :lightcurve_path => "#{@catalogue_images_path}kic#{kic_number}_Cflux_#{season}_#{cadence}_plot.png", :short_fourier_path => "#{@catalogue_images_path}kic#{kic_number}_Cflux_#{season}_#{cadence}_fourier_plot_0to24.png" }
