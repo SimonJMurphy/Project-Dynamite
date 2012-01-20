@@ -37,7 +37,7 @@ module KeplerProcessor
     end
 
     def duty_cycle
-      100 * (@output_data.size / (time_span / std_range)).round_to(3)
+      (100 * @output_data.size / (time_span / std_range)).round_to(3)
     end
     
     def show_me_the_droids_I_am_looking_for
