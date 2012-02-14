@@ -31,10 +31,10 @@ option_parser = OptionParser.new do |opts|
   opts.on("-b", "--batch", "Adopt batch format of output filename for convertor") do |b|
     options[:batch] = b
   end
-  opts.on("-pt", "--plus_time", "Instruct convertor to add 55833.0 to the time values") do |t|
+  opts.on("-p", "--plus_time", "Instruct convertor to add 55833.0 to the time values") do |t|
     options[:plus_time] = t
   end
-  opts.on("-mt", "--minus_time", "Instruct convertor to subtract 2400000.0 from the time values") do |t|
+  opts.on("-m", "--minus_time", "Instruct convertor to subtract 2400000.0 from the time values") do |t|
     options[:minus_time] = t
   end
   opts.on("-k", "--keep_name", "Keep the name of the input file when using convertor") do |k|
@@ -52,7 +52,7 @@ option_parser = OptionParser.new do |opts|
   opts.on("-o", "--output PATH", String, "Specify the path to the output directory. Defaults to data/output") do |p|
     options[:output_path] = p
   end
-  opts.on("-m", "--merge-ratio RATIO", Integer, "Specify a merge ratio to use.") do |p|
+  opts.on("-r", "--merge-ratio RATIO", Integer, "Specify a merge ratio to use.") do |p|
     options[:merge_ratio] = p
   end
   opts.on("-s", "--slice-size SIZE", Float, "Specify a slice size to use.") do |p|
