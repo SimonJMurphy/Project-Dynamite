@@ -20,27 +20,29 @@ Tasks
 
 ### Convertor
 
-Convertor is designed to take the raw kepler data, as downloaded from kasoc, and to convert it into something more usable. As it comes, the data contains multiple columns including: time, raw flux, raw flux error, corrected flux, and corrected flux error. Normally the user will select two columns to convert, and the output file will then contain just two columns, typically time and flux or corrected flux.
+Convertor is designed to take the raw kepler data, as downloaded from kasoc, and to convert it into something more usable. As it comes, the data contains multiple columns including: time, raw flux, raw flux error, corrected flux, and corrected flux error. Normally the user will select two columns to convert, and the output file will then contain just two columns, typically time and SAP flux or PDC flux.
 
 Typical usage:
 
     kepler -c convert -C 0,1 -f ~/data/input/filename.txt
 
-This executes the convert command on columns 0 and 1 (time and raw flux) of the file 'filename.txt' with relative path ~/data/input/. The default setting for the columns to convert is 0,3 (time and corrected flux). Multiple files can be converted simultaneously with, for example, ~/data/input/*.txt as the input filename argument. As with all tasks, the input filename(s) must always be the final argument.
+This executes the convert command on columns 0 and 1 (time and raw flux) of the file 'filename.txt' with relative path ~/data/input/. The default setting for the columns to convert is 0,3 (time and PDC flux). Multiple files can be converted simultaneously with, for example, ~/data/input/*.txt as the input filename argument. As with all tasks, the input filename(s) must always be the final argument.
 
-Other useful options on convertor are '-f' (force overwrite), which automatically overwrites existing files with the same output filename in the output directory, and '-b' (batch), which uses a different output filename that is more useful for converting large batches of data, typically one working group at a time. The batch output filename uses the working group number from the input folder e.g. ~/data/input/wg4 => ~/data/output/converted\_wg4. The standard (non-batch) output directory is ~/data/output. In both cases, convertor has the default filename format kic#\_CFlux\_{quarter}\_{short/long cadence}.txt, e.g. "kic1234567\_CFlux\_Q6.1_slc.txt".
+Other useful options on convertor are '-f' (force overwrite), which automatically overwrites existing files with the same output filename in the output directory, and '-b' (batch), which uses a different output filename that is more useful for converting large batches of data, typically one working group at a time. The batch output filename uses the working group number from the input folder e.g. ~/data/input/wg4 => ~/data/output/converted\_wg4. The standard (non-batch) output directory is ~/data/output. In both cases, convertor has the default filename format kic#\_CFlux\_{quarter}\_{short/long cadence}.txt, e.g. "kic1234567\_CFlux\_Q6.1_slc.txt". If this file-naming convention is undesirable because of a non-standard input filename, the option '-k' will keep the input filename and just insert '\_converted' before the file extension '.txt'.
 
-Convertor will delete any lines containing "-Inf", or containing imaginary numbers (containing 'i'). Any headers in the file are taken out if they start with the # character. All fluxes are converted to magnitudes, and are centered about zero.
+Convertor will delete any lines containing "-Inf", or containing imaginary numbers (containing 'i'). Any headers in the file are taken out if they start with the # character. All fluxes are converted to magnitudes, and are centered about zero. Convertor will automatically name the flux type (currently 'R' for 'raw' and 'C' for corrected -- to be updated when PDC MAP becomes widely implemented) based on the columns selected for conversion, i.e. -C 0,1 => Rflux and -C 0,3 => Cflux.
+
+Options exist for switching from full to truncated Barycentric Julian date (-m) and from switching from the time notation of MAST data files, where time is relative to 1st Jan 2009, to the kasoc format of truncated Barycentric Julian date (-p).
 
 ### Merger
 
-Merger is designed for use on excessively large files. It is preferable to have longer datasets for increased resolution, but having more data points massively increases computation time for fourier transforms and other tasks. With Merger you can take a user-specified number of points, given as the merge-ratio, and merge those points into a single point, whose time and flux values are the average of those points. Merger does not merge points if a gap in the data exists between them. So if points are separated in time by more than the normal separation in time of points with that particular cadence, then that set of points are not merged. The next set of points, if free of time gaps, will merge normally. Points at the end of the file that are insufficient in number for form a whole set to be merged are also not merged.
+Merger is designed for use on excessively large files. It is preferable to have longer datasets for increased frequency resolution, but having more data points massively increases computation time for fourier transforms and other tasks. With Merger you can take a user-specified number of points, given as the merge-ratio, and merge those points into a single point, whose time and flux values are the average of those points. Merger does not merge points if a gap in the data exists between them. So if points are separated in time by more than the normal separation in time of points with that particular cadence, then that set of points are not merged. The next set of points, if free of time gaps, will merge normally. Points at the end of the file that are insufficient in number to form a whole set to be merged are also not merged. The algorithms will merge short-cadence (SC) data into long-cadence (LC) data and produce concurrent data points (with those expected in the LC light curve), but the SC light curve needs engineering such that there are exactly 15 points in the SC data set before the first point in the LC dataset.
 
 Typical usage:
 
-    kepler -c merge -m 10 ~/data/output/filename.txt
+    kepler -c merge -r 10 ~/data/output/filename.txt
 
-Note that Merger is designed to run on files that are already converted, and the input file will likely reside in the directory ~/data/output/. Merger requires a merge-ratio. This is given with "-m" and then the merge-ratio, separated either side by a space. Users may also find the force overwrite option useful. The filename provided by merger is the same as that of convertor, but with "\_{merge_ratio}to1" inserted before the cadence.
+Note that Merger is designed to run on files that are already converted, and the input file will likely reside in the directory ~/data/output/. Merger requires a merge-ratio. This is given with "-r" and then the merge-ratio, separated either side by a space. Users may also find the force overwrite option useful. The filename provided by merger is the same as that of convertor, but with "\_{merge_ratio}to1" inserted before the cadence.
 
 ### Transformer
 
