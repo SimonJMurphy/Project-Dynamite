@@ -95,7 +95,7 @@ if options[:command] == Slicer && !options.has_key?(:slice_size)
 end
 
 if options[:command] == Convertor && !options.has_key?(:flux_type)
-  LOGGER.error "You must provide a a flux type e.g. 'MAP'."
+  LOGGER.error "You must provide a flux type e.g. 'MAP'."
   option_parser.parse '--help'
   exit
 end
