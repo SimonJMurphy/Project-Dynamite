@@ -45,11 +45,7 @@ module KeplerProcessor
         end
 
         def flux_type
-          if flux_type = @input_filename.match(/(\w)flux/)
-            "#{flux_type[1]}flux"
-          else
-            @options[:file_columns] == [0, 1] ? :Rflux : :Cflux
-          end
+          options[:flux_type]
         end
 
         def output_filename          
