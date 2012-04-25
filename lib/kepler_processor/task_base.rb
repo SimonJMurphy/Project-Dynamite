@@ -1,6 +1,6 @@
 module KeplerProcessor
   class TaskBase
-    attr_accessor :options
+    attr_accessor :options, :errors
 
     def initialize(options)
       @options = options
@@ -25,9 +25,9 @@ module KeplerProcessor
           PBAR.inc
         end
       end
-      unless @errors.count.zero?
+      unless errors.count.zero?
         LOGGER.error "The following errors occurred:"
-        @errors.each { |e| LOGGER.error e}
+        errors.each { |e| LOGGER.error e}
       end
     end
   end
