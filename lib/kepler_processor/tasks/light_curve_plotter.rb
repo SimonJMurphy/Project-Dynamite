@@ -21,7 +21,7 @@ module KeplerProcessor
               # plot.format 'y "%6.1f"'
               plot.lmargin "10"
               plot.output "#{@options[:output_path]}/#{@input_filename_without_extension}_plot.png"
-              plot.ylabel "Amplitude (mag)"
+              plot.ylabel "Amplitude (mmag)"
               plot.xlabel "BJD"
               plot.yrange "[] reverse"
 
