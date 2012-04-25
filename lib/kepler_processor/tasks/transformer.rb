@@ -11,11 +11,20 @@ module KeplerProcessor
       
       attr_accessor :spectrum
 
+      def initialize(*args)
+        super
+        @txt_save = false
+      end
+
       def execute!
         super do
           @spectrum = compute_amplitude_spectrum
           plot_DFT spectrum.to_a if cadence == :slc
           plot_DFT spectrum.to_a.select { |x| x[0] <= 24 }
+          if @options[:export]
+            note_amplitudes
+            save! true
+          end
         end
       end
 
@@ -29,7 +38,9 @@ module KeplerProcessor
               plot.lmargin "10"
               plot.output "#{@options[:output_path]}/#{@input_filename_without_extension}_fourier_plot_0to#{data.last[0].round_to(0).to_i}.png"
               peak = peak_point data
-              plot.label "'Peak of #{peak[1].round_to 3} mmag at #{peak[0].round_to 4} c/d' at screen 0.70, screen 0.034"
+              @amplitude = peak[1].round_to 3
+              @frequency = peak[0].round_to 4
+              plot.label "'Peak of #{@amplitude} mmag at #{@frequency} c/d' at screen 0.70, screen 0.034"
               plot.ylabel "Amplitude (mmag)"
               plot.xlabel "Frequency (c/d)"
 
@@ -44,7 +55,14 @@ module KeplerProcessor
           end
         end
 
-        # no output filename method, because we don't want to save any text, just the plots.
+        def note_amplitudes
+          @output_data = []
+          @output_data << [@attributes[:kic_number], @attributes[:season], @amplitude, @frequency]
+        end
+
+        def output_filename
+          "fourier_information.txt"
+        end
     end
   end
 end

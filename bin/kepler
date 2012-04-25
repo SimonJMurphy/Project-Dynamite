@@ -40,6 +40,9 @@ option_parser = OptionParser.new do |opts|
   opts.on("-k", "--keep_name", "Keep the name of the input file when using convertor") do |k|
     options[:keep_name] = k
   end
+  opts.on("-e", "--export", "Export amplitudes and other information from fourier transforms") do |e|
+    options[:export] = e
+  end
   opts.on("-g", "--good_data_only", "Keep only the data with quality flag '0' when using convertor") do |g|
     options[:good_data] = g
   end
