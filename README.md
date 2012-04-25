@@ -3,7 +3,7 @@ Kepler Processor
 
 Installation
 ------------
-Make sure you have GNUPlot installed with support for output to png.
+Make sure you have GNUPlot installed with support for output to png -- this is normally via libgd and dependencies.
 
 Then:
 
@@ -11,9 +11,10 @@ Then:
 
 Usage
 -----
-    kepler -C command filename(s)
+    kepler -C command -o output-path filename(s)
 
 See kepler --help for details
+In the examples below, the -o has been omitted for brevity.
 
 Tasks
 -----
@@ -28,11 +29,11 @@ Typical usage:
 
 This executes the convert command on columns 0 and 1 (time and raw flux) of the file 'filename.txt' with relative path ~/data/input/. The default setting for the columns to convert is 0,3 (time and PDC flux). Multiple files can be converted simultaneously with, for example, ~/data/input/*.txt as the input filename argument. As with all tasks, the input filename(s) must always be the final argument.
 
-Other useful options on convertor are '-f' (force overwrite), which automatically overwrites existing files with the same output filename in the output directory, and '-b' (batch), which uses a different output filename that is more useful for converting large batches of data, typically one working group at a time. The batch output filename uses the working group number from the input folder e.g. ~/data/input/wg4 => ~/data/output/converted\_wg4. The standard (non-batch) output directory is ~/data/output. In both cases, convertor has the default filename format kic#\_CFlux\_{quarter}\_{short/long cadence}.txt, e.g. "kic1234567\_CFlux\_Q6.1_slc.txt". If this file-naming convention is undesirable because of a non-standard input filename, the option '-k' will keep the input filename and just insert '\_converted' before the file extension '.txt'.
+Other useful options on convertor are '-f' (force overwrite), which automatically overwrites existing files with the same output filename in the output directory, and '-b' (batch), which uses a different output filename that is more useful for converting large batches of data, typically one working group at a time. The batch output filename uses the working group number from the input folder e.g. ~/data/input/wg4 => ~/data/output/converted\_wg4. Remember to specify the output directory. Convertor has the default filename format kic#\_CFlux\_{quarter}\_{short/long cadence}.txt, e.g. "kic1234567\_CFlux\_Q6.1\_slc.txt". If this file-naming convention is undesirable because of a non-standard input filename, the option '-k' will keep the input filename and just insert '\_converted' before the file extension '.txt'.
 
-Convertor will delete any lines containing "-Inf", or containing imaginary numbers (containing 'i'). Any headers in the file are taken out if they start with the # character. All fluxes are converted to magnitudes, and are centered about zero. Convertor will automatically name the flux type (currently 'R' for 'raw' and 'C' for corrected -- to be updated when PDC MAP becomes widely implemented) based on the columns selected for conversion, i.e. -C 0,1 => Rflux and -C 0,3 => Cflux.
+Convertor will delete any lines containing "-Inf", or containing imaginary numbers (containing 'i'). Any headers in the file are taken out if they start with the # character. All fluxes are converted to magnitudes, and are centred about zero. Convertor requires the user to specify which type of flux the data are using "-t". The convention commonly used is "LS" for PDC-LS, "MAP" for PDC-MAP and "SAP" for the Simple Aperture Photometry.
 
-Options exist for switching from full to truncated Barycentric Julian date (-m) and from switching from the time notation of MAST data files, where time is relative to 1st Jan 2009, to the kasoc format of truncated Barycentric Julian date (-p).
+Options exist for switching from full to truncated Barycentric Julian date (-m) and from switching from the time notation of MAST data files, where time is relative to 1st Jan 2009, to the kasoc format of truncated Barycentric Julian date (-p). In addition, if data from MAST containing a SAP\_Quality column (third column) are used, then specifying "-g" will use only the points with 'good' SAP\_Quality (==0).
 
 ### Merger
 
@@ -42,7 +43,7 @@ Typical usage:
 
     kepler -c merge -r 10 ~/data/output/filename.txt
 
-Note that Merger is designed to run on files that are already converted, and the input file will likely reside in the directory ~/data/output/. Merger requires a merge-ratio. This is given with "-r" and then the merge-ratio, separated either side by a space. Users may also find the force overwrite option useful. The filename provided by merger is the same as that of convertor, but with "\_{merge_ratio}to1" inserted before the cadence.
+Note that Merger is designed to run on files that are already converted. Hence there is normally no need to specify which columns to use because the file will only have times and fluxes. Merger requires a merge-ratio. This is given with "-r" and then the merge-ratio, separated either side by a space. Users may also find the force overwrite option useful. The filename provided by merger is the same as that of convertor, but with "\_{merge_ratio}to1" inserted before the cadence.
 
 ### Transformer
 
@@ -53,6 +54,8 @@ Typical usage:
     kepler -c transform ~/data/output/filename.txt
 
 Transformer is a ruby program that passes arguments to a program written in c to perform its calculations, because c was found to be much quicker than ruby at this task. The transform calculation code has the inner and outer for loops switched compared to those of Deeming (1975), and trigonometric identities are used to further reduce the number of computationally expensive sine and cosine calculations.
+
+The option "-e" will export the fourier information to a text-file called "fourier_information" in the output directory. It contains the kic number, season, peak amplitude (mmag), and the frequency of that peak (c/d). The force-overwrite "-f" command is required to append to this file when processing multiple time-series.
 
 ### Light Curve Plotter
 
