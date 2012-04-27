@@ -14,7 +14,7 @@ module KeplerProcessor
       od = output_data || input_data || []
       ::FileUtils.mkpath options[:output_path]
       raise FileExistsError if File.exist?(full_output_filename) && !options[:force_overwrite]
-      LOGGER.info "Writing output to #{full_output_filename}: #{od.inspect}"
+      LOGGER.info "Writing output to #{full_output_filename}."
       CSV.open(full_output_filename, append ? "a" : "w+", :col_sep => "\t") do |csv|
         # impicitly truncate file by file mode when force overwriting
         od.each { |record| csv << record }
