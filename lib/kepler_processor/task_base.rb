@@ -17,7 +17,7 @@ module KeplerProcessor
           LOGGER.info message
           errors << message
         rescue => e
-          LOGGER.error e.message
+          LOGGER.error "#{e.message} (#{e.class})"
           LOGGER.error e.backtrace.join("\n")
           errors << e.message
         ensure
@@ -27,7 +27,7 @@ module KeplerProcessor
       end
       unless errors.count.zero?
         LOGGER.error "The following errors occurred:"
-        errors.each { |e| LOGGER.error e}
+        errors.each { |e| LOGGER.error e }
       end
     end
   end

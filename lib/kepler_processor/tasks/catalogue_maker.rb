@@ -14,11 +14,13 @@ module KeplerProcessor
 
       def execute!
         super do
+          @errors = []
           @txt_save = false
           create_star_metadata_hash
           create_observation_index
           sort_observation_index_by_kic_number
           create_pdf
+          print_errors
         end
       end
 
@@ -57,13 +59,28 @@ module KeplerProcessor
       def create_pdf
         observation_index = @observation_index
         star_metadata = @star_metadata
+        errors = @errors
         Prawn::Document.generate(full_output_filename, :page_layout => :portrait, :margin => 5, :skip_page_creation => false) do
           observation_index.each do |observation|
             start_new_page
 
-            image observation[:lightcurve_path], :at => [0,750], :width => 580
-            image observation[:short_fourier_path], :at => [0, 560], :width => 580
-            image observation[:long_fourier_path], :at => [0, 360], :width => 580 if observation[:long_fourier_path]
+            begin
+              image observation[:lightcurve_path], :at => [0,750], :width => 580
+            rescue ArgumentError => e
+              errors << e
+            end
+
+            begin
+              image observation[:short_fourier_path], :at => [0, 560], :width => 580
+            rescue ArgumentError => e
+              errors << e
+            end
+
+            begin
+              image observation[:long_fourier_path], :at => [0, 360], :width => 580 if observation[:long_fourier_path]
+            rescue ArgumentError => e
+              errors << e
+            end
 
             font_size(20) { draw_text observation[:cycle], :at => [5, 760] }
 
@@ -76,6 +93,14 @@ module KeplerProcessor
               draw_text "contam. \t = #{metadata[:contamination]}", :at => [300, 755]
             end
           end
+        end
+      end
+
+      def print_errors
+        return if @errors.empty?
+        puts "The following errors occurred:"
+        @errors.each do |e|
+          puts "  * #{e.message} (#{e.class})"
         end
       end
 
