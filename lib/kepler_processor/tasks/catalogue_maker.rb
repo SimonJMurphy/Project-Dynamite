@@ -38,8 +38,13 @@ module KeplerProcessor
           @catalogue_images_path = "/Users/sjm/data/output/#{@working_group}_catalogue_images/"
           kic_number, cadence, season = observation
           cadence = cadence == "SC" ? "slc" : "llc"
-          hash = { :kic_number => kic_number, :cadence => cadence, :season => season, :cycle => "kic#{kic_number} #{season} #{cadence}", :lightcurve_path => "#{@catalogue_images_path}kic#{kic_number}_Cflux_#{season}_#{cadence}_plot.png", :short_fourier_path => "#{@catalogue_images_path}kic#{kic_number}_Cflux_#{season}_#{cadence}_fourier_plot_0to24.png" }
-          hash[:long_fourier_path] = "#{@catalogue_images_path}kic#{kic_number}_Cflux_#{season}_#{cadence}_fourier_plot_0to100.png" if cadence == "slc"
+          if observation[2] == "Q9" || observation[2] == "Q10"
+            flux_type = "MAP"
+          else
+            flux_type = "LS"
+          end
+          hash = { :kic_number => kic_number, :cadence => cadence, :season => season, :cycle => "kic#{kic_number} #{season} #{cadence} #{flux_type}", :lightcurve_path => "#{@catalogue_images_path}kic#{kic_number}_#{flux_type}_#{season}_#{cadence}_plot.png", :short_fourier_path => "#{@catalogue_images_path}kic#{kic_number}_#{flux_type}_#{season}_#{cadence}_fourier_plot_0to24.png" }
+          hash[:long_fourier_path] = "#{@catalogue_images_path}kic#{kic_number}_#{flux_type}_#{season}_#{cadence}_fourier_plot_0to100.png" if cadence == "slc"
           hash
         end
       end
@@ -52,9 +57,9 @@ module KeplerProcessor
         end
       end
 
-      # input_filenames of the form:        kic10000056_CFlux_Q4.2_slc.txt
-      # lightcurve_filenames of the form:   kic10000056_CFlux_Q4.2_slc_plot.png
-      # fourier_plot_filenames of the form: kic10000056_CFlux_Q4.2_slc_fourier_plot_0to100.png
+      # input_filenames of the form:        kic10000056_LS_Q4.2_slc.txt
+      # lightcurve_filenames of the form:   kic10000056_LS_Q4.2_slc_plot.png
+      # fourier_plot_filenames of the form: kic10000056_LS_Q4.2_slc_fourier_plot_0to100.png
 
       def create_pdf
         observation_index = @observation_index
