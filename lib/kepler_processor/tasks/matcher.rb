@@ -33,6 +33,7 @@ module KeplerProcessor
     end
 
     def match_observation_cycle
+      puts "Cross-examining input files. Transfering fourier information..."
       @fourier_information.each do |line|
         line[0].gsub!('kic','')
         @observation_index.each do |observation_cycle|
@@ -42,6 +43,7 @@ module KeplerProcessor
         end
       end
       @output_data = @observation_index.map { |line| line.first.split(",").to_a }
+      puts "Transfer of Fourier information complete. Identifying any observations missing information..."
     end
 
     def report_missing_entries
@@ -51,6 +53,7 @@ module KeplerProcessor
     end
 
     def sort_results
+      puts "Sorting the results by KIC number and season..."
       @output_data.sort! do |a, b|
         comparison_result = a[0] <=> b[0]
         comparison_result = a[2] <=> b[2] if comparison_result == 0
