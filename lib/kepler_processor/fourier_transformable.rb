@@ -13,8 +13,14 @@ module KeplerProcessor
     end
 
     def peak_point(data)
-      data.sort_by { |x| x[1] }.last
+      @sorted_data = data.sort_by { |x| x[1] }
+      @sorted_data.last
     end
-    
+
+    def percentile_95(data)
+      percentile = (@sorted_data.size * 0.95).round_to 0
+      @sorted_data[percentile]
+    end
+
   end
 end

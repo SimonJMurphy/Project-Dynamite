@@ -5,7 +5,7 @@ module KeplerProcessor
     include Saveable
 
     def execute!
-      @options[:file_columns] = (0..3).to_a
+      @options[:file_columns] = (0..4).to_a
       super do
         produce_arrays
         match_observation_cycle
@@ -39,7 +39,7 @@ module KeplerProcessor
         line[0].gsub!('kic','')
         @observation_index.each_with_index do |observation_cycle, index|
           if observation_cycle.first.include?(line[0]) && observation_cycle.first.include?(line[1])
-            observation_cycle.first.insert(-1, ",#{line[2]},#{line[3]}")
+            observation_cycle.first.insert(-1, ",#{line[2]},#{line[3]},#{line[4]}")
             @output_data << observation_cycle.first.split(",").to_a
             @observation_index.delete_at index
             break

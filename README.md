@@ -55,7 +55,7 @@ Typical usage:
 
 Transformer is a ruby program that passes arguments to a program written in c to perform its calculations, because c was found to be much quicker than ruby at this task. The transform calculation code has the inner and outer for loops switched compared to those of Deeming (1975), and trigonometric identities are used to further reduce the number of computationally expensive sine and cosine calculations.
 
-The option "-e" will export the fourier information to a text-file called "fourier_information" in the output directory. It contains the kic number, season, peak amplitude (mmag), and the frequency of that peak (c/d). The force-overwrite "-f" command is required to append to this file when processing multiple time-series.
+The option "-e" will export the fourier information to a text-file called "fourier_information" in the output directory. It contains the kic number, season, peak amplitude (mmag), the frequency of that peak (c/d) and the grass level (mmag). The grass-level is taken as the 95th percentile in peak amplitudes, and is currently not particularly robust. The force-overwrite "-f" command is required to append to this file when processing multiple time-series.
 
 ### Light Curve Plotter
 
@@ -161,7 +161,7 @@ Although it may well be possible to incorporate this feature into the catalogue 
 
 ### Matcher
 
-The purpose of Matcher is to take a list of Fourier information (i.e. kic\_number, season, peak amplitude, peak frequency) and an observation index, and to port that Fourier information over to the observation index. The program thus take two files containing "fourier\_information" and "observation\_index" in the filename (in any order). Matching takes place by kic\_number and season.
+The purpose of Matcher is to take a list of Fourier information (i.e. kic\_number, season, peak amplitude, peak frequency, grass level) and an observation index, and to port that Fourier information over to the observation index. The program thus take two files containing "fourier\_information" and "observation\_index" in the filename (in any order). Matching takes place by kic\_number and season.
 
 Typical usage:
 
