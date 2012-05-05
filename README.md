@@ -21,15 +21,15 @@ Tasks
 
 ### Convertor
 
-Convertor is designed to take the raw kepler data, as downloaded from kasoc, and to convert it into something more usable. As it comes, the data contains multiple columns including: time, raw flux, raw flux error, corrected flux, and corrected flux error. Normally the user will select two columns to convert, and the output file will then contain just two columns, typically time and SAP flux or PDC flux.
+Convertor is designed to take the raw Kepler data, as downloaded from kasoc, and to convert it into something more usable. As it comes, the data contains multiple columns including: time, raw flux, raw flux error, corrected flux, and corrected flux error. Normally the user will select two columns to convert, and the output file will then contain just two columns, typically time and SAP flux or PDC flux.
 
 Typical usage:
 
-    kepler -c convert -C 0,1 -f ~/data/input/filename.txt
+    kepler -c convert -C -t LS 0,1 -f ~/data/input/filename.txt
 
 This executes the convert command on columns 0 and 1 (time and raw flux) of the file 'filename.txt' with relative path ~/data/input/. The default setting for the columns to convert is 0,3 (time and PDC flux). Multiple files can be converted simultaneously with, for example, ~/data/input/*.txt as the input filename argument. As with all tasks, the input filename(s) must always be the final argument.
 
-Other useful options on convertor are '-f' (force overwrite), which automatically overwrites existing files with the same output filename in the output directory, and '-b' (batch), which uses a different output filename that is more useful for converting large batches of data, typically one working group at a time. The batch output filename uses the working group number from the input folder e.g. ~/data/input/wg4 => ~/data/output/converted\_wg4. Remember to specify the output directory. Convertor has the default filename format kic#\_CFlux\_{quarter}\_{short/long cadence}.txt, e.g. "kic1234567\_CFlux\_Q6.1\_slc.txt". If this file-naming convention is undesirable because of a non-standard input filename, the option '-k' will keep the input filename and just insert '\_converted' before the file extension '.txt'.
+Other useful options on convertor are '-f' (force overwrite), which automatically overwrites existing files with the same output filename in the output directory, and '-b' (batch), which uses a different output filename that is more useful for converting large batches of data, typically one working group at a time. The batch output filename uses the working group number from the input folder e.g. ~/data/input/wg4 => ~/data/output/converted\_wg4. Remember to specify the output directory. Convertor has the default filename format kic#\_{flux\_type}\_{quarter}\_{short/long cadence}.txt, e.g. "kic1234567\_LS\_Q6.1\_slc.txt". If this file-naming convention is undesirable because of a non-standard input filename, the option '-k' will keep the input filename and just insert '\_converted' before the file extension '.txt'.
 
 Convertor will delete any lines containing "-Inf", or containing imaginary numbers (containing 'i'). Any headers in the file are taken out if they start with the # character. All fluxes are converted to magnitudes, and are centred about zero. Convertor requires the user to specify which type of flux the data are using "-t". The convention commonly used is "LS" for PDC-LS, "MAP" for PDC-MAP and "SAP" for the Simple Aperture Photometry.
 
@@ -75,9 +75,9 @@ Typical usage:
 
 By default, Catalogue Maker reads the input file as a list of comma separated values, rather than values separated by spaces, because this is the typical format of observation indexes when downloaded through kasoc. It is assumed that the table has nine columns, containing: (left to right) kic\_number, cadence, season, magnitude, Teff, radius, log g, metallicity and contamination. If this is not the case, line 28 of catalogue_maker.rb will need to be changed according to the contents of the index.
 
-For each observation cycle listed in the observation index, there must be a light curve and the correct number of fourier plots (one for long cadence, two for short) in the folder CATALOGUE\_IMAGES\_PATH (line 14), e.g. ~/data/output/wg4\_catalogue\_images.
+For each observation cycle listed in the observation index, there must be a light curve and the correct number of fourier plots (one for long cadence, two for short) in the folder CATALOGUE\_IMAGES\_PATH (line 14), e.g. ~/data/output/wg4\_catalogue\_images. The filenames of plots that are currently looked for depend on season for PDC data - i.e. MAP and LS are distinguished by season (at the time of writing, only Q9, Q10 and Q11 LC have MAP). The flux type is also added to the catalogue.
 
-The catalogue created is in pdf format, with one observation cycle per page. Catalogue Maker sorts the observation index by kic number and then by season so that the pages are in a sensible order. The path and filename of the catalogue produced is ~/data/output/catalogue.pdf.
+The catalogue created is in pdf format, with one observation cycle per page. Catalogue Maker sorts the observation index by kic\_number and then by season so that the pages are in a sensible order. The path and filename of the catalogue produced is ~/data/output/catalogue.pdf.
 
 ### Appender
 
@@ -158,6 +158,16 @@ Typical usage:
     kepler -c inspect ~/data/output/filename_Q*.txt
 
 Although it may well be possible to incorporate this feature into the catalogue making process, the generic application of Inspector would not be appropriate because of the different cadences available and the occasional wish to omit poor data from such statistics.
+
+### Matcher
+
+The purpose of Matcher is to take a list of Fourier information (i.e. kic\_number, season, peak amplitude, peak frequency) and an observation index, and to port that Fourier information over to the observation index. The program thus take two files containing "fourier\_information" and "observation\_index" in the filename (in any order). Matching takes place by kic\_number and season.
+
+Typical usage:
+
+    kepler -c match_obs ~/data/output/some_fourier_information.txt ~/data/output/corresponding_observation_index.txt
+
+Observations for which corresponding Fourier information was not found are written to the terminal. Matcher produces matched\_table.txt.
 
 Note on Patches/Pull Requests
 -----------------------------
