@@ -38,7 +38,7 @@ module KeplerProcessor
           @catalogue_images_path = "/Users/sjm/data/output/#{@working_group}_catalogue_images/"
           kic_number, cadence, season = observation
           cadence = cadence == "SC" ? "slc" : "llc"
-          if observation[2] == "Q9" || observation[2] == "Q10"
+          if observation[2] == "Q9" || observation[2] == "Q10" || observation[2] == "Q11"
             flux_type = "MAP"
           else
             flux_type = "LS"
