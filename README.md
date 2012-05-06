@@ -55,7 +55,7 @@ Typical usage:
 
 Transformer is a ruby program that passes arguments to a program written in c to perform its calculations, because c was found to be much quicker than ruby at this task. The transform calculation code has the inner and outer for loops switched compared to those of Deeming (1975), and trigonometric identities are used to further reduce the number of computationally expensive sine and cosine calculations.
 
-The option "-e" will export the fourier information to a text-file called "fourier_information" in the output directory. It contains the kic number, season, peak amplitude (mmag), the frequency of that peak (c/d) and the grass level (mmag). The grass-level is taken as the 95th percentile in peak amplitudes, and is currently not particularly robust. The force-overwrite "-f" command is required to append to this file when processing multiple time-series.
+The option "-e" will export the fourier information to a text-file called "fourier_information" in the output directory. It contains the kic number, season, peak amplitude (mmag), the frequency of that peak (c/d) and the grass level (mmag). The grass-level calculation takes ~1-d slices (4-d in SC) and calculates the 95th percentile of peak amplitudes in each slice. The median of these is then assumed to be representative of the grass level. The force-overwrite "-f" command is required to append to this file when processing multiple time-series.
 
 ### Light Curve Plotter
 

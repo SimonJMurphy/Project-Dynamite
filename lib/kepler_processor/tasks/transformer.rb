@@ -37,9 +37,11 @@ module KeplerProcessor
               # plot.format 'y "%6.3f"'
               plot.lmargin "10"
               plot.output "#{@options[:output_path]}/#{@input_filename_without_extension}_fourier_plot_0to#{data.last[0].round_to(0).to_i}.png"
+              if @options[:export]
+                percentile = percentile_95 data
+                @grass_level = percentile.round_to 4
+              end
               peak = peak_point data
-              percentile = percentile_95 data
-              @grass_level = percentile[1].round_to 4
               @amplitude = peak[1].round_to 3
               @frequency = peak[0].round_to 4
               plot.label "'Peak of #{@amplitude} mmag at #{@frequency} c/d' at screen 0.70, screen 0.034"
