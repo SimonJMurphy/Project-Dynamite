@@ -35,7 +35,7 @@ module KeplerProcessor
       def create_observation_index
         @observation_index = @input_data.map do |observation|
           @working_group = @input_filename_without_path.split("_").first
-          @catalogue_images_path = "/Users/sjm/data/output/#{@working_group}_catalogue_images/"
+          @catalogue_images_path = "/#{@input_filename.split("/")[1 ... -1].join("/")}/#{@working_group}_catalogue_images/"
           kic_number, cadence, season = observation
           cadence = cadence == "SC" ? "slc" : "llc"
           if observation[2] == "Q9" || observation[2] == "Q10" || observation[2] == "Q11"
