@@ -8,6 +8,7 @@ module KeplerProcessor
       @options[:file_columns] = (0..4).to_a
       super do
         produce_arrays
+        patch_early_sc
         match_observation_cycle
         report_missing_entries
         sort_results
@@ -30,6 +31,14 @@ module KeplerProcessor
         @runners.last.input_data
       end
       @observation_index.each { |line| line.compact! }
+    end
+
+    def patch_early_sc
+      @observation_index.each do |line|
+        line.first.gsub!("Q0","Q0.0") if line.first.include? "SC,Q0,"
+        line.first.gsub("Q1","Q1.1") if line.first.include? "SC,Q1,"
+      end
+      p @observation_index
     end
 
     def match_observation_cycle
@@ -58,7 +67,7 @@ module KeplerProcessor
     end
 
     def sort_results
-      puts "Sorting the results by KIC number and season..."
+      puts "Sorting the results by KIC number and season, removing duplicates..."
       @output_data.sort! do |a, b|
         comparison_result = a[0] <=> b[0]
         comparison_result = a[2] <=> b[2] if comparison_result == 0
