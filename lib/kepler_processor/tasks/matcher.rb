@@ -43,6 +43,7 @@ module KeplerProcessor
     def match_observation_cycle
       puts "Cross-examining input files. Transfering fourier information..."
       @output_data ||= []
+      @fourier_information.uniq!
       @fourier_information.each do |line|
         line[0].gsub!('kic','')
         @observation_index.each_with_index do |observation_cycle, index|
