@@ -67,13 +67,14 @@ module KeplerProcessor
     end
 
     def sort_results
-      puts "Sorting the results by KIC number and season, removing duplicates..."
+      puts "Sorting the results by KIC number and season..."
       @output_data.sort! do |a, b|
         comparison_result = a[0] <=> b[0]
         comparison_result = a[2] <=> b[2] if comparison_result == 0
-        @output_data.delete(a) if comparison_result == 0
         comparison_result
       end
+      puts "Removing duplicates..."
+      @output_data.uniq!
     end
 
     def output_filename
