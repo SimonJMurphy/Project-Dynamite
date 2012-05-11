@@ -38,7 +38,6 @@ module KeplerProcessor
         line.first.gsub!("Q0","Q0.0") if line.first.include? "SC,Q0,"
         line.first.gsub("Q1","Q1.1") if line.first.include? "SC,Q1,"
       end
-      p @observation_index
     end
 
     def match_observation_cycle
