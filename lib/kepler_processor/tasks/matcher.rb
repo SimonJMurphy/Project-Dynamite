@@ -10,6 +10,7 @@ module KeplerProcessor
         produce_arrays
         patch_early_sc
         match_observation_cycle
+        recover_leftovers
         report_missing_entries
         sort_results
         save!
@@ -55,9 +56,23 @@ module KeplerProcessor
           end
         end
       end
-      leftovers = @observation_index.map { |line| line.first.split(",").to_a }
-      leftovers.each { |line| @output_data << line }
+      @leftovers = @observation_index.map { |line| line.first.split(",").to_a }
       puts "Transfer of Fourier information complete. Identifying any observations missing information..."
+    end
+
+    def recover_leftovers
+      puts "Attempting any leftover matches..."
+      @leftovers.each_with_index do |observation_cycle, index|
+        @fourier_information.each do |line|
+          if observation_cycle[0] == line[0] && observation_cycle[2] == line[1]
+            observation_cycle << [line[2], line[3], line[4]]
+            observation_cycle.flatten!
+            @output_data << observation_cycle
+            break
+          end
+        end
+      end
+      @leftovers.each { |line| @output_data << line }
     end
 
     def report_missing_entries
