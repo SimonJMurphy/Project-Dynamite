@@ -46,10 +46,10 @@ option_parser = OptionParser.new do |opts|
   opts.on("-g", "--good_data_only", "Keep only the data with quality flag '0' when using convertor") do |g|
     options[:good_data] = g
   end
-  opts.on("-t", "--flux_type TYPE", String, "Specify the flux type to be included in the filename, e.g. 'MAP'") do |t|
+  opts.on("-t", "--flux_type TAG", String, "Specify the flux type to be tagged in the filename, e.g. 'MAP'") do |t|
     options[:flux_type] = t
   end
-  opts.on("-C", "--columns 0,1", Array, "Choose input file columns to be read. Defaults to 0,1") do |f|
+  opts.on("-C", "--columns 0,1", Array, "Choose input file columns to be read. Defaults to 0,3") do |f|
     options[:file_columns] = f.map(&:to_i)
   end
   opts.on("-d", "--delimiter DELIMITER", String, "Specify delimiting character. Defaults to a single space") do |f|
