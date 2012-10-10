@@ -38,11 +38,7 @@ module KeplerProcessor
           @catalogue_images_path = "/#{@input_filename.split("/")[1 ... -1].join("/")}/#{@working_group}_catalogue_images/"
           kic_number, cadence, season = observation
           cadence = cadence == "SC" ? "slc" : "llc"
-          if observation[2] == "Q9" || observation[2] == "Q10" || observation[2] == "Q11"
-            flux_type = "MAP"
-          else
-            flux_type = "LS"
-          end
+          flux_type = "MAP"
           hash = { :kic_number => kic_number, :cadence => cadence, :season => season, :cycle => "kic#{kic_number} #{season} #{cadence} #{flux_type}", :lightcurve_path => "#{@catalogue_images_path}kic#{kic_number}_#{flux_type}_#{season}_#{cadence}_plot.png", :short_fourier_path => "#{@catalogue_images_path}kic#{kic_number}_#{flux_type}_#{season}_#{cadence}_fourier_plot_0to24.png" }
           hash[:long_fourier_path] = "#{@catalogue_images_path}kic#{kic_number}_#{flux_type}_#{season}_#{cadence}_fourier_plot_0to100.png" if cadence == "slc"
           hash
