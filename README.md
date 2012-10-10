@@ -35,6 +35,8 @@ Convertor will delete any lines containing "-Inf", or containing imaginary numbe
 
 Options exist for switching from full to truncated Barycentric Julian date (-m) and from switching from the time notation of MAST data files, where time is relative to 1st Jan 2009, to the kasoc format of truncated Barycentric Julian date (-p). In addition, if data from MAST containing a SAP\_Quality column (third column) are used, then specifying "-g" will use only the points with 'good' SAP\_Quality (==0).
 
+Running convertor takes around one second per long-cadence light-curve, and five seconds per short-cadence light-curve.
+
 ### Merger
 
 Merger is designed for use on excessively large files. It is preferable to have longer datasets for increased frequency resolution, but having more data points massively increases computation time for fourier transforms and other tasks. With Merger you can take a user-specified number of points, given as the merge-ratio, and merge those points into a single point, whose time and flux values are the average of those points. Merger does not merge points if a gap in the data exists between them. So if points are separated in time by more than the normal separation in time of points with that particular cadence, then that set of points are not merged. The next set of points, if free of time gaps, will merge normally. Points at the end of the file that are insufficient in number to form a whole set to be merged are also not merged. The algorithms will merge short-cadence (SC) data into long-cadence (LC) data and produce concurrent data points (with those expected in the LC light curve), but the SC light curve needs engineering such that there are exactly 15 points in the SC data set before the first point in the LC dataset.
@@ -65,6 +67,8 @@ Typical usage:
 
     kepler -c plot_lc ~/data/output/filename.txt
 
+Plotting light curves takes around half a second per long-cadence light-curve, and around five seconds per short-cadence light-curve.
+
 ### Catalogue Maker
 
 Catalogue Maker requires more scaffolding than other tasks. Firstly, there must be an observation index with a list of stars for which the catalogue is to be made, along with their key parameters. This is passed to Catalogue Maker as the input filename argument at the command line.
@@ -78,6 +82,8 @@ By default, Catalogue Maker reads the input file as a list of comma separated va
 For each observation cycle listed in the observation index, there must be a light curve and the correct number of fourier plots (one for long cadence, two for short) in the folder CATALOGUE\_IMAGES\_PATH (line 14), e.g. ~/data/output/wg4\_catalogue\_images. The filenames of plots that are currently looked for depend on season for PDC data - i.e. MAP and LS are distinguished by season (at the time of writing, only Q9, Q10 and Q11 LC have MAP). The flux type is also added to the catalogue.
 
 The catalogue created is in pdf format, with one observation cycle per page. Catalogue Maker sorts the observation index by kic\_number and then by season so that the pages are in a sensible order. The path and filename of the catalogue produced is ~/data/output/catalogue.pdf.
+
+Making the catalogue, once the catalogue\_images directory is fully populated, takes about 6 seconds per 200 pages.
 
 ### Appender
 
@@ -161,7 +167,7 @@ Although it may well be possible to incorporate this feature into the catalogue 
 
 ### Matcher
 
-The purpose of Matcher is to take a list of Fourier information (i.e. kic\_number, season, peak amplitude, peak frequency, grass level) and an observation index, and to port that Fourier information over to the observation index. The program thus take two files containing "fourier\_information" and "observation\_index" in the filename (in any order). Matching takes place by kic\_number and season.
+The purpose of Matcher is to take a list of Fourier information (i.e. kic\_number, season, peak amplitude, peak frequency, grass level) and an observation index, and to port that Fourier information over to the observation index. The program thus takes two files containing "fourier\_information" and "observation\_index" in the filename (in any order). Matching takes place by kic\_number and season.
 
 Typical usage:
 
