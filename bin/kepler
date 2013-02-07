@@ -46,6 +46,9 @@ option_parser = OptionParser.new do |opts|
   opts.on("-g", "--good_data_only", "Keep only the data with quality flag '0' when using convertor") do |g|
     options[:good_data] = g
   end
+  opts.on("-i", "--inbetween MIN,MAX", "Provide a frequency range inbetween which to calculate the fourier transform, e.g. 5,20. Defaults to 0,24 for LC data and 0,100 for SC data.") do |i|
+    options[:fourier_range] = i
+  end
   opts.on("-t", "--flux_type TAG", String, "Specify the flux type to be tagged in the filename, e.g. 'MAP'") do |t|
     options[:flux_type] = t
   end
