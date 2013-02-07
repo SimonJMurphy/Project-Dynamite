@@ -7,8 +7,8 @@ module KeplerProcessor
       source_data ||= input_data
       time_span_of_dataset = source_data.last.first - source_data.first.first
       if @options[:fourier_range]
-        start_frequency = @options[:fourier_range].split(",").first
-        final_frequency = @options[:fourier_range].split(",").last
+        start_frequency = @options[:fourier_range].split(",").first.to_f
+        final_frequency = @options[:fourier_range].split(",").last.to_f
       else
         start_frequency = 0
         final_frequency = cadence == :slc ? 100 : 24

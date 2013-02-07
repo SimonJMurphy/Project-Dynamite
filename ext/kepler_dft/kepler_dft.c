@@ -7,7 +7,7 @@ VALUE method_dft(VALUE self, VALUE times, VALUE magnitudes, VALUE number_of_poin
 
 void Init_kepler_dft() {
   VALUE KeplerDFT = rb_define_module("KeplerDFT");
-  rb_define_method(KeplerDFT, "dft", method_dft, 7);
+  rb_define_method(KeplerDFT, "dft", method_dft, 6);
 }
 
 VALUE method_dft(VALUE self, VALUE times, VALUE magnitudes, VALUE number_of_points, VALUE bandwidth, VALUE min_frequency, VALUE max_frequency) {
