@@ -36,7 +36,7 @@ module KeplerProcessor
             plot.terminal "png size 900,300"
             # plot.format 'y "%6.3f"'
             plot.lmargin "10"
-            plot.output "#{@options[:output_path]}/#{@input_filename_without_extension}_fourier_plot_0to#{data.last[0].round_to(0).to_i}.png"
+            plot.output "#{@options[:output_path]}/#{@input_filename_without_extension}_fourier_plot_#{data.first[0].round_to(0).to_i}to#{data.last[0].round_to(0).to_i}.png"
             if @options[:export]
               percentile = percentile_95 data
               @grass_level = percentile.round_to 4
