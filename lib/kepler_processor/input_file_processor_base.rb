@@ -52,6 +52,8 @@ module KeplerProcessor
         @attributes[:kic_number] = @attributes[:kic_number].to_i if @attributes[:kic_number]
         @attributes[:kic_number] ||= @input_filename_without_path.split("_").first
         @attributes[:season] ||= @input_filename_without_path.split("_")[2]
+        quarter = @attributes[:season].split("Q").last.to_f
+        @attributes[:season].insert(1, '0') if quarter < 10
         @attributes[:cadence] ||= @input_filename_without_path.split("_")[3]
       end
 
