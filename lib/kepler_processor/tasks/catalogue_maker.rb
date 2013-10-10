@@ -41,7 +41,7 @@ module KeplerProcessor
           flux_type = "MAP"
           hash = { :kic_number => kic_number, :cadence => cadence, :season => season, :cycle => "kic#{kic_number} #{season} #{cadence} #{flux_type}", :lightcurve_path => "#{@catalogue_images_path}kic#{kic_number}_#{flux_type}_#{season}_#{cadence}_plot.png", :short_fourier_path => "#{@catalogue_images_path}kic#{kic_number}_#{flux_type}_#{season}_#{cadence}_fourier_plot_0to24.png" }
           hash[:long_fourier_path] = "#{@catalogue_images_path}kic#{kic_number}_#{flux_type}_#{season}_#{cadence}_fourier_plot_0to100.png" if cadence == "slc"
-          season.insert(1, "0") if season.split("Q").last.to_i < 10 # so that Q10 comes after Q9 (Q09) rather than between Q1 & Q2
+          season.insert(1, "0") if season.split("Q").last.split(".").first.size == 1 # now Q10 comes after Q9 (Q09) rather than between Q1 & Q2, but no additional zero is added if the quarter was already Q09 (i.e. no Q009).
           hash
         end
       end
