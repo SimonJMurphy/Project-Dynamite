@@ -20,7 +20,9 @@ module KeplerProcessor
         super do
           @spectrum = compute_amplitude_spectrum
           plot_DFT spectrum.to_a if cadence == :slc
-          plot_DFT spectrum.to_a.select { |x| x[0] <= 24 }
+          llc_upper_limit = @options[:fourier_range].split(",").last.to_f
+          llc_upper_limit ||= 24.0
+          plot_DFT spectrum.to_a.select { |x| x[0] <= llc_upper_limit }
           if @options[:export]
             note_amplitudes
             save! true
@@ -36,6 +38,7 @@ module KeplerProcessor
             plot.terminal "png size 900,300"
             # plot.format 'y "%6.3f"'
             plot.lmargin "10"
+            puts data
             plot.output "#{@options[:output_path]}/#{@input_filename_without_extension}_fourier_plot_#{data.first[0].round_to(0).to_i}to#{data.last[0].round_to(0).to_i}.png"
             if @options[:export]
               percentile = percentile_95 data
