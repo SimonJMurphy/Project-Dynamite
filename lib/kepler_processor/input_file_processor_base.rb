@@ -52,7 +52,7 @@ module KeplerProcessor
         @attributes[:kic_number] = @attributes[:kic_number].to_i if @attributes[:kic_number]
         @attributes[:kic_number] ||= @input_filename_without_path.split("_").first
         @attributes[:season] ||= @input_filename_without_path.split("_")[2]
-        @attributes[:season].insert(1, "0") if @attributes[:season].split("Q").last.split(".").first.size == 1
+        if @attributes[:season].nil? == false && @attributes[:season].split("Q").last.split(".").first.size == 1 then @attributes[:season].insert(1, "0") end
         @attributes[:cadence] ||= @input_filename_without_path.split("_")[3]
       end
 
