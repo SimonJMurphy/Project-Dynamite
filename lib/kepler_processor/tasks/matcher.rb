@@ -44,10 +44,8 @@ module KeplerProcessor
 
     def patch_quarters_from_kasoc
       @observation_index.each do |line|
-        p line
         line.first.gsub!("Q","Q0") unless line.first.include? ",Q1"
         line.first.gsub!("Q","Q0") if line.first.include? ",Q1,"
-        p line
       end
     end
 
