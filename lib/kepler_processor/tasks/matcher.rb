@@ -9,6 +9,7 @@ module KeplerProcessor
       super do
         produce_arrays
         patch_early_sc
+        patch_quarters_from_kasoc
         match_observation_cycle
         recover_leftovers
         report_missing_entries
@@ -38,6 +39,15 @@ module KeplerProcessor
       @observation_index.each do |line|
         line.first.gsub!("Q0","Q0.0") if line.first.include? "SC,Q0,"
         line.first.gsub!("Q1","Q1.0") if line.first.include? "SC,Q1,"
+      end
+    end
+
+    def patch_quarters_from_kasoc
+      @observation_index.each do |line|
+        p line
+        line.first.gsub!("Q","Q0") unless line.first.include? ",Q1"
+        line.first.gsub!("Q","Q0") if line.first.include? ",Q1,"
+        p line
       end
     end
 
