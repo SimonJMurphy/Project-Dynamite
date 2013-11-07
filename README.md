@@ -25,15 +25,15 @@ Convertor is designed to take the raw Kepler data, as downloaded from kasoc, and
 
 Typical usage:
 
-    kepler -c convert -C -t LS 0,1 -f ~/data/input/filename.txt
+    kepler -c convert -t 'msMAP' -C 0,1 -f -o ~/data/output ~/data/input/filename.txt
 
 This executes the convert command on columns 0 and 1 (time and raw flux) of the file 'filename.txt' with relative path ~/data/input/. The default setting for the columns to convert is 0,3 (time and PDC flux). Multiple files can be converted simultaneously with, for example, ~/data/input/*.txt as the input filename argument. As with all tasks, the input filename(s) must always be the final argument.
 
-Other useful options on convertor are '-f' (force overwrite), which automatically overwrites existing files with the same output filename in the output directory, and '-b' (batch), which uses a different output filename that is more useful for converting large batches of data, typically one working group at a time. The batch output filename uses the working group number from the input folder e.g. ~/data/input/wg4 => ~/data/output/converted\_wg4. Remember to specify the output directory. Convertor has the default filename format kic#\_{flux\_type}\_{quarter}\_{short/long cadence}.txt, e.g. "kic1234567\_LS\_Q6.1\_slc.txt". If this file-naming convention is undesirable because of a non-standard input filename, the option '-k' will keep the input filename and just insert '\_converted' before the file extension '.txt'.
+Other useful options on convertor are '-f' (force overwrite), which automatically overwrites existing files with the same output filename in the output directory, and '-b' (batch), which uses a different output filename that is more useful for converting large batches of data, typically one working group at a time. The batch output filename uses the working group number from the input folder e.g. ~/data/input/wg4 => ~/data/output/converted\_wg4. Remember to specify the output directory. Convertor has the default filename format kic#\_{flux\_type}\_{quarter}\_{short/long cadence}.txt, e.g. "kic1234567\_msMAP\_Q6.1\_slc.txt". If this file-naming convention is undesirable because of a non-standard input filename, the option '-k' will keep the input filename and just insert '\_converted' before the file extension '.txt'.
 
-Convertor will delete any lines containing "-Inf", or containing imaginary numbers (containing 'i'). Any headers in the file are taken out if they start with the # character. All fluxes are converted to magnitudes, and are centred about zero. Convertor requires the user to specify which type of flux the data are using "-t". The convention commonly used is "LS" for PDC-LS, "MAP" for PDC-MAP and "SAP" for the Simple Aperture Photometry.
+Convertor will delete any lines containing "-Inf", or containing imaginary numbers (containing 'i'). Any headers in the file are taken out if they start with the # character. All fluxes are converted to magnitudes, and are centred about zero. Convertor requires the user to specify which type of flux the data are using "-t". The convention commonly used is 'LS' for PDC-LS, 'msMAP' for PDC-multiscale-MAP and "SAP" for the Simple Aperture Photometry.
 
-Options exist for switching from full to truncated Barycentric Julian date (-m) and from switching from the time notation of MAST data files, where time is relative to 1st Jan 2009, to the kasoc format of truncated Barycentric Julian date (-p). In addition, if data from MAST containing a SAP\_Quality column (third column) are used, then specifying "-g" will use only the points with 'good' SAP\_Quality (==0).
+An option exists (-m) for switching from the time notation of MAST data files, where time is relative to 1st Jan 2009, to the kasoc format of truncated Barycentric Julian date. In addition, if data from MAST containing a SAP\_Quality column (third column) are used, then specifying "-g" will use only the points with 'good' SAP\_Quality (==0).
 
 Running convertor takes around one second per long-cadence light-curve, and five seconds per short-cadence light-curve.
 
@@ -43,7 +43,7 @@ Merger is designed for use on excessively large files. It is preferable to have 
 
 Typical usage:
 
-    kepler -c merge -r 10 ~/data/output/filename.txt
+    kepler -c merge -r 10  -o ~/data/output ~/data/output/filename.txt
 
 Note that Merger is designed to run on files that are already converted. Hence there is normally no need to specify which columns to use because the file will only have times and fluxes. Merger requires a merge-ratio. This is given with "-r" and then the merge-ratio, separated either side by a space. Users may also find the force overwrite option useful. The filename provided by merger is the same as that of convertor, but with "\_{merge_ratio}to1" inserted before the cadence.
 
@@ -53,13 +53,11 @@ Transformer is designed to work on converted files. A fourier transform of the c
 
 Typical usage:
 
-    kepler -c transform ~/data/output/filename.txt
+    kepler -c transform [-f -e -i 5,24] -o ~/data/output/example_catalogue_images ~/data/output/filename.txt
+
+Using "-i" allows the user to specify the frequencies inbetween which the Fourier transform will be calculated. The option "-e" will export the fourier information to a text file called "fourier_information" in the output directory. It contains the kic number, season, peak amplitude (mmag), the frequency of that peak (c/d) and the grass level (mmag). The grass-level calculation takes ~1-c/d slices (4-c/d in SC) and calculates the 95th percentile of peak amplitudes in each slice. The median of that 95th percentile as measured over all slices is then assumed to be representative of the grass level. The force-overwrite "-f" command is required to append to this file when processing multiple time-series.
 
 Transformer is a ruby program that passes arguments to a program written in c to perform its calculations, because c was found to be much quicker than ruby at this task. The transform calculation code has the inner and outer for loops switched compared to those of Deeming (1975), and trigonometric identities are used to further reduce the number of computationally expensive sine and cosine calculations.
-
-Using "-i" allows the user to specify the frequencies inbetween which the Fourier transform will be calculated.
-
-The option "-e" will export the fourier information to a text-file called "fourier_information" in the output directory. It contains the kic number, season, peak amplitude (mmag), the frequency of that peak (c/d) and the grass level (mmag). The grass-level calculation takes ~1-d slices (4-d in SC) and calculates the 95th percentile of peak amplitudes in each slice. The median of that 95th percentile as measured over all slices is then assumed to be representative of the grass level. The force-overwrite "-f" command is required to append to this file when processing multiple time-series.
 
 ### Light Curve Plotter
 
@@ -67,7 +65,7 @@ Light Curve Plotter plots a light curve of the input data. The output filename o
 
 Typical usage:
 
-    kepler -c plot_lc ~/data/output/filename.txt
+    kepler -c plot_lc -o ~/data/output/example_catalogue_images ~/data/output/filename.txt
 
 Plotting light curves takes around half a second per long-cadence light-curve, and around five seconds per short-cadence light-curve.
 
@@ -77,13 +75,15 @@ Catalogue Maker requires more scaffolding than other tasks. Firstly, there must 
 
 Typical usage:
 
-    kepler -c catalogue ~/data/input/wg4_observation_index.txt
+    kepler -c catalogue [-i 5,24] -o ~/data/output ~/data/input/example_observation_index.txt
+
+where the -i option allows the user to specify the 'fourier range' of the Fourier transforms that will be used for the catalogue, so that the correct filenames of those Fourier transforms are identified.
 
 By default, Catalogue Maker reads the input file as a list of comma separated values, rather than values separated by spaces, because this is the typical format of observation indexes when downloaded through kasoc. It is assumed that the table has nine columns, containing: (left to right) kic\_number, cadence, season, magnitude, Teff, radius, log g, metallicity and contamination. If this is not the case, line 28 of catalogue_maker.rb will need to be changed according to the contents of the index.
 
-For each observation cycle listed in the observation index, there must be a light curve and the correct number of fourier plots (one for long cadence, two for short) in the folder CATALOGUE\_IMAGES\_PATH (line 14), e.g. ~/data/output/wg4\_catalogue\_images. The filenames of plots that are currently looked for depend on season for PDC data - i.e. MAP and LS are distinguished by season (at the time of writing, only Q9, Q10 and Q11 LC have MAP). The flux type is also added to the catalogue.
+For each observation cycle listed in the observation index, there must be a light curve and the correct number of fourier plots (one for long cadence, two for short) in the folder CATALOGUE\_IMAGES\_PATH (line 14), e.g. ~/data/output/example\_catalogue\_images. There is a hard-coded expectation that the flux type of the Fourier transforms and light curve plots is 'msMAP'. The flux type is also added to the catalogue.
 
-The catalogue created is in pdf format, with one observation cycle per page. Catalogue Maker sorts the observation index by kic\_number and then by season so that the pages are in a sensible order. The path and filename of the catalogue produced is ~/data/output/catalogue.pdf.
+The catalogue created is in pdf format, with one observation cycle per page. Catalogue Maker sorts the observation index by kic\_number and then by season so that the pages are in a sensible order. The path and filename of the catalogue produced is ~/data/output/example_catalogue.pdf.
 
 Making the catalogue, once the catalogue\_images directory is fully populated, takes about 6 seconds per 200 pages.
 
@@ -95,7 +95,7 @@ Since the comments of unconverted files contain information about the kic\_numbe
 
 Typical usage:
 
-    kepler -c append ~/data/input/kplr001234567*.txt
+    kepler -c append -o ~/data/output ~/data/input/kplr001234567*.txt
 
 where kplr001234567 is a unique object with only consecutive quarters.
 
@@ -109,7 +109,7 @@ The output filename indicates the length of the slices and the part\_number of t
 
 Typical usage:
 
-    kepler -c slice -s 2 ~/data/output/kic01234567-appended_Q2.1-Q2.3_slc.
+    kepler -c slice -s 2 -o ~/data/output ~/data/output/kic01234567-appended_Q2.1-Q2.3_slc.
 
 
 ### Modulation Finder
@@ -134,7 +134,7 @@ The detrender is designed to work on converted data. It uses GSL to find a linea
 
 Typical usage:
 
-    kepler -c detrend ~/data/output/filename.txt
+    kepler -c detrend -o ~/data/output ~/data/output/filename.txt
 
 
 ### Phase Finder
@@ -143,7 +143,7 @@ Phase finder takes an input (typically from an Excel spreadsheet) containing a f
 
 Typical usage:
 
-    kepler -c find_phase ~/data/output/filename.txt
+    kepler -c find_phase -o ~/data/output ~/data/output/filename.txt
 
 The relative phases returned will be folded on multiples of 2 pi. By plotting a scatter diagram of the relative phase against frequency for the combination frequencies, one should see stripes of points if there is a correlated relationship. It is recommended to unfold these manually by shifting the points by multiples of 2 pi so that they form a straight line. Once the line is straight, albeit perhaps with a few outliers, the "Fitter" program is recommended to improve the fit.
 
@@ -153,7 +153,7 @@ Fitter takes a series of x and y values, fits a linear trend to them, and then t
 
 Typical usage:
 
-    kepler -c improve_fit -f ~/data/output/filename.txt
+    kepler -c improve_fit -o ~/data/output -f ~/data/output/filename.txt
 
 Fitter may need to be run more than once to converge on the best fit, so the force overwrite command "-f" has been implemented in the above typical usage example. The output from the first iteration will need to be used as the input for the second iteration in this case - such a re-iterative procedure is not yet automated.
 
@@ -163,7 +163,7 @@ Inspector provides information on the time span of Kepler observations and the d
 
 Typical usage:
 
-    kepler -c inspect ~/data/output/filename_Q*.txt
+    kepler -c inspect -o ~/data/output ~/data/output/filename_Q*.txt
 
 Although it may well be possible to incorporate this feature into the catalogue making process, the generic application of Inspector would not be appropriate because of the different cadences available and the occasional wish to omit poor data from such statistics.
 
@@ -173,7 +173,7 @@ The purpose of Matcher is to take a list of Fourier information (i.e. kic\_numbe
 
 Typical usage:
 
-    kepler -c match_obs ~/data/output/some_fourier_information.txt ~/data/output/corresponding_observation_index.txt
+    kepler -c match_obs -o ~/data/output ~/data/output/some_fourier_information.txt ~/data/output/corresponding_observation_index.txt
 
 Observations for which corresponding Fourier information was not found are written to the terminal. Matcher produces matched\_table.txt.
 
@@ -190,4 +190,4 @@ Note on Patches/Pull Requests
 Copyright
 ---------
 
-Copyright (c) 2011 Simon Murphy, Ben Langfeld. MIT licence (see LICENSE for details).
+Copyright (c) 2011,2012,2013 Simon Murphy, Ben Langfeld. MIT licence (see LICENSE for details).
