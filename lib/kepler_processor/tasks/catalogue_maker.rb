@@ -37,13 +37,23 @@ module KeplerProcessor
           @working_group = @input_filename_without_path.split("_").first
           @catalogue_images_path = "/#{@input_filename.split("/")[1 ... -1].join("/")}/#{@working_group}_catalogue_images/"
           kic_number, cadence, season = observation
-          cadence = cadence == "SC" ? "slc" : "llc"
+          @cadence = cadence == "SC" ? "slc" : "llc"
+          grab_fourier_ranges
           flux_type = "msMAP"
           season.insert(1, "0") if season.split("Q").last.split(".").first.size == 1 # now Q10 comes after Q9 (Q09) rather than between Q1 & Q2, but no additional zero is added if the quarter was already Q09 (i.e. no Q009).
-          hash = { :kic_number => kic_number, :cadence => cadence, :season => season, :cycle => "kic#{kic_number} #{season} #{cadence} #{flux_type}", :lightcurve_path => "#{@catalogue_images_path}kic#{kic_number}_#{flux_type}_#{season}_#{cadence}_plot.png", :short_fourier_path => "#{@catalogue_images_path}kic#{kic_number}_#{flux_type}_#{season}_#{cadence}_fourier_plot_0to24.png" }
-          hash[:long_fourier_path] = "#{@catalogue_images_path}kic#{kic_number}_#{flux_type}_#{season}_#{cadence}_fourier_plot_0to100.png" if cadence == "slc"
+          hash = { :kic_number => kic_number, :cadence => @cadence, :season => season, :cycle => "kic#{kic_number} #{season} #{cadence} #{flux_type}", :lightcurve_path => "#{@catalogue_images_path}kic#{kic_number}_#{flux_type}_#{season}_#{@cadence}_plot.png", :short_fourier_path => "#{@catalogue_images_path}kic#{kic_number}_#{flux_type}_#{season}_#{@cadence}_fourier_plot_#{@lower_limit}to#{@upper_limit}.png" }
+          hash[:long_fourier_path] = "#{@catalogue_images_path}kic#{kic_number}_#{flux_type}_#{season}_#{@cadence}_fourier_plot_#{@lower_limit}to#{@upper_limit}.png" if @cadence == "slc"
           hash
         end
+      end
+
+      def grab_fourier_ranges
+        if @options[:fourier_range] then
+          @upper_limit = @options[:fourier_range].split(",").last
+          @lower_limit = @options[:fourier_range].split(",").first
+        end
+        @lower_limit ||= 0
+        @upper_limit ||= @cadence == "slc" ? 100 : 24
       end
 
       def sort_observation_index_by_kic_number
