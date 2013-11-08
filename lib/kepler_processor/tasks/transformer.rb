@@ -20,7 +20,7 @@ module KeplerProcessor
         super do
           @spectrum = compute_amplitude_spectrum
           plot_DFT spectrum.to_a if cadence == :slc
-          llc_upper_limit = @options[:fourier_range].split(",").last.to_f
+          llc_upper_limit = @options[:fourier_range].split(",").last.to_f if @options[:fourier_range]
           llc_upper_limit ||= 24.0
           plot_DFT spectrum.to_a.select { |x| x[0] <= llc_upper_limit }
           if @options[:export]
