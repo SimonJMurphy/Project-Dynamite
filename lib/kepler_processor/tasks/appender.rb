@@ -38,7 +38,7 @@ module KeplerProcessor
       end
 
       def output_filename
-        flux_type = @options[:file_columns] == [0, 1] ? :Rflux : :Cflux
+        flux_type = @options[:file_columns] == [0, 1] ? :SAP : :msMAP
         @runners.first.input_filename_without_path.sub(/\d{13}/, "#{flux_type}_appended_#{season_range}") # Timestamp always has 13 digits
       end
   end
