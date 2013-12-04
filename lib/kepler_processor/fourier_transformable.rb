@@ -6,6 +6,7 @@ module KeplerProcessor
     def compute_amplitude_spectrum(source_data = nil)
       source_data ||= input_data
       time_span_of_dataset = source_data.last.first - source_data.first.first
+      step_rate = @options[:step_rate] ? @options[:step_rate].to_f : 20.0
       if @options[:fourier_range]
         start_frequency = @options[:fourier_range].split(",").first.to_f
         final_frequency = @options[:fourier_range].split(",").last.to_f
@@ -13,7 +14,7 @@ module KeplerProcessor
         start_frequency = 0
         final_frequency = cadence == :slc ? 100 : 24
       end
-      dft source_data.map { |x| x[0] }, source_data.map { |x| x[1] }, source_data.size, time_span_of_dataset, start_frequency, final_frequency
+      dft source_data.map { |x| x[0] }, source_data.map { |x| x[1] }, source_data.size, time_span_of_dataset, step_rate, start_frequency, final_frequency
     end
 
     def cadence

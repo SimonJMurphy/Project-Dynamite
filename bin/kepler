@@ -67,6 +67,9 @@ option_parser = OptionParser.new do |opts|
   opts.on("-s", "--slice-size SIZE", Float, "Specify a slice size to use.") do |p|
     options[:slice_size] = p
   end
+  opts.on("-w", "--wider-resolution RATE", Float, "Specify the step rate parameter 'w' (step size = 1/(w*T)) for Fourier transforms. Defaults to high resolution (w=20)") do |w|
+    options[:step_rate] = w
+  end
   opts.on_tail("-h", "--help", "Show this message") do
     puts opts
     exit
