@@ -4,6 +4,7 @@ module KeplerProcessor
     attr_accessor :options
 
     def compute_amplitude_spectrum(source_data = nil)
+      subtract_mean
       source_data ||= input_data
       time_span_of_dataset = source_data.last.first - source_data.first.first
       step_rate = @options[:step_rate] ? @options[:step_rate].to_f : 20.0
@@ -15,6 +16,13 @@ module KeplerProcessor
         final_frequency = cadence == :slc ? 100 : 24
       end
       dft source_data.map { |x| x[0] }, source_data.map { |x| x[1] }, source_data.size, time_span_of_dataset, step_rate, start_frequency, final_frequency
+    end
+
+    def subtract_mean
+      the_mean = @input_data.map { |x| x[1] }.mean
+      @input_data.each do |line|
+        line[1] = line[1] - the_mean
+      end
     end
 
     def cadence
