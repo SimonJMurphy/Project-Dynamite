@@ -26,6 +26,10 @@ module KeplerProcessor
             note_amplitudes
             save! true
           end
+          if @options[:print]
+            print_fourier_information spectrum.to_a
+            save! true
+          end
         end
       end
 
@@ -68,8 +72,16 @@ module KeplerProcessor
         @output_data << [@attributes[:kic_number], @attributes[:season], @amplitude, @frequency, @grass_level]
       end
 
+      def print_fourier_information(data)
+        @output_data = data
+      end
+
       def output_filename
-        "fourier_information.txt"
+        if @options[:export]
+          "fourier_information.txt"
+        else @options[:print]
+          "#{@attributes[:kic_number]}_phase-time_fou.txt"
+        end
       end
     end
   end
