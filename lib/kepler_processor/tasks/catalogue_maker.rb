@@ -48,12 +48,13 @@ module KeplerProcessor
       end
 
       def grab_fourier_ranges
-        if @options[:fourier_range] then
+        if @options[:fourier_range]
           @upper_limit = @options[:fourier_range].split(",").last
           @lower_limit = @options[:fourier_range].split(",").first
+        else
+          @lower_limit = 0
+          @upper_limit = @cadence == "slc" ? 100 : 24
         end
-        @lower_limit ||= 0
-        @upper_limit ||= @cadence == "slc" ? 100 : 24
       end
 
       def sort_observation_index_by_kic_number
@@ -63,10 +64,6 @@ module KeplerProcessor
           comparison_result
         end
       end
-
-      # input_filenames of the form:        kic10000056_LS_Q4.2_slc.txt
-      # lightcurve_filenames of the form:   kic10000056_LS_Q4.2_slc_plot.png
-      # fourier_plot_filenames of the form: kic10000056_LS_Q4.2_slc_fourier_plot_0to100.png
 
       def create_pdf
         observation_index = @observation_index
