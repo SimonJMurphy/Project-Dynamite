@@ -80,7 +80,7 @@ module KeplerProcessor
         if @options[:export]
           "fourier_information.txt"
         else @options[:print]
-          "#{@attributes[:kic_number]}_phase-time_fou.txt"
+          "#{@input_filename_without_path.dup.insert(-5, '_fou')}"
         end
       end
     end
