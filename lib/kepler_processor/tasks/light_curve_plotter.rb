@@ -21,8 +21,8 @@ module KeplerProcessor
               # plot.format 'y "%6.1f"'
               plot.lmargin "10"
               plot.output "#{@options[:output_path]}/#{@input_filename_without_extension}_plot.png"
-              plot.ylabel "Amplitude (mmag)"
-              plot.xlabel "BJD"
+              plot.ylabel "Delta Kp (mmag)"
+              plot.xlabel "BJD - 2400000"
               plot.yrange "[] reverse"
 
               x = @input_data.map { |point| point[0] }
