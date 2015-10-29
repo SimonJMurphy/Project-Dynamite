@@ -8,6 +8,7 @@ module KeplerProcessor
       source_data ||= input_data
       time_span_of_dataset = source_data.last.first - source_data.first.first
       step_rate = @options[:step_rate] ? @options[:step_rate].to_f : 20.0
+      puts "\n The Step size (=1/#{step_rate}T) is too low, at #{1/(step_rate*time_span_of_dataset)}\n\n" if 1.0/(step_rate*time_span_of_dataset) < 1E-4
       if @options[:fourier_range]
         start_frequency = @options[:fourier_range].split(",").first.to_f
         final_frequency = @options[:fourier_range].split(",").last.to_f
