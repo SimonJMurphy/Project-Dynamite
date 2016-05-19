@@ -21,8 +21,10 @@ module KeplerProcessor
           @spectrum = compute_amplitude_spectrum
           plot_DFT spectrum.to_a if cadence == :slc
           llc_upper_limit = @options[:fourier_range] ? @options[:fourier_range].split(",").last.to_f : 24.0
-          plot_DFT spectrum.to_a.select { |x| x[0] <= llc_upper_limit }
+          data = spectrum.to_a.select { |x| x[0] <= llc_upper_limit }
+          plot_DFT data
           if @options[:export]
+            determine_grass_level data
             note_amplitudes
             save! true
           end
@@ -43,10 +45,7 @@ module KeplerProcessor
             plot.lmargin "10"
             plot.output "#{@options[:output_path]}/#{@input_filename_without_extension}_fourier_plot_#{data.first[0].round_to(0).to_i}to#{data.last[0].round_to(0).to_i}.png"
             plot.border   "linewidth 2"
-            if @options[:export]
-              percentile = percentile_95 data
-              @grass_level = percentile.round_to 4
-            end
+
             peak = peak_point data
             @amplitude = peak[1].round_to 3
             @frequency = peak[0].round_to 4
@@ -63,6 +62,11 @@ module KeplerProcessor
             end
           end
         end
+      end
+
+      def determine_grass_level(data)
+        percentile = percentile_95 data
+        @grass_level = percentile.round_to 4
       end
 
       def note_amplitudes
