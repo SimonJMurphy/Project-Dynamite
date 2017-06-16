@@ -57,7 +57,7 @@ module KeplerProcessor
             y = data.select { |x| x[1] }
 
             plot.data << ::Gnuplot::DataSet.new([x, y]) do |ds|
-              ds.with = "lines"
+              ds.with = "lines lw 2"
               ds.notitle
             end
           end
