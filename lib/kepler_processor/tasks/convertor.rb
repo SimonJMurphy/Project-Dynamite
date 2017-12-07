@@ -54,9 +54,9 @@ module KeplerProcessor
             "converted_#{@input_filename.split("/")[2]}/kic#{[@attributes[:kic_number], flux_type, @attributes[:season], @input_filename.split("_").last.split(".").first].compact.join('_')}.txt"
           elsif options[:keep_name]
             "#{@input_filename_without_extension.split("/").last}_converted.txt"
-          elsif @attributes[:kic_number].include? "ktwo"
+          elsif @attributes[:kic_number].to_s.include? "ktwo"
             # For k2 data
-            "#{[@attributes[:kic_number].split("-").first, flux_type, @attributes[:kic_number].split("-").last, @input_filename.split("_").last.split(".").first].compact.join('_')}.txt".gsub("ktwo","kic")
+            "#{[@attributes[:kic_number].split("-").first, flux_type, @attributes[:kic_number].split("-").last, @input_filename.split("_").last.split(".").first].compact.join('_')}.txt".gsub("ktwo","epic")
           else
             # For individual stars, in raw name format on their own
             "kic#{[@attributes[:kic_number], flux_type, @attributes[:season], @input_filename.split("_").last.split(".").first].compact.join('_')}.txt"
