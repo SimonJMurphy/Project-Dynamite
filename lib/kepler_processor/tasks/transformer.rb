@@ -22,12 +22,12 @@ module KeplerProcessor
           plot_DFT spectrum.to_a if cadence == :slc
           llc_upper_limit = @options[:fourier_range] ? @options[:fourier_range].split(",").last.to_f : 24.0
           data = spectrum.to_a.select { |x| x[0] <= llc_upper_limit }
-          plot_DFT data
           if @options[:export]
             determine_grass_level data
             note_amplitudes
             save! true
           end
+          plot_DFT data
           if @options[:print]
             print_fourier_information spectrum.to_a
             save! true
