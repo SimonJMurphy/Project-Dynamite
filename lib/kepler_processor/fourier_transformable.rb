@@ -32,8 +32,12 @@ module KeplerProcessor
     end
 
     def peak_point(data)
-      @sorted_amp = data.sort_by { |x| x[1] }
-      @sorted_amp.last
+      x = data.map{ |x,y| x }
+      y = data.map{ |x,y| y }
+      ymax = y.max
+      ind = y.index(ymax)
+      xmax = x[ind]
+      return [xmax, ymax]
     end
 
     def percentile_95(data)
