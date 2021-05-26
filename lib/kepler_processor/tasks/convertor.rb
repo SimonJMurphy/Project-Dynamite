@@ -33,7 +33,7 @@ module KeplerProcessor
         end
 
         def convert_fluxes_to_magnitudes!
-          @input_data.each { |record| record[1] = -2.5 * Math.log10(record[1]) }
+          @input_data.each { |record| record[1] = -2.5 * Math.log10(record[1].to_f) }
         end
 
         def average_mag
