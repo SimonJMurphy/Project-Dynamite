@@ -28,7 +28,8 @@ module KeplerProcessor
     end
 
     def cadence
-      input_filename_without_extension.split("_")[3].to_sym
+      c = input_filename_without_extension.split("_")[3]
+      cad = c ? c.to_sym : :llc
     end
 
     def peak_point(data)
