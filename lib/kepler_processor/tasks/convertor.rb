@@ -19,7 +19,7 @@ module KeplerProcessor
       private
 
         def strip_invalid!
-          @input_data.delete_if { |record| record =~ /$(i)/ || record[1] == "-Inf" || record[1] == "NaN" || record[0] == "NaN" || record[1] == "nan" || record[1].nil? || record[1] == "" }
+          @input_data.delete_if { |record| record =~ /$(i)/ || record[1] == "-Inf" || record[1] == "NaN" || record[0] == "NaN" || record[1] == "nan" || record[1].nil? || record[1] == "" || record[0] == "time" }
         end
 
         def cherry_pick!
